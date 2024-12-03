@@ -51,17 +51,20 @@ def print_log(log_type: str, message: str, width: int = 7) -> None:
     print_colored(formatted_message, color_code)
 
 
-def get_driver(os: str = "Windows") -> webdriver.Chrome:
+def get_driver(os: str = "Windows", mode: str = 'headless') -> webdriver.Chrome:
     """
     Get the WebDriver instance based on the OS.
-    Args:
-        os (str): The operating system (Windows or Linux).
-    Returns:
-        WebDriver: The WebDriver instance.
+    :param os:
+    :param mode: # headless (default) or windowed
+    :return: WebDriver instance
+
+    Example:
+    get_driver("Windows", "windowed")
     """
     # Configure WebDriver
     options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")  # Run in headless mode (no browser window)
+    if mode == 'headless':
+        options.add_argument("--headless") # Run in headless mode (no browser window)
     options.add_argument("--no-sandbox")  # Bypass OS security model
     options.add_argument("--disable-images")  # Don't load images for faster scraping
 
