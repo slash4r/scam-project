@@ -38,7 +38,7 @@ def print_log(log_type: str, message: str, width: int = 7) -> None:
         'INFO': '96'  # Light Cyan
     }
 
-    color_code = color_map.get(log_type, '97')  # Default to white if level is unknown
+    color_code = color_map.get(log_type.upper(), '97')  # Default to white if level is unknown
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     # Center the log level text within the specified width

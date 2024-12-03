@@ -40,6 +40,8 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
 
     offers = chrome_driver.find_elements(By.CSS_SELECTOR, 'div[data-cy="l-card"]')
 
+    print_log('INFO', f"Processing page №{page_num} with {len(offers)} offers.")
+
     # Extract details from each offer
     for offer in offers:
         try:
@@ -48,25 +50,45 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
             location = fetch_offer_details_by_value(offer, 'span.css-d5w927')
             employment_type = fetch_offer_details_by_value(offer, 'p.css-s7oag9')
             link = fetch_offer_details_by_value(offer, 'a.css-13gxtrp')
-            print({
-                "Title": title,
-                "Salary": salary,
-                "Location": location,
-                "Employment Type": employment_type,
-                "Link": link,
-            })
+
+            print_log('INFO', f"Finished processing offer in page №{page_num}.")
         except Exception as e:
             print_log('ERROR', f"Error processing offer in page №{page_num}:\n{e}")
 
 
-selenium_driver = get_driver(mode='windowed') # windowed for debugging
+driver = get_driver(mode='windowed') # windowed for debugging
 
 url = "https://www.olx.ua/uk/rabota/it-telekom-kompyutery/"
 
-process_page(selenium_driver, url, 1)
+# find the number of pages
+try:
+    driver.get(url)
 
-input("Press Enter to close the browser...\n")
+    driver.implicitly_wait(10)
 
-selenium_driver.quit()
+    # Locate the pagination element
+    pagination_element = driver.find_element(By.CSS_SELECTOR, 'ul.pagination-list')
+
+    # Find all page number elements within the pagination list
+    page_links = pagination_element.find_elements(By.CSS_SELECTOR, 'li[data-testid="pagination-list-item"] a')
+
+    # Extract the text (page numbers) and convert them to integers
+    page_numbers = [int(link.text) for link in page_links if link.text.isdigit()]
+
+    # Return the largest page number or 0 if the list is empty
+    max_page_num = max(page_numbers, default=0)
+    print_log('INFO', f"Max page number: {max_page_num}")
+except Exception as e:
+    print_log('ERROR', f"Error extracting page numbers:\n{e}")
+    exit(96)
+
+for page_num in range(1, 3):
+    page_url = f"{url}?page={page_num}"
+    process_page(driver, page_url, page_num)
+
+print_log('WARNING', 'Press any key to close the browser...')
+input()
+
+driver.quit()
 
 print_log('Info', 'Browser closed successfully.')
