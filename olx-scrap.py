@@ -1,5 +1,5 @@
 from general_functions import *
-
+import pandas as pd
 
 def fetch_offer_details_by_value(olx_offer: WebElement, value: str) -> WebElement or None:
     """
@@ -51,6 +51,14 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
             employment_type = fetch_offer_details_by_value(offer, 'p.css-s7oag9')
             link = fetch_offer_details_by_value(offer, 'a.css-13gxtrp')
 
+            df.loc[len(df)] = [
+                title.text if title else None,
+                salary.text if salary else None,
+                location.text if location else None,
+                employment_type.text if employment_type else None,
+                link.get_attribute('href') if link else None
+            ]
+
             print_log('INFO', f"Finished processing offer in page №{page_num}.")
         except Exception as e:
             print_log('ERROR', f"Error processing offer in page №{page_num}:\n{e}")
@@ -59,6 +67,9 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
 driver = get_driver(mode='windowed') # windowed for debugging
 
 url = "https://www.olx.ua/uk/rabota/it-telekom-kompyutery/"
+
+# init the dataframe
+df = pd.DataFrame(columns=['Title', 'Salary', 'Location', 'Employment Type', 'Link'])
 
 # find the number of pages
 try:
@@ -82,13 +93,17 @@ except Exception as e:
     print_log('ERROR', f"Error extracting page numbers:\n{e}")
     exit(96)
 
-for page_num in range(1, 3):
+for page_num in range(1, max_page_num + 1):
     page_url = f"{url}?page={page_num}"
     process_page(driver, page_url, page_num)
+print_log('INFO', 'All pages processed successfully!')
+
+# Save the dataframe to a CSV file
+df.to_csv('./data/olx_offers.csv', index=False)
+print_log('SUCCESS', r"Data saved to 'data/olx_offers.csv'.")
 
 print_log('WARNING', 'Press any key to close the browser...')
 input()
 
 driver.quit()
-
 print_log('Info', 'Browser closed successfully.')
