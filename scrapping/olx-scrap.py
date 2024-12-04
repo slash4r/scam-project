@@ -1,7 +1,8 @@
 from general_functions import *
 import pandas as pd
 
-def fetch_offer_details_by_value(olx_offer: WebElement, value: str) -> WebElement or None:
+
+def fetch_offer_details_by_value(olx_offer: WebElement, value: str) -> WebElement or None or tuple:
     """
     Fetch the details of an OLX offer by a specific value. If the value is not found, return None.
     :param olx_offer:
@@ -11,7 +12,19 @@ def fetch_offer_details_by_value(olx_offer: WebElement, value: str) -> WebElemen
     Example:
     fetch_offer_details_by_value(offer, 'h4.css-3hbl63').text
     """
+    if value == 'p.css-s7oag9':
+        try:
+            elements = olx_offer.find_elements(By.CSS_SELECTOR, value)
 
+            element1 = elements[0] if elements[0] else None
+            element2 = elements[1] if elements[1] else None
+            element3 = elements[2] if elements[2] else None
+
+            print_log('SUCCESS', f"Details extracted successfully!")
+            return element1, element2, element3
+        except Exception as e:
+            print_log('ERROR', f"Error extracting details of class {value}:\n{e}")
+            return None, None, None
 
     try:
         output = olx_offer.find_element(By.CSS_SELECTOR, value)
@@ -28,7 +41,7 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
     :param chrome_driver: The WebDriver instance.
     :param page_url: The URL of the OLX page.
     :param page_num: The page number.
-    :return: None
+    :return: None but updates the DataFrame.
 
     Example:
     process_page(selenium_driver, url, 1)
@@ -37,6 +50,8 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
     chrome_driver.get(page_url)
 
     chrome_driver.implicitly_wait(10)
+
+
 
     offers = chrome_driver.find_elements(By.CSS_SELECTOR, 'div[data-cy="l-card"]')
 
@@ -47,8 +62,7 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
         try:
             title = fetch_offer_details_by_value(offer, 'h4.css-3hbl63')
             salary = fetch_offer_details_by_value(offer, 'p.css-9i84wo')
-            location = fetch_offer_details_by_value(offer, 'span.css-d5w927')
-            employment_type = fetch_offer_details_by_value(offer, 'p.css-s7oag9')
+            location, employment_type, working_hours = fetch_offer_details_by_value(offer, 'p.css-s7oag9')
             link = fetch_offer_details_by_value(offer, 'a.css-13gxtrp')
 
             df.loc[len(df)] = [
@@ -56,6 +70,7 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
                 salary.text if salary else None,
                 location.text if location else None,
                 employment_type.text if employment_type else None,
+                working_hours.text if working_hours else None,
                 link.get_attribute('href') if link else None
             ]
 
@@ -69,7 +84,7 @@ driver = get_driver(mode='windowed') # windowed for debugging
 url = "https://www.olx.ua/uk/rabota/it-telekom-kompyutery/"
 
 # init the dataframe
-df = pd.DataFrame(columns=['Title', 'Salary', 'Location', 'Employment Type', 'Link'])
+df = pd.DataFrame(columns=['Title', 'Salary', 'Location', 'Employment_Type', 'Working_hours', 'Link'])
 
 # find the number of pages
 try:
@@ -93,15 +108,26 @@ except Exception as e:
     print_log('ERROR', f"Error extracting page numbers:\n{e}")
     exit(96)
 
-for page_num in range(1, max_page_num + 1):
-    page_url = f"{url}?page={page_num}"
-    process_page(driver, page_url, page_num)
-print_log('INFO', 'All pages processed successfully!')
 
-# Save the dataframe to a CSV file
-df.to_csv('./data/olx_offers.csv', index=False)
-print_log('SUCCESS', r"Data saved to 'data/olx_offers.csv'.")
 
+def main():
+    for page_num in range(1, max_page_num + 1):
+        page_url = f"{url}?page={page_num}"
+        process_page(driver, page_url, page_num)
+    print_log('INFO', 'All pages processed successfully!')
+
+    # Save the dataframe to a CSV file
+    df.to_csv('./data/olx_offers.csv', index=False)
+    print_log('SUCCESS', r"Data saved to 'data/olx_offers.csv'.")
+
+# updated process_page function
+def test():
+    process_page(driver, url, 1)
+    df.to_csv('../tests/test_olx_offers.csv', index=False)
+    print_log('INFO', 'Test completed successfully!')
+
+
+test()
 print_log('WARNING', 'Press any key to close the browser...')
 input()
 
