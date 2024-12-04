@@ -6,18 +6,21 @@ categorize_job <- function(title) {
     return("Software Development")
   } else if (grepl("тестувальник|qa|quality assurance|test", title, ignore.case = TRUE)) {
     return("Testing")
-  } else if (grepl("адміністратор|DevOps|sysadmin|network|infrastructure", title, ignore.case = TRUE)) {
+  } else if (grepl("адміністратор|DevOps|sysadmin|network|infrastructure|administrator|системный администратор", title, ignore.case = TRUE)) {
     return("System Administration / DevOps")
-  } else if (grepl("аналітик|data scientist|data engineer|big data|data", title, ignore.case = TRUE)) {
+  } else if (grepl("аналітик|data scientist|data engineer|big data|data|analyst", title, ignore.case = TRUE)) {
     return("Data Analysis / Data Science")
   } else if (grepl("AI|machine learning|штучний інтелект|deep learning|computer vision|research|науковий співробітник", title, ignore.case = TRUE)) {
     return("AI / Research")
   }
-  else if (grepl("дизайнер|ux|ui|graphic|web design|illustrator|photoshop", title, ignore.case = TRUE)) {
+  else if (grepl("дизайнер|ux|ui|graphic|web design|illustrator|photoshop|designer", title, ignore.case = TRUE)) {
     return("Design")
   }
-  else if (grepl("ремонт|maintenance|technician|service", title, ignore.case = TRUE)) {
+  else if (grepl("ремонт|maintenance|technician|service|монтажник", title, ignore.case = TRUE)) {
     return("Repair / Maintenance")
+  }
+  else if (grepl("інженер|engineering|engineer|mechanical engineer|civil engineer|engineer", title, ignore.case = TRUE)) {
+    return("Engineering")
   }
   return("Non-IT")
 }
@@ -80,8 +83,12 @@ happy_tb <- happy_tb %>%
   mutate(
     Salary_from = as.numeric(Salary_from),
     Salary_to = as.numeric(Salary_to),
-    site_name = 'HappyMonday'
-  )
+    site_name = 'HappyMonday',
+Location = ifelse(
+      str_detect(Location, "Україна"), 
+      str_sub(Location, 1, nchar(Location) - 10), 
+      Location
+    )  )
 happy_tb<- happy_tb %>% 
   select(-`...5`)
 
