@@ -499,15 +499,7 @@ ggplot(avg_salary_vacancies, aes(x = Total_Jobs, y = Average_Salary, label = Job
 
 ## Average Salary by Job Category
 
-### Insights:
-- Job categories with higher average salaries often have fewer vacancies.
-- Categories with significant demand include **Data Science**, **Cloud Engineering**, and **DevOps**.
-
-### Visualization:
-![Average Salary by Job Category](average_salary_by_category_plot.png)
-
-### Code:
-```{r}
+```{r echo=FALSE, eval=TRUE}
 ggplot(average_salary_by_category, aes(x = reorder(Job_Category, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
   geom_bar(stat = "identity") +
   coord_flip() +
@@ -523,17 +515,17 @@ ggplot(average_salary_by_category, aes(x = reorder(Job_Category, Average_Salary)
 
 ---
 
+### Average Salary by Job Category. Insights:
+- **Highest Salary**: Software Development offers the highest average salary.
+- **In-Demand Roles**: Data Science and AI/Research have competitive salaries and growing demand.
+- **Lower Salaries**: Testing and Repair/Maintenance have the lowest average salaries but more vacancies.
+- **Specialization Trend**: Highly specialized roles offer higher pay with fewer openings.
+
+---
+
 ## Top Cities for IT Jobs
 
-### Insights:
-- **Kyiv**, **Lviv**, and **Kharkiv** offer the highest salaries and largest number of IT vacancies.
-- Smaller cities show significantly fewer opportunities but maintain competitive salaries.
-
-### Visualization:
-![Average Salary by City](top_cities_plot.png)
-
-### Code:
-```{r}
+```{r echo=FALSE, eval=TRUE}
 ggplot(top_cities, aes(x = reorder(Location, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
   geom_bar(stat = "identity") +
   coord_flip() +
@@ -549,17 +541,17 @@ ggplot(top_cities, aes(x = reorder(Location, Average_Salary), y = Average_Salary
 
 ---
 
+### Top Cities for IT Jobs. Insights:
+- **Highest Salaries**: Remote positions offer the highest average salaries, reflecting flexibility as a key factor in compensation.
+- **Top City**: Kyiv leads in both average salary and total vacancies, making it a hub for IT jobs.
+- **Competitive Markets**: Cities like Odesa, Lviv, and Dnipro offer substantial salaries but have fewer vacancies compared to Kyiv.
+- **Smaller Cities**: Vinnytsia has fewer vacancies and lower average salaries, indicating limited opportunities compared to larger cities.
+
+---
+
 ## Remote vs Office Work
 
-### Insights:
-- **Remote jobs** often have slightly higher average salaries than office-based roles.
-- A significant number of vacancies are now remote-friendly, reflecting global IT trends.
-
-### Visualization:
-![Remote vs Office Work](remote_vs_office_plot.png)
-
-### Code:
-```{r}
+```{r echo=FALSE, eval=TRUE}
 ggplot(remote_vs_office, aes(x = Employment_Type, y = Average_Salary, fill = Total_Jobs)) +
   geom_bar(stat = "identity", show.legend = TRUE) +
   labs(
@@ -576,17 +568,16 @@ ggplot(remote_vs_office, aes(x = Employment_Type, y = Average_Salary, fill = Tot
 
 ---
 
+### Remote vs Office Work. Insights:
+- **Higher Salaries for Full-Time Work**: Full-time roles offer significantly higher average salaries compared to combined full-time/part-time opportunities.
+- **Vacancy Distribution**: Full-time roles dominate in the number of total vacancies, indicating strong demand for dedicated employees.
+- **Part-Time Trade-Off**: Combined full-time/part-time roles offer flexibility but with a noticeable reduction in average salary.
+
+---
+
 ## Percentage of Companies Showing Salaries
 
-### Insights:
-- A large portion of job postings across categories do not display salary information.
-- **Job Categories like Data Science and AI** tend to reveal salaries more often.
-
-### Visualization:
-![Salary Visibility by Job Category](salary_visibility_plot.png)
-
-### Code:
-```{r}
+```{r echo=FALSE, eval=TRUE}
 ggplot(salary_visibility, aes(x = reorder(Job_Category, Percentage_Companies_Showing_Salaries), y = Percentage_Companies_Showing_Salaries, fill = Total_Jobs)) +
   geom_bar(stat = "identity", show.legend = TRUE) +
   coord_flip() +
@@ -603,16 +594,17 @@ ggplot(salary_visibility, aes(x = reorder(Job_Category, Percentage_Companies_Sho
 
 ---
 
+### % Showing Salaries. Insights:
+- **Highest Transparency**: Repair/Maintenance roles lead in salary transparency.
+- **Software Development**: Fewer companies disclose salaries despite high pay.
+- **Specialized Roles**: AI/Research and Data Science have lower transparency.
+- **General Trend**: Less specialized roles show higher transparency.
+
+---
+
 ## Salary Distribution Across IT Jobs
 
-### Insights:
-- Salaries for IT jobs cluster between **20,000 UAH and 60,000 UAH**, with some outliers exceeding 200,000 UAH.
-
-### Visualization:
-![Salary Distribution](salary_distribution_plot.png)
-
-### Code:
-```{r}
+```{r echo=FALSE, eval=TRUE}
 ggplot(job_data, aes(x = Salary)) +
   geom_histogram(binwidth = 5000, fill = "skyblue", color = "black") +
   scale_x_continuous(
@@ -627,3 +619,11 @@ ggplot(job_data, aes(x = Salary)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+---
+
+### Salary Distribution Across IT Jobs. Insights:
+- **Cluster**: Most salaries fall between **20,000-40,000 UAH**.
+- **Higher Salaries Rare**: Few postings exceed **60,000 UAH**.
+- **Outliers**: High salaries over **100,000 UAH** are rare.
+- **Skewed Distribution**: Majority of jobs are in lower salary ranges.
