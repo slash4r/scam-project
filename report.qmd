@@ -1,16 +1,23 @@
 ---
 title: "Project 1"
-subtitle: "IT vacancy research"
+subtitle: "IT Vacancy Research"
 author: "Kvitka Yarish, Zakhar Staryk, Penys Mykhailov"
 date: "2024-12-06"
-format: 
+
+format:
   revealjs:
     theme: simple
     slideNumber: true
     transition: fade
     incremental: true
-    logo: "logo_black-01.png"
+    logo: logo_black-01.png
     navigation-mode: vertical
+engines:
+  python: python3
+  r: Rscript
+execute:
+  echo: true
+  eval: true
 ---
 
 # Data Scraping: An Overview
@@ -27,19 +34,15 @@ format:
 
 ## Code Breakdown: Import Libraries
 
-```{python}
-# | echo: true
-# | eval: false
-# | python.reticulate: false
-# Import necessary libraries
-
-from general_functions import *  # Custom utility functions for logging and other tasks
+```{python echo=TRUE, eval=TRUE, output=FALSE}
 import pandas as pd  # Data manipulation and storage
 
 # Selenium imports for web scraping
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
+
+from general_functions import *  # Custom functions for logging and other tasks
 ```
 
 - **General Functions**: Helper functions like `print_log` for better logging.
@@ -50,20 +53,30 @@ from selenium.webdriver.remote.webelement import WebElement
 
 ## Fetching Offer Details
 
+```{python}
+def fetch_offer_details_by_value(olx_offer: WebElement, value: str) -> WebElement or None or list:
+    try:
+        elements = olx_offer.find_elements(By.CSS_SELECTOR, value)
+        if not elements:
+            print_log('WARNING', f"No elements found for selector {value}.")
+            return None
+        if value == 'p.css-s7oag9':
+            return elements  
+        elif value == 'span.css-17tytap':
+            return elements
+        return elements[0]  # Single element for title or salary
+    except Exception as e:
+        print_log('ERROR', f"Error extracting details:\n{e}")
+        return None
+```
 
-
-- **Purpose**: Extracts details like title, salary, and job location from a single job offer.
-- **Handles Cases**: Differentiates between single and multiple elements based on the CSS selector.
+- Extracts details like title, salary... from a single offer.
+- **Complex Cases**: Differentiates between single and multiple elements based on the CSS selector.
 
 ---
 
 ## Processing a Single Page
 ```{python}
-# | echo: true
-# | scroll: true
-# | start: 2
-# | eval: false
-# | python.reticulate: false
 def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) -> None:
     chrome_driver.get(page_url)
     chrome_driver.implicitly_wait(10)
@@ -81,12 +94,12 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
 
 
 
-- **Navigates to Page**: The function navigates to the provided `page_url` using Selenium.
-- **Extracts Details**: Iterates through offers on the page, extracting details using the `fetch_offer_details_by_value` function.
+- Navigates to the provided `page_url` using Selenium.
+- Extracting details using the `fetch_offer_details_by_value` function.
 
 ---
 
-## Expanding Data Scraping Across Platforms
+## Scraping Across Platforms
 
 We applied similar scraping methods to multiple job listing websites, including:
 
@@ -96,22 +109,49 @@ We applied similar scraping methods to multiple job listing websites, including:
 - This approach allowed us to compile a comprehensive dataset of IT vacancies, providing insights into trends and opportunities across platforms.
 
 # Data cleaning 
-The primary objective in this step was to standardize job data from various sources, clean it, and group the professions into meaningful categories. This included handling salary ranges, standardizing employment types, and cleaning location names.
-## Creating Essential Columns
-We standardized the dataset by creating the following columns:
-    - Title: Job title.
-    - Location: Job location, with remote jobs marked as "remote".
-    - Company: The company offering the job.
-    - Employment_Type: Employment type (e.g., Full-Time, Part-Time).
-    - site_name: Source of the job posting.
-    - Salary_from: Minimum salary.
-    - Salary_to: Maximum salary.
-    - Job_Category: Grouped job categories
 
-### Code sample. All code can be found in file data_cleaning.r
+```{r echo=FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(stringr)
+library(scales)
+```
+
+---
+
+## Data Cleaning Process
+The primary objective in this step was to standardize job data from various sources, clean it, and group the professions into meaningful categories. This included handling salary ranges, standardizing employment types, and cleaning location names.
+
+---
+
+## Creating Essential Columns
+
+We standardized the dataset by creating the following columns:
+
+- Title: Job title.
+- Location: Job location, with remote jobs marked as "remote".
+- Company: The company offering the job.
+- Employment_Type: Employment type (e.g., Full-Time, Part-Time).
+- site_name: Source of the job posting.
+
+---
+
+## Creating Essential Columns
+
+We standardized the dataset by creating the following columns:
+
+- Salary_from: Minimum salary.
+- Salary_to: Maximum salary.
+- Job_Category: Grouped job categories
+
+---
+
+## Code sample from `data_cleaning.r`
+
 ```{r}
-# | echo: true
-# | eval: false
+govern_tb <- read_csv('./data/govern_offers2.csv')
 
 govern_tb <- govern_tb %>%
 mutate(
@@ -126,6 +166,13 @@ govern_tb <- govern_tb %>%
 select(-c(Site, Salary))
 
 govern_tb$Employment_Type %>% unique()
+```
+
+---
+
+## Code sample from `data_cleaning.r`
+
+```{r}
 govern_tb <- govern_tb %>%
 mutate(
     Location = ifelse(str_detect(Employment_Type,"дистанційно"), "remote", Location),
@@ -136,12 +183,15 @@ mutate(
         str_detect(Employment_Type, "проектна") ~ "Part-Time"
     )
 )
-
-
+govern_tb$Employment_Type %>% unique()
 ```
+
+---
+
 ## Grouping Job Titles into Categories
 
 Job titles were categorized into meaningful groups to simplify analysis. Below are the groups used:
+
 - Software Development
 - Testing
 - System Administration / DevOps
@@ -149,11 +199,13 @@ Job titles were categorized into meaningful groups to simplify analysis. Below a
 - AI / Research
 - Design
 - Repair / Maintenance
-- Engineering
-- Non-IT (clean out the Non-IT professions)
+- ... and more
+
+---
+
+### Code for Categorizing Job Titles
+
 ```{r}
-# | echo: true
-# | eval: false
 categorize_job <- function(title) {
   # Check for IT subcategories first
   if (grepl("програміст|розробник|software engineer|developer|frontend|backend|fullstack|HTML", title, ignore.case = TRUE)) {
@@ -178,5 +230,400 @@ categorize_job <- function(title) {
   }
   return("Non-IT")
 }
+```
 
+# Data Analysis: Insights and Trends
+
+```{r echo=FALSE, eval=TRUE, output=FALSE}
+file_path <- "./data/all_jobs2.0.csv"
+job_data <- read_csv(file_path, show_col_types = FALSE)
+
+# Filter out non-IT vacancies (adjust the condition as per your dataset)
+job_data <- job_data %>%
+  filter(Job_Category != "Non-IT")
+
+extract_salary <- function(salary_str) {
+  if (is.na(salary_str)) return(NA)
+
+  salary_str <- gsub("[^0-9–-]", "", salary_str)
+
+  if (str_detect(salary_str, "–|-")) {
+    parts <- as.numeric(unlist(str_split(salary_str, "–|-")))
+    return(mean(parts, na.rm = TRUE))
+  }
+
+  return(as.numeric(salary_str))
+}
+
+job_data <- job_data %>%
+  mutate(
+    Salary = sapply(Salary, extract_salary),
+    Salary_from = as.numeric(Salary_from),
+    Salary_to = as.numeric(Salary_to),
+    Salary = ifelse(is.na(Salary), (Salary_from + Salary_to) / 2, Salary)
+  )
+
+job_data <- job_data %>%
+  mutate(Salary_Provided = !is.na(Salary))
+
+salary_visibility <- job_data %>%
+  group_by(Job_Category) %>%
+  summarize(
+    Percentage_Companies_Showing_Salaries = mean(Salary_Provided, na.rm = TRUE) * 100,
+    Total_Jobs = n(),
+    .groups = "drop"
+  )
+
+salary_visibility_by_platform <- job_data %>%
+  group_by(site_name) %>%
+  summarize(
+    Percentage_Salaries_Showing = mean(Salary_Provided, na.rm = TRUE) * 100,
+    Total_Jobs = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Percentage_Salaries_Showing))
+
+job_data <- job_data %>%
+  filter(Salary > 0 & Salary < 500000)
+
+minimum_vacancies <- 30
+average_salary_by_category <- job_data %>%
+  group_by(Job_Category) %>%
+  summarize(
+    Average_Salary = mean(Salary, na.rm = TRUE),
+    Total_Jobs = n(),
+    Salary_Std_Dev = sd(Salary, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Total_Jobs >= minimum_vacancies) %>%
+  arrange(desc(Average_Salary))
+
+average_salary_by_city <- job_data %>%
+  group_by(Location) %>%
+  summarize(
+    Average_Salary = mean(Salary, na.rm = TRUE),
+    Total_Jobs = n(),
+    Salary_Std_Dev = sd(Salary, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Total_Jobs >= minimum_vacancies) %>%
+  arrange(desc(Average_Salary))
+
+remote_vs_office <- job_data %>%
+  group_by(Employment_Type) %>%
+  summarize(
+    Average_Salary = mean(Salary, na.rm = TRUE),
+    Total_Jobs = n(),
+    Salary_Std_Dev = sd(Salary, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(!is.na(Employment_Type), Total_Jobs >= minimum_vacancies) %>%
+  arrange(desc(Average_Salary))
+
+ggplot(average_salary_by_category, aes(x = reorder(Job_Category, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Average Salary by Job Category (IT Only, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Job Category",
+    y = "Average Salary (UAH)"
+  ) +
+  scale_fill_gradient(name = "Total Vacancies", low = "lightblue", high = "darkblue") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+top_cities <- average_salary_by_city %>%
+  slice_max(order_by = Average_Salary, n = 15)
+
+ggplot(top_cities, aes(x = reorder(Location, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Average Salary by City (IT Only, Top 15, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "City",
+    y = "Average Salary (UAH)"
+  ) +
+  scale_fill_gradient(name = "Total Vacancies", low = "lightgreen", high = "darkgreen") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+ggplot(remote_vs_office, aes(x = Employment_Type, y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity", show.legend = TRUE) +
+  labs(
+    title = "Remote vs Office Work: Average Salary (IT Only, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Employment Type",
+    y = "Average Salary (UAH)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "pink", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(salary_visibility, aes(x = reorder(Job_Category, Percentage_Companies_Showing_Salaries), y = Percentage_Companies_Showing_Salaries, fill = Total_Jobs)) +
+  geom_bar(stat = "identity", show.legend = TRUE) +
+  coord_flip() +
+  labs(
+    title = "Percentage of Companies Showing Salaries by Job Category (IT Only)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Job Category",
+    y = "Percentage (%)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "yellow", high = "orange") +
+  theme_minimal()
+
+ggplot(salary_visibility_by_platform, aes(x = reorder(site_name, Percentage_Salaries_Showing), y = Percentage_Salaries_Showing, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Percentage of Job Postings Showing Salaries by Platform (IT Only)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Platform",
+    y = "Percentage (%)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+ggplot(job_data, aes(x = Salary)) +
+  geom_histogram(binwidth = 5000, fill = "skyblue", color = "black") +
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = seq(0, 300000, by = 20000)
+  ) +
+  labs(
+    title = "Distribution of Salaries Across All IT Job Postings",
+    x = "Salary (UAH)",
+    y = "Number of Job Postings"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+boxplot_data <- job_data %>%
+  group_by(Job_Category) %>%
+  filter(n() >= minimum_vacancies)
+
+ggplot(boxplot_data, aes(x = reorder(Job_Category, Salary, median), y = Salary)) +
+  geom_boxplot(fill = "lightcoral") +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(
+    title = "Salary Distribution by Job Category (IT Only, Minimum 30 Vacancies)",
+    x = "Job Category",
+    y = "Salary (UAH)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+employment_type_data <- job_data %>%
+  filter(!is.na(Employment_Type)) %>%
+  group_by(Job_Category, Employment_Type) %>%
+  summarize(
+    Total_Jobs = n(),
+    .groups = "drop"
+  )
+
+employment_type_data <- employment_type_data %>%
+  group_by(Job_Category) %>%
+  mutate(Percentage = Total_Jobs / sum(Total_Jobs) * 100)
+
+employment_type_data <- employment_type_data %>%
+  group_by(Job_Category) %>%
+  filter(sum(Total_Jobs) >= minimum_vacancies)
+
+ggplot(employment_type_data, aes(x = Job_Category, y = Percentage, fill = Employment_Type)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Proportion of Employment Types within IT Job Categories (Minimum 30 Vacancies)",
+    x = "Job Category",
+    y = "Percentage (%)",
+    fill = "Employment Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+top_categories <- job_data %>%
+  group_by(Job_Category) %>%
+  summarize(
+    Total_Jobs = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Total_Jobs)) %>%
+  slice_max(Total_Jobs, n = 10)
+
+ggplot(top_categories, aes(x = reorder(Job_Category, Total_Jobs), y = Total_Jobs)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(
+    title = "Top 10 IT Job Categories by Total Vacancies",
+    x = "Job Category",
+    y = "Number of Vacancies"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+
+avg_salary_vacancies <- job_data %>%
+  group_by(Job_Category) %>%
+  summarize(
+    Average_Salary = mean(Salary, na.rm = TRUE),
+    Total_Jobs = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(Average_Salary))
+
+ggplot(avg_salary_vacancies, aes(x = Total_Jobs, y = Average_Salary, label = Job_Category)) +
+  geom_point(color = "darkorange", size = 3) +
+  geom_text(vjust = -0.5, size = 3) +
+  scale_y_continuous(labels = scales::comma) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(
+    title = "Average Salary vs Total Vacancies by IT Job Category",
+    x = "Total Vacancies",
+    y = "Average Salary (UAH)"
+  ) +
+  theme_minimal()
+```
+
+## Overview of the Dataset
+
+- **Filtered Data**: Non-IT jobs were removed.
+- **Total Jobs Analyzed**: Jobs with valid salary information were included.
+- **Key Variables**: Salary, Job Category, Location, Employment Type, and Platform.
+
+---
+
+## Average Salary by Job Category
+
+### Insights:
+- Job categories with higher average salaries often have fewer vacancies.
+- Categories with significant demand include **Data Science**, **Cloud Engineering**, and **DevOps**.
+
+### Visualization:
+![Average Salary by Job Category](average_salary_by_category_plot.png)
+
+### Code:
+```{r}
+ggplot(average_salary_by_category, aes(x = reorder(Job_Category, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Average Salary by Job Category (IT Only, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Job Category",
+    y = "Average Salary (UAH)"
+  ) +
+  scale_fill_gradient(name = "Total Vacancies", low = "lightblue", high = "darkblue") +
+  theme_minimal()
+```
+
+---
+
+## Top Cities for IT Jobs
+
+### Insights:
+- **Kyiv**, **Lviv**, and **Kharkiv** offer the highest salaries and largest number of IT vacancies.
+- Smaller cities show significantly fewer opportunities but maintain competitive salaries.
+
+### Visualization:
+![Average Salary by City](top_cities_plot.png)
+
+### Code:
+```{r}
+ggplot(top_cities, aes(x = reorder(Location, Average_Salary), y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Average Salary by City (IT Only, Top 15, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "City",
+    y = "Average Salary (UAH)"
+  ) +
+  scale_fill_gradient(name = "Total Vacancies", low = "lightgreen", high = "darkgreen") +
+  theme_minimal()
+```
+
+---
+
+## Remote vs Office Work
+
+### Insights:
+- **Remote jobs** often have slightly higher average salaries than office-based roles.
+- A significant number of vacancies are now remote-friendly, reflecting global IT trends.
+
+### Visualization:
+![Remote vs Office Work](remote_vs_office_plot.png)
+
+### Code:
+```{r}
+ggplot(remote_vs_office, aes(x = Employment_Type, y = Average_Salary, fill = Total_Jobs)) +
+  geom_bar(stat = "identity", show.legend = TRUE) +
+  labs(
+    title = "Remote vs Office Work: Average Salary (IT Only, Minimum 30 Vacancies)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Employment Type",
+    y = "Average Salary (UAH)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "pink", high = "red") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+---
+
+## Percentage of Companies Showing Salaries
+
+### Insights:
+- A large portion of job postings across categories do not display salary information.
+- **Job Categories like Data Science and AI** tend to reveal salaries more often.
+
+### Visualization:
+![Salary Visibility by Job Category](salary_visibility_plot.png)
+
+### Code:
+```{r}
+ggplot(salary_visibility, aes(x = reorder(Job_Category, Percentage_Companies_Showing_Salaries), y = Percentage_Companies_Showing_Salaries, fill = Total_Jobs)) +
+  geom_bar(stat = "identity", show.legend = TRUE) +
+  coord_flip() +
+  labs(
+    title = "Percentage of Companies Showing Salaries by Job Category (IT Only)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Job Category",
+    y = "Percentage (%)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "yellow", high = "orange") +
+  theme_minimal()
+```
+
+---
+
+## Salary Distribution Across IT Jobs
+
+### Insights:
+- Salaries for IT jobs cluster between **20,000 UAH and 60,000 UAH**, with some outliers exceeding 200,000 UAH.
+
+### Visualization:
+![Salary Distribution](salary_distribution_plot.png)
+
+### Code:
+```{r}
+ggplot(job_data, aes(x = Salary)) +
+  geom_histogram(binwidth = 5000, fill = "skyblue", color = "black") +
+  scale_x_continuous(
+    labels = scales::comma,
+    breaks = seq(0, 300000, by = 20000)
+  ) +
+  labs(
+    title = "Distribution of Salaries Across All IT Job Postings",
+    x = "Salary (UAH)",
+    y = "Number of Job Postings"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
