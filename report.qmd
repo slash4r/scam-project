@@ -1,0 +1,28 @@
+---
+title: "Project 1"
+subtitle: "IT vacancy research"
+author: "Kvitka Yarish, Zakhar Staryk, Penys Mykhailov"
+date: "2024-12-06"
+format: 
+  revealjs:
+    theme: simple
+    slideNumber: true
+    transition: fade
+    incremental: true
+    logo: "logo_black-01.png"
+    navigation-mode: vertical
+---
+
+# Section 1
+
+## Slide 1
+This is the first horizontal slide
+
+## Slide 2
+This is the second horizontal slide
+
+### Slide 2.1
+This should be a vertical slide under the second horizontal slide, but does not work
+
+## Slide 3 {.scrollable}
+This should be a scrollable slide but does not work
