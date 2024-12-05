@@ -13,16 +13,81 @@ format:
     navigation-mode: vertical
 ---
 
-# Section 1
+# Data Scraping: An Overview
 
-## Slide 1
-This is the first horizontal slide
+## Purpose of Data Scraping
 
-## Slide 2
-This is the second horizontal slide
+- **Goal**: Extract IT job listings from different websites.
+- **Tools Used**: 
+    - Python
+    - Selenium (for automated web scraping)
+    - Pandas (for data storage and manipulation)
 
-### Slide 2.1
-This should be a vertical slide under the second horizontal slide, but does not work
+---
 
-## Slide 3 {.scrollable}
-This should be a scrollable slide but does not work
+## Code Breakdown: Import Libraries
+
+```{python}
+# | echo: true
+
+# Import necessary libraries
+from general_functions import *  # Custom utility functions for logging and other tasks
+import pandas as pd  # Data manipulation and storage
+
+# Selenium imports for web scraping
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
+```
+
+- **General Functions**: Helper functions like `print_log` for better logging.
+- **Pandas**: Used to store data in a structured `DataFrame`.
+- **Selenium**: Automates browser interactions for web scraping.
+
+---
+
+## Fetching Offer Details
+
+
+
+- **Purpose**: Extracts details like title, salary, and job location from a single job offer.
+- **Handles Cases**: Differentiates between single and multiple elements based on the CSS selector.
+
+---
+
+## Processing a Single Page
+```{python}
+# | echo: true
+# | scroll: true
+# | start: 2
+
+def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) -> None:
+    chrome_driver.get(page_url)
+    chrome_driver.implicitly_wait(10)
+    offers = chrome_driver.find_elements(By.CSS_SELECTOR, 'div[data-cy="l-card"]')
+    for offer in offers:
+        try:
+            title = fetch_offer_details_by_value(offer, 'h4.css-3hbl63')
+            salary = fetch_offer_details_by_value(offer, 'p.css-9i84wo')
+            class_s7oag9 = fetch_offer_details_by_value(offer, 'p.css-s7oag9')
+            location, employment_type, working_hours = (class_s7oag9 + [None]*3)[:3]
+            print_log('INFO', f"Processed offer on page {page_num}.")
+        except Exception as e:
+            print_log('ERROR', f"Error processing offer: {e}")
+```
+
+
+
+- **Navigates to Page**: The function navigates to the provided `page_url` using Selenium.
+- **Extracts Details**: Iterates through offers on the page, extracting details using the `fetch_offer_details_by_value` function.
+
+---
+
+## Expanding Data Scraping Across Platforms
+
+We applied similar scraping methods to multiple job listing websites, including:
+
+- **OLX**, **Happy House**, **Robota.ua**, **DOU**, and **Work.ua**.
+- Adjusted for dynamic elements, pagination, and platform-specific layouts.
+- Ensured robust error handling for structural variations.
+- This approach allowed us to compile a comprehensive dataset of IT vacancies, providing insights into trends and opportunities across platforms.
