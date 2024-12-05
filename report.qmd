@@ -29,8 +29,10 @@ format:
 
 ```{python}
 # | echo: true
-
+# | eval: false
+# | python.reticulate: false
 # Import necessary libraries
+
 from general_functions import *  # Custom utility functions for logging and other tasks
 import pandas as pd  # Data manipulation and storage
 
@@ -60,7 +62,8 @@ from selenium.webdriver.remote.webelement import WebElement
 # | echo: true
 # | scroll: true
 # | start: 2
-
+# | eval: false
+# | python.reticulate: false
 def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) -> None:
     chrome_driver.get(page_url)
     chrome_driver.implicitly_wait(10)
@@ -87,7 +90,93 @@ def process_page(chrome_driver: webdriver.Chrome, page_url: str, page_num: int) 
 
 We applied similar scraping methods to multiple job listing websites, including:
 
-- **OLX**, **Happy House**, **Robota.ua**, **DOU**, and **Work.ua**.
+- **OLX**, **Happy House**, **Robota.ua**, **Державна служба зайнятості**, and **Work.ua**.
 - Adjusted for dynamic elements, pagination, and platform-specific layouts.
 - Ensured robust error handling for structural variations.
 - This approach allowed us to compile a comprehensive dataset of IT vacancies, providing insights into trends and opportunities across platforms.
+
+# Data cleaning 
+The primary objective in this step was to standardize job data from various sources, clean it, and group the professions into meaningful categories. This included handling salary ranges, standardizing employment types, and cleaning location names.
+## Creating Essential Columns
+We standardized the dataset by creating the following columns:
+    - Title: Job title.
+    - Location: Job location, with remote jobs marked as "remote".
+    - Company: The company offering the job.
+    - Employment_Type: Employment type (e.g., Full-Time, Part-Time).
+    - site_name: Source of the job posting.
+    - Salary_from: Minimum salary.
+    - Salary_to: Maximum salary.
+    - Job_Category: Grouped job categories
+
+### Code sample. All code can be found in file data_cleaning.r
+```{r}
+# | echo: true
+# | eval: false
+
+govern_tb <- govern_tb %>%
+mutate(
+    Salary_from = Salary %>% str_remove_all(" ") %>%
+    str_remove("грн") %>% as.numeric(),
+    Salary_to = Salary %>% str_remove_all(" ") %>%
+    str_remove("грн") %>% as.numeric()
+    
+)
+
+govern_tb <- govern_tb %>%
+select(-c(Site, Salary))
+
+govern_tb$Employment_Type %>% unique()
+govern_tb <- govern_tb %>%
+mutate(
+    Location = ifelse(str_detect(Employment_Type,"дистанційно"), "remote", Location),
+    Employment_Type = case_when(
+        Employment_Type == "повна,неповна" ~ "Full-Time, Part-Time",
+        str_detect(Employment_Type, "повна") ~ "Full-Time",
+        str_detect(Employment_Type, "неповна") ~ "Part-Time",
+        str_detect(Employment_Type, "проектна") ~ "Part-Time"
+    )
+)
+
+
+```
+## Grouping Job Titles into Categories
+
+Job titles were categorized into meaningful groups to simplify analysis. Below are the groups used:
+- Software Development
+- Testing
+- System Administration / DevOps
+- Data Analysis / Data Scienc
+- AI / Research
+- Design
+- Repair / Maintenance
+- Engineering
+- Non-IT (clean out the Non-IT professions)
+```{r}
+# | echo: true
+# | eval: false
+categorize_job <- function(title) {
+  # Check for IT subcategories first
+  if (grepl("програміст|розробник|software engineer|developer|frontend|backend|fullstack|HTML", title, ignore.case = TRUE)) {
+    return("Software Development")
+  } else if (grepl("тестувальник|qa|quality assurance|test|тестування|тестировщиков|Тестирование", title, ignore.case = TRUE)) {
+    return("Testing")
+  } else if (grepl("адміністратор|DevOps|sysadmin|network|infrastructure|administrator|системный администратор", title, ignore.case = TRUE)) {
+    return("System Administration / DevOps")
+  } else if (grepl("аналітик|data scientist|data engineer|big data|data|analyst", title, ignore.case = TRUE)) {
+    return("Data Analysis / Data Science")
+  } else if (grepl("AI|machine learning|штучний інтелект|deep learning|computer vision|research|науковий співробітник", title, ignore.case = TRUE)) {
+    return("AI / Research")
+  }
+  else if (grepl("дизайнер|ux|ui|graphic|web design|illustrator|photoshop|designer|artist", title, ignore.case = TRUE)) {
+    return("Design")
+  }
+  else if (grepl("ремонт|maintenance|technician|service|монтажник|майстер|Технік", title, ignore.case = TRUE)) {
+    return("Repair / Maintenance")
+  }
+  else if (grepl("інженер|engineering|engineer|mechanical engineer|civil engineer|engineer|Збиральник", title, ignore.case = TRUE)) {
+    return("Engineering")
+  }
+  return("Non-IT")
+}
+
+```
