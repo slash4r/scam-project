@@ -84,11 +84,8 @@ happy_tb <- happy_tb %>%
     Salary_from = as.numeric(Salary_from),
     Salary_to = as.numeric(Salary_to),
     site_name = 'HappyMonday',
-Location = ifelse(
-      str_detect(Location, "Україна"), 
-      str_sub(Location, 1, nchar(Location) - 10), 
-      Location
-    )  )
+    Location = str_remove_all(Location, "\\s*\\(Україна\\)\\s*")
+  )
 happy_tb<- happy_tb %>% 
   select(-`...5`)
 
@@ -101,4 +98,31 @@ all_jobs <- bind_rows(govern_tb, happy_tb)
 glimpse(all_jobs)
 
 
-write.csv(all_jobs, "all_jobs.csv", row.names = FALSE)
+# write.csv(all_jobs, "all_jobs.csv", row.names = FALSE)
+
+olx_tb <- read_csv("data/olx_offers.csv")
+olx_tb %>% glimpse()
+
+
+
+olx_tb <- olx_tb %>% mutate(
+  Salary_from = str_remove_all(Salary, "грн.*| ") %>% 
+                str_extract("^\\d+"),
+  Salary_to = str_remove_all(Salary, "грн.*| ") %>% 
+              str_extract("(?<=[-–])\\d+")
+)%>% 
+  mutate(
+    Salary_from = as.numeric(Salary_from),
+    Salary_to = as.numeric(Salary_to),
+    site_name = 'OLX',
+  )
+
+olx_tb <- olx_tb %>% mutate(
+  Location = ifesle(Employment_Type %in% c("Удаленная работа","Віддалена робота"),"remote", Location ),
+  Location = strsplit(Location, ", ")[[1]][1]
+)
+
+olx_tb %>% glimpse()
+olx_tb$Salary_to
+
+olx_tb$Employment_Type %>% unique()
