@@ -575,6 +575,30 @@ ggplot(remote_vs_office, aes(x = Employment_Type, y = Average_Salary, fill = Tot
 
 ---
 
+## Proportion of Employment Types within IT Job Categories
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(employment_type_data, aes(x = Job_Category, y = Percentage, fill = Employment_Type)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Proportion of Employment Types within IT Job Categories (Minimum 30 Vacancies)",
+    x = "Job Category",
+    y = "Percentage (%)",
+    fill = "Employment Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+```
+
+---
+
+- **Full-Time Dominance**: Most IT job categories are overwhelmingly full-time, accounting for nearly 100% of roles.
+- **Limited Flexibility**: Part-time and mixed (full-time, part-time) roles are scarce across all categories.
+- **Testing and DevOps**: These categories show slightly more diversity in employment types compared to others.
+
+---
+
 ## Percentage of Companies Showing Salaries
 
 ```{r echo=FALSE, eval=TRUE}
@@ -599,6 +623,35 @@ ggplot(salary_visibility, aes(x = reorder(Job_Category, Percentage_Companies_Sho
 - **Software Development**: Fewer companies disclose salaries despite high pay.
 - **Specialized Roles**: AI/Research and Data Science have lower transparency.
 - **General Trend**: Less specialized roles show higher transparency.
+
+---
+
+## Percentage of Job Postings Showing Salaries by Platform
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(salary_visibility_by_platform, aes(x = reorder(site_name, Percentage_Salaries_Showing), y = Percentage_Salaries_Showing, fill = Total_Jobs)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Percentage of Job Postings Showing Salaries by Platform (IT Only)",
+    subtitle = "Bars colored by total number of vacancies",
+    x = "Platform",
+    y = "Percentage (%)",
+    fill = "Total Vacancies"
+  ) +
+  scale_fill_gradient(low = "lightgray", high = "black") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 8))
+```
+
+---
+
+### % Showing Salaries by Platform. Insights: 
+
+- **Most Transparent**: Governmental platforms lead in salary disclosures.
+- **High Transparency**: OLX and Pidbir also show significant salary transparency.
+- **Lower Transparency**: Work.ua and Robota.ua have many vacancies but fewer salary disclosures.
+- **Least Transparent**: HappyMonday and grc.ua show the lowest transparency.
 
 ---
 
