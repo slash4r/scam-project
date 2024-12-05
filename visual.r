@@ -4,7 +4,7 @@ library(readr)
 library(stringr)
 library(scales)
 
-file_path <- "all_jobs.csv"
+file_path <- "./data/all_jobs2.0.csv"
 job_data <- read_csv(file_path, show_col_types = FALSE)
 
 # Filter out non-IT vacancies (adjust the condition as per your dataset)
