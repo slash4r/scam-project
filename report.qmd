@@ -20,6 +20,38 @@ execute:
   eval: true
 ---
 
+# Table of Contents
+
+1. [Project Overview](#project-overview)
+2. [Data Scraping: An Overview](#data-scraping-an-overview)
+3. [Data Cleaning](#data-cleaning)
+4. [Data Analysis: Insights and Trends](#data-analysis-insights-and-trends)
+5. [Conclusion and Summary](#conclusion-and-summary)
+
+# Project Overview
+
+## Exploring IT Job Market Trends
+
+We are a team of students with a shared interest in understanding the dynamics of the IT job market as we prepare to enter the workforce ourselves. Finding the right opportunities in a highly competitive and diverse industry is crucial for us, and this project reflects our curiosity and excitement about uncovering trends that can guide not only our career choices but also help others in similar situations.
+
+---
+
+## Objectives and Excitement
+
+Through this analysis, we aim to explore:
+
+- Which job categories and cities offer the highest salaries?
+- How does employment type impact compensation?
+- What is the level of salary transparency across job categories and platforms?
+- What patterns can we observe in the distribution of salaries?
+
+---
+
+## Objectives and Excitement
+
+By focusing on these questions, we hope to gain valuable insights into the job market and share findings that could benefit our peers and the wider community.
+
+
 # Data Scraping: An Overview
 
 ## Purpose of Data Scraping
@@ -593,6 +625,8 @@ ggplot(employment_type_data, aes(x = Job_Category, y = Percentage, fill = Employ
 
 ---
 
+### Employment Types by Job Category. Insights:
+
 - **Full-Time Dominance**: Most IT job categories are overwhelmingly full-time, accounting for nearly 100% of roles.
 - **Limited Flexibility**: Part-time and mixed (full-time, part-time) roles are scarce across all categories.
 - **Testing and DevOps**: These categories show slightly more diversity in employment types compared to others.
@@ -680,3 +714,42 @@ ggplot(job_data, aes(x = Salary)) +
 - **Higher Salaries Rare**: Few postings exceed **60,000 UAH**.
 - **Outliers**: High salaries over **100,000 UAH** are rare.
 - **Skewed Distribution**: Majority of jobs are in lower salary ranges.
+
+# Conclusion and Summary
+
+Our analysis revealed critical insights into the IT job market:
+
+- **Salary Trends**:
+  - Software Development and Data Science roles offer the highest average salaries, emphasizing the demand for specialized skills.
+  - Most salaries are clustered between **20,000-40,000 UAH**, with few high-paying outliers.
+
+---
+
+## Conclusion and Summary
+
+Our analysis revealed critical insights into the IT job market:
+
+
+- **Employment Types**:
+  - Full-time roles dominate across all job categories, with limited flexibility in part-time opportunities.
+
+- **Regional Insights**:
+  - Kyiv leads in both average salaries and total vacancies, while remote positions offer the highest compensation.
+
+---
+
+## Conclusion and Summary
+
+Our analysis revealed critical insights into the IT job market:
+
+- **Salary Transparency**:
+  - Platforms and job categories vary significantly in transparency, with governmental platforms and less specialized roles being more open about compensation.
+
+- **Platform-Specific Patterns**:
+  - Governmental and OLX platforms demonstrate higher transparency, while Work.ua and Robota.ua dominate in total vacancies but disclose salaries less often.
+
+---
+
+## Conclusion and Summary
+
+These findings highlight the importance of specialization, regional focus, and transparency in shaping the IT job market. As students actively looking for jobs, understanding these trends is invaluable for us to identify the best opportunities and make informed decisions. This project has given us deeper insights into the IT industry, which we hope will serve as a resource for others embarking on their professional journey.
