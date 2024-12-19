@@ -1,0 +1,41 @@
+---
+title: "Project 2"
+subtitle: "Descriptive Statistics"
+author: "Denys, Zakhar, Kvitoslava"
+institute: Kyiv School of Economics
+date: "today"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+execute:
+  engine: knitr
+---
+
+# Packages
+
+```{r}
+library(tidyverse)
+# library(tidymodels)
+# library(DAAG)
+```
+
+# Data
+
+```{r}
+genetal_folder <- "Project 2/data"
+ru_ua_folder <- "2022 Russia Ukraine War"
+ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
+missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
+
+ru_loss_persons <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+```
+
