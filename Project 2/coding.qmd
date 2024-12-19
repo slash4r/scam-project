@@ -151,7 +151,23 @@ ru_loss_equipment_temp %>%
 # calculate the score for each row (cumulative)
 ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
 
-ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, ru_loss_equipment_temp$cdf_loss_score)
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
 glimpse(ru_loss_equipment_evaluated)
 summary(ru_loss_equipment_temp$cdf_loss_score)
+```
+
+Now, we will evaluate the PDF for the equipment losses!
+
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>% 
+  arrange(date)
+```
+
+```{r}
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>% 
+  head()
 ```
