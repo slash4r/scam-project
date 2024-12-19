@@ -1,0 +1,29 @@
+---
+date: "today"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+execute:
+  engine: knitr
+---
+
+```{r}
+
+library(tidyverse)
+
+set.seed(123)
+n <- 10 
+
+equipment_loss <- sort(sample(10:100, n, replace = FALSE))
+
+simulated_data <- data.frame(
+  equipment_loss_cdf = equipment_loss
+)
+
+simulated_data <- simulated_data %>%
+  arrange(equipment_loss_cdf) %>%
+  mutate(pdf = c(equipment_loss_cdf[1], diff(equipment_loss_cdf)))
+print(simulated_data)
+
+```

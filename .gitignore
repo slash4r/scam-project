@@ -2,3 +2,6 @@
 /.idea
 /__pycache__
 *.zip
+corrected_dataset.csv
+correction_dataset.csv
+main_dataset.csv
