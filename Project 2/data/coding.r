@@ -1,10 +1,6 @@
 library(tidyverse)
 
 missile_attacks <- read_csv("/home/kyarish/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
-missile_attacks %>% glimpse()
-missile_attacks$model %>% table()
-library(dplyr)
-
 
 categorize_missile <- function(missile) {
   severity_scores <- c(
@@ -35,4 +31,16 @@ categorize_missile <- function(missile) {
   return(severity_scores["Unknown"])  
 }
 
-missile_attacks <- missile_attacks %>% mutate(missile_scoring = sapply(model, categorize_missile))
+missile_attacks <- missile_attacks %>% 
+    mutate(
+        missile_scoring = sapply(model, categorize_missile), 
+        total_score = missile_scoring * launched,
+        date = as.Date(time_start))
+
+
+##  two cols day and total score per day
+missile_attacks_score_per_day <- missile_attacks %>% 
+group_by(date)%>%
+summarize(total_score_per_day = sum(total_score))
+print(missile_attacks_score_per_day, n = 10001)
+
