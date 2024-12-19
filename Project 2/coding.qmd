@@ -22,20 +22,152 @@ library(tidyverse)
 
 # Data
 
+Here are the links to the data files that we will be using in this project:
+
+- [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+- [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+- [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
 ```{r}
-genetal_folder <- "Project 2/data"
+general_folder <- "Project 2/data"
 ru_ua_folder <- "2022 Russia Ukraine War"
 ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
 missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
 
-ru_loss_persons <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_personnel.csv"))
-ru_loss_equipment <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment.csv"))
-ru_loss_equipment_correction <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
 
-losses_ru <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_russia.csv"))
-losses_ua <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
 
-missiles_daily <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
-missiles_and_uav <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
 ```
 
+# Data Overview
+
+...
+
+# Data Processing
+
+## Equipment Losses
+
+### Russia
+
+First, we will deal with the Russia equipment losses correction!
+
+```{r}
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+        
+    corrected_columns <- c("aircraft", "helicopter", "tank", "APC", "field_artillery",
+                                                 "MRL", "drone", "naval_ship", "submarines", 
+                                                 "anti_aircraft_warfare", "special_equipment", 
+                                                 "vehicles_and_fuel_tanks", "cruise_missiles")
+    
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+    
+    # Remove correction columns
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+    
+    return(corrected_data)
+}
+```
+
+```{r}
+# make both datasets have the same ascending date order
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+# ru_loss_equipment %>% 
+#     head() %>%
+#     select(date, day)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>% 
+    arrange(desc(date))
+
+write.csv(ru_loss_equipment_corrected, file.path(general_folder, ru_ua_folder, "russia_losses_equipment_corrected.csv"), row.names = FALSE)
+```
+
+Now, we will evaluate the score for each type of equipment!
+
+```{r}
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000,             # Submarines: Strategic naval supremacy
+  greatest.losses.direction = 1  # skip this column
+)
+```
+
+```{r}
+# rearange columns
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+# use weights to evaluate the score for each type of equipment
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>% 
+  head()
+
+# calculate the score for each row (cumulative)
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
+```
+
+Now, we will evaluate the PDF for the equipment losses!
+
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>% 
+  arrange(date)
+```
+
+```{r}
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>% 
+  head()
+```
