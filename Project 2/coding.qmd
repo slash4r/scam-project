@@ -103,5 +103,55 @@ ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
 
 ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
 
-write.csv(ru_loss_equipment_corrected, file.path(general_folder, ru_ua_folder, "russia_losses_equipment_corrected.csv"))
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>% 
+    arrange(desc(date))
+
+write.csv(ru_loss_equipment_corrected, file.path(general_folder, ru_ua_folder, "russia_losses_equipment_corrected.csv"), row.names = FALSE)
+```
+
+Now, we will evaluate the score for each type of equipment!
+
+```{r}
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000,             # Submarines: Strategic naval supremacy
+  greatest.losses.direction = 1  # skip this column
+)
+```
+
+```{r}
+# rearange columns
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+# use weights to evaluate the score for each type of equipment
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>% 
+  head()
+
+# calculate the score for each row (cumulative)
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
 ```
