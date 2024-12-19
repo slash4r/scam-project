@@ -22,20 +22,86 @@ library(tidyverse)
 
 # Data
 
+Here are the links to the data files that we will be using in this project:
+
+- [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+- [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+- [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
 ```{r}
-genetal_folder <- "Project 2/data"
+general_folder <- "Project 2/data"
 ru_ua_folder <- "2022 Russia Ukraine War"
 ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
 missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
 
-ru_loss_persons <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_personnel.csv"))
-ru_loss_equipment <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment.csv"))
-ru_loss_equipment_correction <- read.csv(file.path(genetal_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
 
-losses_ru <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_russia.csv"))
-losses_ua <- read.csv(file.path(genetal_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
 
-missiles_daily <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
-missiles_and_uav <- read.csv(file.path(genetal_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
 ```
 
+# Data Overview
+
+...
+
+# Data Processing
+
+## Equipment Losses
+
+### Russia
+
+First, we will deal with the Russia equipment losses correction!
+
+```{r}
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+        
+    corrected_columns <- c("aircraft", "helicopter", "tank", "APC", "field_artillery",
+                                                 "MRL", "drone", "naval_ship", "submarines", 
+                                                 "anti_aircraft_warfare", "special_equipment", 
+                                                 "vehicles_and_fuel_tanks", "cruise_missiles")
+    
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+    
+    # Remove correction columns
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+    
+    return(corrected_data)
+}
+```
+
+```{r}
+# make both datasets have the same ascending date order
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+# ru_loss_equipment %>% 
+#     head() %>%
+#     select(date, day)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+write.csv(ru_loss_equipment_corrected, file.path(general_folder, ru_ua_folder, "russia_losses_equipment_corrected.csv"))
+```
