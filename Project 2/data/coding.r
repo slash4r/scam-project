@@ -1,4 +1,5 @@
 library(tidyverse)
+library(tidymodels)
 
 missile_attacks <- read_csv("/home/kyarish/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
 missile_attacks %>% glimpse()
@@ -101,11 +102,37 @@ t.test(total_score_per_day ~ significant_date, missile_attacks_score_per_day_sig
 # with removed outliers IQR
 Q1 <- quantile(missile_attacks_score_per_day_significant$total_score_per_day, 0.25, na.rm = TRUE)
 Q3 <- quantile(missile_attacks_score_per_day_significant$total_score_per_day, 0.75, na.rm=TRUE)
+Q3
 IQR <- Q3 - Q1
 
 upper_threshold <- Q3 + 1.5 * IQR
+upper_threshold
 
-filtered_date <- missile_attacks_score_per_day_significant %>% filter(total_score_per_day < upper_threshold)
+filtered_date <- missile_attacks_score_per_day_significant %>% filter(total_score_per_day < 125)
 filtered_date
 
-t.test(total_score_per_day ~ significant_date, missile_attacks_score_per_day_significant)
+t.test(total_score_per_day ~ significant_date, missile_attacks_score_per_day_significant,alternative = "less")
+
+
+```{r}
+#| label: box plot
+#| warning: false
+#| fig-width: 9
+#| fig-asp: 0.618
+#| echo: false
+
+ggplot(missile_attacks_score_per_day_significant, aes(x = significant_date, y = total_score_per_day, fill = significant_date)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Severity of missile attacks ",
+    x = "Significant date",
+    y = "Severity score",
+    fill = "Significant day"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 20),
+    axis.text = element_text(size = 10)
+  )
+```
