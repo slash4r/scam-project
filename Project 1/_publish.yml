@@ -1,0 +1,4 @@
+- source: report.qmd
+  quarto-pub:
+    - id: e031e1df-fa2a-42bc-a7b4-611ae187a6e7
+      url: https://sl4shuur.quarto.pub/it-vacancy-research
