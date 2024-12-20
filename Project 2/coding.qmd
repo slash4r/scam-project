@@ -394,3 +394,133 @@ else {
   cat("Fail to reject the null hypothesis: No significant difference in means.\n")
 }
 ```
+
+# Chi-Square Test
+
+```{r}
+mu <- mean(summer_2023)
+sd <- sd(summer_2023)
+
+
+n <- length(summer_2023)
+breaks <- seq(
+  min(summer_2023),
+  max(summer_2023),
+  length.out = ceiling(log2(n) + 1)
+)
+
+# Compute observed frequencies
+observed <- hist(summer_2023, breaks = breaks, plot = FALSE)$counts
+
+# Plot histogram using ggplot with the overlay
+plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightblue", line_color = "red", line_size = 1.5) {
+  # Create a data frame for ggplot
+  data_df <- data.frame(x = data)
+  
+  # Create the histogram bins
+  hist_bins <- seq(min(data), max(data), length.out = length(breaks))
+  
+  # Generate x values for the normal curve
+  normal_curve <- data.frame(
+    x = seq(min(data), max(data), length.out = 1000),
+    y = dnorm(seq(min(data), max(data), length.out = 1000), mean = mean, sd = sd)
+  )
+  
+  # Plot histogram with density and overlay normal curve
+  ggplot(data_df, aes(x)) +
+    geom_histogram(aes(y = ..density..), bins = length(breaks) - 1, fill = hist_color, color = "black", alpha = 0.7) +
+    geom_line(data = normal_curve, aes(x = x, y = y), color = line_color, size = line_size) +
+    labs(
+      title = "Histogram with Normal Distribution Overlay",
+      x = "Data",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+
+
+
+# Plot using the function
+plot_normal_overlay_gg(summer_2023, mean = mu, sd = sd, breaks = breaks)
+
+```
+
+```{r}
+# Chi-Squared Test Logic
+chi_squared_test <- function(data, mean, sd, breaks) {
+  # Compute observed frequencies
+  hist_data <- hist(data, breaks = breaks, plot = FALSE)
+  observed <- hist_data$counts
+  
+  # Total number of observations
+  n <- sum(observed)
+  
+  # Compute expected frequencies
+  expected <- numeric(length(observed))
+  for (i in seq_along(expected)) {
+    if (i == 1) {
+      # Smallest bin
+      expected[i] <- pnorm(breaks[i + 1], mean = mean, sd = sd) * n
+    } else if (i == length(expected)) {
+      # Largest bin
+      expected[i] <- (1 - pnorm(breaks[i], mean = mean, sd = sd)) * n
+    } else {
+      # Middle bins
+      expected[i] <- (pnorm(breaks[i + 1], mean = mean, sd = sd) -
+                      pnorm(breaks[i], mean = mean, sd = sd)) * n
+    }
+  }
+  
+  # Combine bins with expected frequencies < 5
+  while (any(expected < 5)) {
+    idx <- which.min(expected)
+    if (idx == 1) {
+      # Combine with next bin
+      observed[2] <- observed[2] + observed[1]
+      expected[2] <- expected[2] + expected[1]
+      observed <- observed[-1]
+      expected <- expected[-1]
+    } else if (idx == length(expected)) {
+      # Combine with previous bin
+      observed[length(expected) - 1] <- observed[length(expected) - 1] + observed[length(expected)]
+      expected[length(expected) - 1] <- expected[length(expected) - 1] + expected[length(expected)]
+      observed <- observed[-length(expected)]
+      expected <- expected[-length(expected)]
+    } else {
+      # Combine with smaller of adjacent bins
+      if (expected[idx - 1] < expected[idx + 1]) {
+        observed[idx - 1] <- observed[idx - 1] + observed[idx]
+        expected[idx - 1] <- expected[idx - 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      } else {
+        observed[idx + 1] <- observed[idx + 1] + observed[idx]
+        expected[idx + 1] <- expected[idx + 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      }
+    }
+  }
+  
+  # Compute chi-squared statistic
+  chi_sq_stat <- sum((observed - expected)^2 / expected)
+  df <- length(observed) - 1 - 2  # Adjust for estimated mean and sd
+  p_value <- pchisq(chi_sq_stat, df, lower.tail = FALSE)
+  critical_value <- qchisq(0.95, df)
+  
+  # Print results
+  cat("Chi-Squared Statistic:", chi_sq_stat, "\n")
+  cat("Degrees of Freedom:", df, "\n")
+  cat("P-value:", p_value, "\n")
+  cat("Critical Value (alpha = 0.05):", critical_value, "\n")
+  
+  if (p_value < 0.05) {
+    cat("Reject the null hypothesis: The data does not follow the assumed normal distribution.\n")
+  } else {
+    cat("Fail to reject the null hypothesis: The data follows the assumed normal distribution.\n")
+  }
+}
+
+# Call the chi-squared test function
+chi_squared_test(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
