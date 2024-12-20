@@ -64,10 +64,12 @@ apply_corrections <- function(main_data, corrections) {
     corrected_data <- main_data %>%
         left_join(corrections, by = "date", suffix = c("", "_correction"))
         
-    corrected_columns <- c("aircraft", "helicopter", "tank", "APC", "field_artillery",
-                                                 "MRL", "drone", "naval_ship", "submarines", 
-                                                 "anti_aircraft_warfare", "special_equipment", 
-                                                 "vehicles_and_fuel_tanks", "cruise_missiles")
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
     
     for (col in corrected_columns) {
         correction_col <- paste0(col, "_correction")
