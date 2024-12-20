@@ -694,3 +694,211 @@ The analysis revealed no evidence of a connection between significant dates and 
 . . .
 
 Statistical testing showed no significant difference in attack severity between significant and non-significant dates. This indicates that the chosen significant dates do not influence the intensity of missile strikes.
+
+# Zakhar's Hypothesis {background-iframe="template_files/libs/index.html"}
+
+```{r}
+#| label: background-calculations-Zakhar
+#| echo: false
+#| message: false
+#| output: false
+#| warning: false
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date)
+
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated_pdf %>%
+  arrange(date)
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date)
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date) %>%
+  mutate(equipment_daily_points = cdf_loss_score - lag(cdf_loss_score, default = 0))
+
+head(ru_loss_equipment_evaluated %>% select(date, cdf_loss_score, equipment_daily_points))
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = as.numeric(gsub("[^0-9]", "", personnel)))  # Remove non-numeric characters
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = replace_na(personnel, 0))
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date) %>%
+  mutate(personnel_daily_points = personnel - lag(personnel, default = 0))
+
+head(ru_loss_persons %>% select(date, personnel, personnel_daily_points))
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  mutate(date = as.Date(date))
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(date = as.Date(date))
+
+missiles_daily <- missiles_daily %>%
+  mutate(date = as.Date(time_end))
+
+shelling_per_day <- missiles_daily %>%
+  group_by(date) %>%
+  summarise(shelling_points = sum(launched, na.rm = TRUE))
+
+head(shelling_per_day)
+equipment_shelling_merged <- ru_loss_equipment_evaluated %>%
+  select(date, equipment_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(equipment_shelling_merged)
+personnel_shelling_merged <- ru_loss_persons %>%
+  select(date, personnel_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+personnel_shelling_merged <- personnel_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(personnel_shelling_merged)
+```
+
+## Model 1
+
+**Equipment Loss Points vs. Shelling Points**
+
+::: {style="text-align: center;"}
+```{r}
+#| label: model-1
+#| code-fold: true
+
+ggplot(equipment_shelling_merged, aes(x = shelling_points, y = equipment_daily_points)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "Regression of Daily Equipment Loss Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Equipment Loss Points"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Regression Analysis Fit Model 1
+
+```{r}
+model1 <- lm(equipment_daily_points ~ shelling_points, data = equipment_shelling_merged)
+
+summary(model1)
+```
+
+---
+
+## Model 1. Summary
+
+- **Intercept** (2058.375): Baseline equipment loss points when shelling points are zero.  
+- **Slope** (24.461): Each additional shelling point increases equipment loss by ~24.46 points.  
+- **Significance** (Pr(>|t|) < 2e-16): Both coefficients are highly significant.  
+- **R-squared** (0.1309): Shelling explains 13.09% of equipment loss variability, suggesting other factors play a major role.  
+
+## Model 2
+
+**Personnel Loss Points vs. Shelling Points**
+
+
+::: {style="text-align: center;"}
+
+```{r}
+#| label: model-2
+#| code-fold: true
+
+ggplot(personnel_shelling_merged, aes(x = shelling_points, y = personnel_daily_points)) +
+  geom_point(alpha = 0.6, color = "red") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(
+    title = "Regression of Daily Personnel Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Personnel Points (Killed)"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Regression Analysis Fit Model 2
+
+```{r}
+model2 <- lm(personnel_daily_points ~ shelling_points, data = personnel_shelling_merged)
+
+summary(model2)
+```
+
+---
+
+## Model 2. Summary
+
+- **Intercept** (627.39): Baseline personnel loss points when shelling points are zero.  
+- **Slope** (6.30): Each additional shelling point increases personnel losses by ~6.30 points.  
+- **Significance** (Pr(>|t|) < 2e-16): Both coefficients are highly significant.  
+- **R-squared** (0.22): Shelling explains 22% of personnel loss variability, indicating other influential factors.  
+
+## Model Comparison
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model1)
+```
+
+## Model Comparison
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model2)
+```
+
+---
+
+## Summary
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-summary
+#| code-fold: true
+
+massive_shelling_threshold <- 50
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(
+    massive_shelling = ifelse(shelling_points > massive_shelling_threshold, "Massive", "Non-Massive")
+  )
+
+group_means_tech <- equipment_shelling_merged %>%
+  group_by(massive_shelling) %>%
+  summarise(
+    mean_points = mean(equipment_daily_points, na.rm = TRUE),
+    sd_points = sd(equipment_daily_points, na.rm = TRUE),
+    n = n()
+  )
+
+
+t_test_tech <- t.test(
+  equipment_daily_points ~ massive_shelling,
+  data = equipment_shelling_merged
+)
+
+
+ggplot(equipment_shelling_merged, aes(x = massive_shelling, y = equipment_daily_points)) +
+  geom_boxplot(fill = c("lightblue", "salmon")) +
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, fill = "white") +
+  labs(
+    title = "Розподіл очок за техніку між масованими та немасованими обстрілами",
+    x = "Тип обстрілу",
+    y = "Кількість очок за техніку (daily points)"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+# Denys's Hypothesis {background-iframe="template_files/libs/index.html"}
+
+## Hypothesis

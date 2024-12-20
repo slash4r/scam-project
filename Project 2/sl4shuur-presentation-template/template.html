@@ -769,8 +769,219 @@ mean in group FALSE  mean in group TRUE
 <p>The analysis revealed no evidence of a connection between significant dates and the severity of missile attacks.</p>
 <div class="fragment">
 <p>Statistical testing showed no significant difference in attack severity between significant and non-significant dates. This indicates that the chosen significant dates do not influence the intensity of missile strikes.</p>
+</div>
+</section></section>
+<section>
+<section id="zakhars-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Zakhar’s Hypothesis</h1>
+
+</section>
+<section id="model-1" class="slide level2">
+<h2>Model 1</h2>
+<p><strong>Equipment Loss Points vs.&nbsp;Shelling Points</strong></p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a><span class="fu">ggplot</span>(equipment_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> shelling_points, <span class="at">y =</span> equipment_daily_points)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-5"><a href=""></a>    <span class="at">title =</span> <span class="st">"Regression of Daily Equipment Loss Points on Shelling Points"</span>,</span>
+<span id="cb16-6"><a href=""></a>    <span class="at">x =</span> <span class="st">"Shelling Points (Missiles Launched)"</span>,</span>
+<span id="cb16-7"><a href=""></a>    <span class="at">y =</span> <span class="st">"Daily Equipment Loss Points"</span></span>
+<span id="cb16-8"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb16-9"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/model-1-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="regression-analysis-fit-model-1" class="slide level2">
+<h2>Regression Analysis Fit Model 1</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(equipment_daily_points <span class="sc">~</span> shelling_points, <span class="at">data =</span> equipment_shelling_merged)</span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = equipment_daily_points ~ shelling_points, data = equipment_shelling_merged)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+ -5753  -1127   -434    863  38615 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     2058.375     70.994   28.99   &lt;2e-16 ***
+shelling_points   24.461      1.971   12.41   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1951 on 1023 degrees of freedom
+Multiple R-squared:  0.1309,    Adjusted R-squared:   0.13 
+F-statistic:   154 on 1 and 1023 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="model-1.-summary" class="slide level2">
+<h2>Model 1. Summary</h2>
+<ul>
+<li class="fragment"><strong>Intercept</strong> (2058.375): Baseline equipment loss points when shelling points are zero.<br>
+</li>
+<li class="fragment"><strong>Slope</strong> (24.461): Each additional shelling point increases equipment loss by ~24.46 points.<br>
+</li>
+<li class="fragment"><strong>Significance</strong> (Pr(&gt;|t|) &lt; 2e-16): Both coefficients are highly significant.<br>
+</li>
+<li class="fragment"><strong>R-squared</strong> (0.1309): Shelling explains 13.09% of equipment loss variability, suggesting other factors play a major role.</li>
+</ul>
+</section>
+<section id="model-2" class="slide level2">
+<h2>Model 2</h2>
+<p><strong>Personnel Loss Points vs.&nbsp;Shelling Points</strong></p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">ggplot</span>(personnel_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> shelling_points, <span class="at">y =</span> personnel_daily_points)) <span class="sc">+</span></span>
+<span id="cb19-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb19-3"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb19-5"><a href=""></a>    <span class="at">title =</span> <span class="st">"Regression of Daily Personnel Points on Shelling Points"</span>,</span>
+<span id="cb19-6"><a href=""></a>    <span class="at">x =</span> <span class="st">"Shelling Points (Missiles Launched)"</span>,</span>
+<span id="cb19-7"><a href=""></a>    <span class="at">y =</span> <span class="st">"Daily Personnel Points (Killed)"</span></span>
+<span id="cb19-8"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb19-9"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/model-2-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="regression-analysis-fit-model-2" class="slide level2">
+<h2>Regression Analysis Fit Model 2</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(personnel_daily_points <span class="sc">~</span> shelling_points, <span class="at">data =</span> personnel_shelling_merged)</span>
+<span id="cb20-2"><a href=""></a></span>
+<span id="cb20-3"><a href=""></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = personnel_daily_points ~ shelling_points, data = personnel_shelling_merged)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1052.89  -287.39   -17.39   262.86  2532.61 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     627.3928    13.3669   46.94   &lt;2e-16 ***
+shelling_points   6.3038     0.3711   16.99   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 367.4 on 1023 degrees of freedom
+Multiple R-squared:   0.22, Adjusted R-squared:  0.2192 
+F-statistic: 288.5 on 1 and 1023 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="model-2.-summary" class="slide level2">
+<h2>Model 2. Summary</h2>
+<ul>
+<li class="fragment"><strong>Intercept</strong> (627.39): Baseline personnel loss points when shelling points are zero.<br>
+</li>
+<li class="fragment"><strong>Slope</strong> (6.30): Each additional shelling point increases personnel losses by ~6.30 points.<br>
+</li>
+<li class="fragment"><strong>Significance</strong> (Pr(&gt;|t|) &lt; 2e-16): Both coefficients are highly significant.<br>
+</li>
+<li class="fragment"><strong>R-squared</strong> (0.22): Shelling explains 22% of personnel loss variability, indicating other influential factors.</li>
+</ul>
+</section>
+<section id="model-comparison" class="slide level2">
+<h2>Model Comparison</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb22-2"><a href=""></a><span class="fu">plot</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
+<img data-src="template_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<section id="model-comparison-1" class="slide level2">
+<h2>Model Comparison</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb23-2"><a href=""></a><span class="fu">plot</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="template_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section>
+<section id="summary-1" class="slide level2">
+<h2>Summary</h2>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>massive_shelling_threshold <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb24-2"><a href=""></a></span>
+<span id="cb24-3"><a href=""></a>equipment_shelling_merged <span class="ot">&lt;-</span> equipment_shelling_merged <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-5"><a href=""></a>    <span class="at">massive_shelling =</span> <span class="fu">ifelse</span>(shelling_points <span class="sc">&gt;</span> massive_shelling_threshold, <span class="st">"Massive"</span>, <span class="st">"Non-Massive"</span>)</span>
+<span id="cb24-6"><a href=""></a>  )</span>
+<span id="cb24-7"><a href=""></a></span>
+<span id="cb24-8"><a href=""></a>group_means_tech <span class="ot">&lt;-</span> equipment_shelling_merged <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href=""></a>  <span class="fu">group_by</span>(massive_shelling) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href=""></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-11"><a href=""></a>    <span class="at">mean_points =</span> <span class="fu">mean</span>(equipment_daily_points, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-12"><a href=""></a>    <span class="at">sd_points =</span> <span class="fu">sd</span>(equipment_daily_points, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-13"><a href=""></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb24-14"><a href=""></a>  )</span>
+<span id="cb24-15"><a href=""></a></span>
+<span id="cb24-16"><a href=""></a></span>
+<span id="cb24-17"><a href=""></a>t_test_tech <span class="ot">&lt;-</span> <span class="fu">t.test</span>(</span>
+<span id="cb24-18"><a href=""></a>  equipment_daily_points <span class="sc">~</span> massive_shelling,</span>
+<span id="cb24-19"><a href=""></a>  <span class="at">data =</span> equipment_shelling_merged</span>
+<span id="cb24-20"><a href=""></a>)</span>
+<span id="cb24-21"><a href=""></a></span>
+<span id="cb24-22"><a href=""></a></span>
+<span id="cb24-23"><a href=""></a><span class="fu">ggplot</span>(equipment_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> massive_shelling, <span class="at">y =</span> equipment_daily_points)) <span class="sc">+</span></span>
+<span id="cb24-24"><a href=""></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"salmon"</span>)) <span class="sc">+</span></span>
+<span id="cb24-25"><a href=""></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">shape =</span> <span class="dv">23</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">fill =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb24-26"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-27"><a href=""></a>    <span class="at">title =</span> <span class="st">"Розподіл очок за техніку між масованими та немасованими обстрілами"</span>,</span>
+<span id="cb24-28"><a href=""></a>    <span class="at">x =</span> <span class="st">"Тип обстрілу"</span>,</span>
+<span id="cb24-29"><a href=""></a>    <span class="at">y =</span> <span class="st">"Кількість очок за техніку (daily points)"</span></span>
+<span id="cb24-30"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb24-31"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-summary-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="deniss-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Denis’s Hypothesis</h1>
+
+</section>
+<section id="hypothesis" class="slide level2">
+<h2>Hypothesis</h2>
+
 </section></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">

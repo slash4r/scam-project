@@ -45,6 +45,16 @@ losses_ua <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russi
 
 missiles_daily <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
 missiles_and_uav <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missiles_and_uav.csv")
+
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
 ```
 
 # Data Overview
@@ -194,7 +204,6 @@ ru_loss_persons <- ru_loss_persons %>%
 
 head(ru_loss_persons %>% select(date, personnel, personnel_daily_points))
 ```
-n
 
 
 ```{r}
@@ -258,6 +267,7 @@ ggplot(personnel_shelling_merged, aes(x = shelling_points, y = personnel_daily_p
   ) +
   theme_minimal()
 ```
+
 	• Intercept (2058.375): This is the estimated equipment loss points when the number of shelling points is zero. While theoretically, shelling points cannot be negative, the intercept provides a baseline level of equipment loss independent of shelling activity.
 	•	Slope (24.461): For each additional shelling point (missile launched), the daily equipment loss points increase by approximately 24.46 points. This positive coefficient suggests a direct relationship between shelling activity and equipment losses.
 	•	Statistical Significance (Pr(>|t|) < 2e-16): Both the intercept and slope are highly statistically significant, indicating strong evidence against the null hypothesis that these coefficients are zero.
