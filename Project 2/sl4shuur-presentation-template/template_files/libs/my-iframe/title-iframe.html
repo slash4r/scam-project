@@ -1,0 +1,28 @@
+<style>
+    /* Target the first slide and set a full-screen iframe background */
+    .reveal .slides > section:first-child {
+      position: relative;
+    }
+    .reveal .slides > section:first-child iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      z-index: -1; /* Place the iframe behind the slide content */
+    }
+  </style>
+  
+  <script>
+    // Dynamically add an iframe to the first slide
+    document.addEventListener("DOMContentLoaded", function () {
+      const firstSlide = document.querySelector(".reveal .slides > section:first-child");
+      if (firstSlide) {
+        const iframe = document.createElement("iframe");
+        iframe.src = "my-iframe/index.html"; /* Path to your iframe source */
+        firstSlide.appendChild(iframe);
+      }
+    });
+  </script>
+  

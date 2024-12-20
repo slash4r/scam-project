@@ -1,0 +1,330 @@
+---
+title: "Project 2"
+subtitle: "Descriptive Statistics"
+author: "Denys, Zakhar, Kvitoslava"
+institute: Kyiv School of Economics
+date: "today"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+execute:
+  engine: knitr
+---
+
+# Packages
+
+```{r}
+library(tidyverse)
+# library(tidymodels)
+# library(DAAG)
+```
+
+# Data
+
+Here are the links to the data files that we will be using in this project:
+
+- [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+- [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+- [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
+```{r}
+general_folder <- "Project 2/data"
+ru_ua_folder <- "2022 Russia Ukraine War"
+ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
+missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
+
+ru_loss_persons <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War/russia_losses_personnel.csv")
+ru_loss_equipment <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War/russia_losses_equipment.csv")
+ru_loss_equipment_correction <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War/russia_losses_equipment_correction.csv")
+
+losses_ru <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War, Losses, Oryx + Images/losses_russia.csv")
+losses_ua <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War, Losses, Oryx + Images/losses_ukraine.csv")
+
+missiles_daily <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
+missiles_and_uav <- read.csv("~/Documents/GitHub/scam-project/Project 2/data/Massive Missile Attacks on Ukraine/missiles_and_uav.csv")
+
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+```
+
+# Data Overview
+
+...
+
+# Data Processing
+
+## Equipment Losses
+
+### Russia
+
+First, we will deal with the Russia equipment losses correction!
+
+```{r}
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+
+    corrected_columns <- c("aircraft", "helicopter", "tank", "APC", "field_artillery",
+                                                 "MRL", "drone", "naval_ship", "submarines",
+                                                 "anti_aircraft_warfare", "special_equipment",
+                                                 "vehicles_and_fuel_tanks", "cruise_missiles")
+
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+
+    # Remove correction columns
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+
+    return(corrected_data)
+}
+```
+
+```{r}
+# make both datasets have the same ascending date order
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+# ru_loss_equipment %>%
+#     head() %>%
+#     select(date, day)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>%
+    arrange(desc(date))
+
+write.csv(ru_loss_equipment_corrected, "~/Documents/GitHub/scam-project/Project 2/data/2022 Russia Ukraine War/russia_losses_equipment_corrected.csv", row.names = FALSE)
+```
+
+Now, we will evaluate the score for each type of equipment!
+
+```{r}
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000,             # Submarines: Strategic naval supremacy
+  greatest.losses.direction = 1  # skip this column
+)
+```
+
+```{r}
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>%
+  head()
+
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
+```
+
+Now, we will evaluate the PDF for the equipment losses!
+
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date)
+```
+
+```{r}
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>%
+  head()
+```
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date)
+
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated_pdf %>%
+  arrange(date)
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date)
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date) %>%
+  mutate(equipment_daily_points = cdf_loss_score - lag(cdf_loss_score, default = 0))
+
+head(ru_loss_equipment_evaluated %>% select(date, cdf_loss_score, equipment_daily_points))
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = as.numeric(gsub("[^0-9]", "", personnel)))  # Remove non-numeric characters
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = replace_na(personnel, 0))
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date) %>%
+  mutate(personnel_daily_points = personnel - lag(personnel, default = 0))
+
+head(ru_loss_persons %>% select(date, personnel, personnel_daily_points))
+```
+
+
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  mutate(date = as.Date(date))
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(date = as.Date(date))
+
+missiles_daily <- missiles_daily %>%
+  mutate(date = as.Date(time_end))
+
+shelling_per_day <- missiles_daily %>%
+  group_by(date) %>%
+  summarise(shelling_points = sum(launched, na.rm = TRUE))
+
+head(shelling_per_day)
+equipment_shelling_merged <- ru_loss_equipment_evaluated %>%
+  select(date, equipment_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(equipment_shelling_merged)
+personnel_shelling_merged <- ru_loss_persons %>%
+  select(date, personnel_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+personnel_shelling_merged <- personnel_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(personnel_shelling_merged)
+```
+Model 1: Equipment Loss Points vs. Shelling Points
+```{r}
+ggplot(equipment_shelling_merged, aes(x = shelling_points, y = equipment_daily_points)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "Regression of Daily Equipment Loss Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Equipment Loss Points"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+model1 <- lm(equipment_daily_points ~ shelling_points, data = equipment_shelling_merged)
+
+summary(model1)
+```
+```{r}
+ggplot(personnel_shelling_merged, aes(x = shelling_points, y = personnel_daily_points)) +
+  geom_point(alpha = 0.6, color = "red") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(
+    title = "Regression of Daily Personnel Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Personnel Points (Killed)"
+  ) +
+  theme_minimal()
+```
+
+	• Intercept (2058.375): This is the estimated equipment loss points when the number of shelling points is zero. While theoretically, shelling points cannot be negative, the intercept provides a baseline level of equipment loss independent of shelling activity.
+	•	Slope (24.461): For each additional shelling point (missile launched), the daily equipment loss points increase by approximately 24.46 points. This positive coefficient suggests a direct relationship between shelling activity and equipment losses.
+	•	Statistical Significance (Pr(>|t|) < 2e-16): Both the intercept and slope are highly statistically significant, indicating strong evidence against the null hypothesis that these coefficients are zero.
+	•	R-squared (0.1309): Approximately 13.09% of the variability in daily equipment loss points is explained by the number of shelling points. While statistically significant, the R-squared value suggests that other factors not included in the model also play a substantial role in explaining equipment losses.
+```{r}
+model2 <- lm(personnel_daily_points ~ shelling_points, data = personnel_shelling_merged)
+
+summary(model2)
+```
+	•	Intercept (627.3928): This represents the estimated personnel loss points when the number of shelling points is zero.
+	•	Slope (6.3038): For each additional shelling point, the daily personnel loss points increase by approximately 6.30 points. This positive coefficient indicates that increased shelling activity is associated with higher personnel casualties.
+	•	Statistical Significance (Pr(>|t|) < 2e-16): Both coefficients are highly significant, providing strong evidence of a relationship between shelling points and personnel casualties.
+	•	R-squared (0.22): About 22% of the variability in daily personnel loss points is explained by the number of shelling points. Similar to Model 1, this indicates that while shelling activity is a significant predictor, other factors also influence personnel casualties.
+```{r}
+par(mfrow = c(2, 2))
+plot(model1)
+
+plot(model2)
+par(mfrow = c(1, 1))
+```
+
+```{r}
+massive_shelling_threshold <- 50
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(
+    massive_shelling = ifelse(shelling_points > massive_shelling_threshold, "Massive", "Non-Massive")
+  )
+
+table(equipment_shelling_merged$massive_shelling)
+
+group_means_tech <- equipment_shelling_merged %>%
+  group_by(massive_shelling) %>%
+  summarise(
+    mean_points = mean(equipment_daily_points, na.rm = TRUE),
+    sd_points = sd(equipment_daily_points, na.rm = TRUE),
+    n = n()
+  )
+
+group_means_tech
+
+t_test_tech <- t.test(
+  equipment_daily_points ~ massive_shelling,
+  data = equipment_shelling_merged
+)
+
+t_test_tech
+
+library(ggplot2)
+
+ggplot(equipment_shelling_merged, aes(x = massive_shelling, y = equipment_daily_points)) +
+  geom_boxplot(fill = c("lightblue", "salmon")) +
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, fill = "white") +
+  labs(
+    title = "Розподіл очок за техніку між масованими та немасованими обстрілами",
+    x = "Тип обстрілу",
+    y = "Кількість очок за техніку (daily points)"
+  ) +
+  theme_minimal()
+```

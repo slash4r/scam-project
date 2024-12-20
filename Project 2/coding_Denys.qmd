@@ -1,0 +1,512 @@
+---
+title: "Project 2"
+subtitle: "Descriptive Statistics"
+author: "Denys, Zakhar, Kvitoslava"
+institute: Kyiv School of Economics
+date: "today"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+execute:
+  engine: knitr
+---
+
+# Packages
+
+```{r}
+library(tidyverse)
+# library(tidymodels)
+# library(DAAG)
+```
+
+# Data
+
+Here are the links to the data files that we will be using in this project:
+
+- [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+- [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+- [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
+```{r}
+general_folder <- "Project 2/data"
+ru_ua_folder <- "2022 Russia Ukraine War"
+ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
+missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
+
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+```
+
+# Data Overview
+
+...
+
+# Data Processing
+
+## Equipment Losses
+
+### Russia
+
+First, we will deal with the Russia equipment losses correction!
+
+```{r}
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+        
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+    
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+    
+    # Remove correction columns
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+    return(corrected_data)
+}
+```
+
+```{r}
+# make both datasets have the same ascending date order
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+# ru_loss_equipment %>% 
+#     head() %>%
+#     select(date, day)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>% 
+    arrange(desc(date))
+
+write.csv(ru_loss_equipment_corrected, file.path(general_folder, ru_ua_folder, "russia_losses_equipment_corrected.csv"), row.names = FALSE)
+```
+
+Now, we will evaluate the score for each type of equipment!
+
+```{r}
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000,             # Submarines: Strategic naval supremacy
+)
+```
+
+```{r}
+# rearange columns
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+# use weights to evaluate the score for each type of equipment
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>% 
+  head()
+
+# calculate the score for each row (cumulative)
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
+```
+
+Now, we will evaluate the PDF for the equipment losses!
+
+```{r}
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>% 
+  arrange(date)
+```
+
+```{r}
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>% 
+  head()
+```
+
+## Distribution of Equipment Losses
+
+First, let's split the data by seasons (winter, spring, summer, autumn) + year
+
+```{r}
+SUMMER_HEX <- "#e31a1c"
+WINTER_HEX <- "#1f78b4"
+SPRING_HEX <- "#33a02c"
+AUTUMN_HEX <- "#ff7f00"
+
+disrtibution_data <- ru_loss_equipment_evaluated_pdf %>% 
+  mutate(
+    season = case_when(
+      month(date) %in% c(12, 1, 2) ~ "Winter",
+      month(date) %in% c(3, 4, 5) ~ "Spring",
+      month(date) %in% c(6, 7, 8) ~ "Summer",
+      month(date) %in% c(9, 10, 11) ~ "Autumn"
+    ),
+    year = year(date)
+  ) %>%
+  select(pdf_loss_score, season, year)
+```
+
+Now, let's build the distribution of equipment losses! by each season
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2022) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2022",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2023) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2023",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2024) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2024",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+## Build two distributions for the hypothesis testing
+
+  ```{r}
+  disrtibution_data %>%
+    filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+    ggplot(aes(x = pdf_loss_score, fill = season)) +
+    geom_density(alpha = 0.5) +
+    scale_fill_manual(values = c("Summer" = SUMMER_HEX, "Autumn" = AUTUMN_HEX)) +
+    labs(
+      title = "Distribution of Equipment Losses in Summer 2023 and Autumn 2024",
+      x = "PDF Loss Score",
+      y = "Density"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom") +
+    scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+# Hypothesis
+
+## Bootstrapping
+
+```{r}
+bootstrap_normal <- function(data, n = 10000) {
+  boot_means <- replicate(n, {
+    sample(data, size = length(data), replace = TRUE) %>%
+      mean()
+  })
+  boot_means
+}
+
+data_filtered <- disrtibution_data %>%
+  filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+  mutate(season_year = paste(season, year))
+
+summer_2023 <- data_filtered %>% filter(season_year == "Summer 2023") %>% pull(pdf_loss_score)
+autumn_2024 <- data_filtered %>% filter(season_year == "Autumn 2024") %>% pull(pdf_loss_score)
+
+# IQR because... why not?
+Q1 <- quantile(autumn_2024, 0.05)
+Q3 <- quantile(autumn_2024, 0.95)
+IQR <- Q3 - Q1
+autumn_2024_filtered <- autumn_2024[autumn_2024 > (Q1 - 1.5 * IQR) & autumn_2024 < (Q3 + 1.5 * IQR)]
+
+set.seed(123)
+boot_summer <- bootstrap_normal(summer_2023)
+boot_autumn <- bootstrap_normal(autumn_2024_filtered)
+
+fit_summer <- list(mean = mean(boot_summer), sd = sd(boot_summer))
+fit_autumn <- list(mean = mean(boot_autumn), sd = sd(boot_autumn))
+
+summer_normal <- data.frame(
+  x = seq(min(boot_summer), max(boot_summer), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_summer), max(boot_summer), length.out = 1000), 
+    mean = fit_summer$mean, 
+    sd = fit_summer$sd
+  ),
+  season = "Summer 2023"
+)
+
+autumn_normal <- data.frame(
+  x = seq(min(boot_autumn), max(boot_autumn), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
+    mean = fit_autumn$mean, 
+    sd = fit_autumn$sd
+  ),
+  season = "Autumn 2024"
+)
+
+# Combine for plotting
+normal_data <- bind_rows(summer_normal, autumn_normal)
+
+ggplot() +
+  geom_density(
+    data = data.frame(value = boot_summer, season = "Summer 2023"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_density(
+    data = data.frame(value = boot_autumn, season = "Autumn 2024"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_line(
+    data = normal_data, aes(x = x, y = density, color = season), size = 1
+  ) +
+  scale_fill_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  scale_color_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  labs(
+    title = "Bootstrap and Fitted Normal Distributions",
+    x = "PDF Loss Score",
+    y = "Density",
+    fill = "Season",
+    color = "Fitted Normal"
+  ) +
+  theme_minimal()
+```
+
+## Hypothesis Testing
+
+```{r}
+# Perform t-test
+t_test_result <- t.test(
+  boot_summer,               # Bootstrapped means for Summer 2023
+  boot_autumn,               # Bootstrapped means for Autumn 2024
+  alternative = "greater",   # One-tailed test (Summer 2023 > Autumn 2024)
+  var.equal = FALSE          # Assume unequal variances (Welch's t-test)
+)
+
+print(t_test_result)
+
+cat("T-statistic:", t_test_result$statistic, "\n")
+cat("P-value:", t_test_result$p.value, "\n")
+cat("95% Confidence Interval:", t_test_result$conf.int, "\n")
+
+if (t_test_result$p.value < 0.05) {
+  cat("Reject the null hypothesis: There is a significant difference in means.\n")
+} 
+else {
+  cat("Fail to reject the null hypothesis: No significant difference in means.\n")
+}
+```
+
+# Chi-Square Test
+
+```{r}
+mu <- mean(summer_2023)
+sd <- sd(summer_2023)
+
+n <- length(summer_2023)
+breaks <- seq(
+  min(summer_2023),
+  max(summer_2023),
+  length.out = ceiling(log2(n) + 1)
+)
+
+
+observed <- hist(summer_2023, breaks = breaks, plot = FALSE)$counts
+
+plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightblue", line_color = "red", line_size = 1.5) {
+  data_df <- data.frame(x = data)
+  hist_bins <- seq(min(data), max(data), length.out = length(breaks))
+  normal_curve <- data.frame(
+    x = seq(min(data), max(data), length.out = 1000),
+    y = dnorm(seq(min(data), max(data), length.out = 1000), mean = mean, sd = sd)
+  )
+  
+  ggplot(data_df, aes(x)) +
+    geom_histogram(aes(y = ..density..), bins = length(breaks) - 1, fill = hist_color, color = "black", alpha = 0.7) +
+    geom_line(data = normal_curve, aes(x = x, y = y), color = line_color, size = line_size) +
+    labs(
+      title = "Histogram with Normal Distribution Overlay",
+      x = "Data",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+
+plot_normal_overlay_gg(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
+
+```{r}
+chi_squared_test <- function(data, mean, sd, breaks) {
+  hist_data <- hist(data, breaks = breaks, plot = FALSE)
+  observed <- hist_data$counts
+  
+  n <- sum(observed)
+  
+  expected <- numeric(length(observed))
+  for (i in seq_along(expected)) {
+    if (i == 1) {
+      # Smallest bin
+      expected[i] <- pnorm(breaks[i + 1], mean = mean, sd = sd) * n
+    } else if (i == length(expected)) {
+      # Largest bin
+      expected[i] <- (1 - pnorm(breaks[i], mean = mean, sd = sd)) * n
+    } else {
+      # Middle bins
+      expected[i] <- (pnorm(breaks[i + 1], mean = mean, sd = sd) -
+                      pnorm(breaks[i], mean = mean, sd = sd)) * n
+    }
+  }
+  
+  # Combine bins with expected frequencies < 5
+  while (any(expected < 5)) {
+    idx <- which.min(expected)
+    # if index is 1 or last, combine with next or previous bin
+    if (idx == 1) {
+      # Combine with next bin
+      observed[2] <- observed[2] + observed[1]
+      expected[2] <- expected[2] + expected[1]
+      observed <- observed[-1]
+      expected <- expected[-1]
+    } else if (idx == length(expected)) {
+      # Combine with previous bin
+      observed[length(expected) - 1] <- observed[length(expected) - 1] + observed[length(expected)]
+      expected[length(expected) - 1] <- expected[length(expected) - 1] + expected[length(expected)]
+      observed <- observed[-length(expected)]
+      expected <- expected[-length(expected)]
+    } else {
+      # Combine with smaller of adjacent bins
+      if (expected[idx - 1] < expected[idx + 1]) {
+        observed[idx - 1] <- observed[idx - 1] + observed[idx]
+        expected[idx - 1] <- expected[idx - 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      } else {
+        observed[idx + 1] <- observed[idx + 1] + observed[idx]
+        expected[idx + 1] <- expected[idx + 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      }
+    }
+  }
+  
+  chi_sq_stat <- sum((observed - expected)^2 / expected)
+  df <- length(observed) - 1 - 2  # we estimate mean and sd
+  p_value <- pchisq(chi_sq_stat, df, lower.tail = FALSE)
+  critical_value <- qchisq(0.95, df)
+  
+  cat("Chi-Squared Statistic:", chi_sq_stat, "\n")
+  cat("Degrees of Freedom:", df, "\n")
+  cat("P-value:", p_value, "\n")
+  cat("Critical Value (alpha = 0.05):", critical_value, "\n")
+  
+  if (p_value < 0.05) {
+    cat("Reject the null hypothesis: The data does not follow the assumed normal distribution.\n")
+  } else {
+    cat("Fail to reject the null hypothesis: The data follows the assumed normal distribution.\n")
+  }
+}
+
+chi_squared_test(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```

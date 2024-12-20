@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="template_files/libs/clipboard/clipboard.min.js"></script>
+<script src="template_files/libs/quarto-html/tabby.min.js"></script>
+<script src="template_files/libs/quarto-html/popper.min.js"></script>
+<script src="template_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="template_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="template_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="template_files/libs/quarto-html/quarto-syntax-highlighting-383d4a065b21370043bc4709e21900a7.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.35">
+
+  <meta name="author" content="Zakhar Staryk, Kvitka Yarish, Denys Mykhailov">
+  <title>The Russo-Ukrainian War Analysis</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="template_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="template_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="template_files/libs/revealjs/dist/theme/quarto-aa40653b10d5fc8fbb10ee8656ecb3cf.css">
+  <link rel="stylesheet" href="styles.scss">
+  <link href="template_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" data-background-iframe="template_files/libs/index.html" class="quarto-title-block center">
+  <h1 class="title">The Russo-Ukrainian War Analysis</h1>
+  <p class="subtitle">Descriptive Statistics</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Zakhar Staryk, Kvitka Yarish, Denys Mykhailov 
+</div>
+        <p class="quarto-title-affiliation">
+            Kyiv School of Economics
+          </p>
+    </div>
+</div>
+
+  <p class="date">Friday, the 20<sup style="font-size:65%;font-style:italic;">th</sup> of December, 2024</p>
+</section>
+<section id="table-of-contents" class="title-slide slide level1 center" style="left: 10%;" data-background-iframe="template_files/libs/index.html">
+<h1>Table of Contents</h1>
+<div>
+<ol type="1">
+<li><p><a href="#/introduction-and-objectives">Introduction and Objectives</a></p></li>
+<li><p><a href="#/data-description">Data Description</a></p></li>
+<li><p><a href="#/data-processing">Data Processing</a></p></li>
+<li><p><a href="#/kvitkas-hypothesis">Kvitka’s Hypothesis</a></p></li>
+<li><p><a href="#/zakhars-hypothesis">Zakhar’s Hypothesis</a></p></li>
+<li><p><a href="#/denyss-hypothesis">Denys’s Hypothesis</a></p></li>
+<li><p><a href="#/conclusion">Conclusion</a></p></li>
+</ol>
+</div>
+</section>
+
+<section>
+<section id="introduction-and-objectives" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Introduction and Objectives</h1>
+
+</section>
+<section id="what-our-project-is-about" class="slide level2">
+<h2>What our project is about?</h2>
+<p>The <code>Russo-Ukrainian War</code> is an ongoing conflict between Russia and Ukraine that began in 2014. The war has had a significant impact on both countries, with thousands of people killed and millions displaced. In this presentation, we will analyze the conflict using descriptive statistics to see some patterns and trends in the data.</p>
+<div class="fragment">
+<p>So we decided to scroll <a href="https://www.kaggle.com/datasets?search=ukraine">Kaggle</a> and find a dataset that would help us to analyze the conflict in recent years.</p>
+</div>
+</section></section>
+<section>
+<section id="data-description" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Data Description</h1>
+
+</section>
+<section id="data-description-1" class="slide level2">
+<h2>Data Description</h2>
+<p>As it was mentioned before, we found some datasets on <a href="https://www.kaggle.com/datasets?search=ukraine">Kaggle</a>. The dataset we chose contains information about the conflict in Ukraine from 2014 to 2021. It includes data on the number of casualties, attacks, and other relevant information.</p>
+<div class="fragment">
+<p>So, the datasets:</p>
+<ol type="1">
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war">2022 Russia Ukraine War</a> (updated weekly)</p></li>
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx">2022 Russia Ukraine War, Losses, Oryx + Images</a></p></li>
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv">Massive Missile Attacks on Ukraine</a></p></li>
+</ol>
+</div>
+</section>
+<section id="russia-ukraine-war" class="slide level2">
+<h2>1. 2022 Russia Ukraine War</h2>
+<p>This dataset describes Equipment Losses &amp; Death Toll &amp; Military Wounded &amp; Prisoner of War of russians in 2022-2024 Ukraine russia War by each day.</p>
+<div class="fragment">
+<p>All data are official and additionally structured by the author (<a href="https://www.kaggle.com/piterfm">Petro</a>).</p>
+</div>
+<div class="fragment">
+<p><strong>Data:</strong></p>
+<ul>
+<li class="fragment"><p><code>russia_losses_personnel.csv</code> - contains Personnel Losses during the war.</p></li>
+<li class="fragment"><p><code>russia_losses_equipment.csv</code> - contains Equipment Losses during the war.</p></li>
+<li class="fragment"><p><code>russia_losses_equipment_correction.csv</code> - contains some data correction <em>(dates: 2022-10-13, date: 2023-05-27)</em>.</p></li>
+</ul>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p>The dataset describes russian and Ukrainian Equipment Losses During The 2022 Russian Invasion Of Ukraine.</p>
+<div class="fragment">
+<p>The dataset was created based on <a href="https://www.oryxspioenkop.com/">Oryx</a> by scraping <a href="https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html">Ukrainian losses</a> and <a href="https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html">russian losses</a> pages.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 90%;">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>The datasets mentioned above are updated regularly and provide a comprehensive overview of the ongoing conflict. It is important to cross-verify the data with other sources for accuracy and reliability.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 90%;">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning!</strong></p>
+</div>
+<div class="callout-content">
+<p>This list only includes destroyed vehicles and equipment of which photo or videographic evidence is available. Therefore, the amount of equipment destroyed is significantly higher than recorded!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images-1" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p><strong>Images data of Equipment Losses</strong></p>
+<p>Images data include <code>pictures</code> of Equipment Losses. More than <strong>18k (8 GB)</strong> images of destroyed equipment can be found here.</p>
+<div class="fragment">
+<div class="r-stack">
+<p><img data-src="assets/images/daf_yad.jpg" class="fragment" style="position: absolute; top: 50; left: 0; height: 60%;"></p>
+<p><img data-src="assets/images/mi-17v5.png" class="fragment" style="position: absolute; top: 50; left: 350px; height: 60%;"></p>
+<p><img data-src="assets/images/strizh-class-boat-dam.jpg" class="fragment" style="position: absolute; top: 50; right: 0; width: 50%; height: 50%;"></p>
+</div>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images-2" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p><strong>Images data of Equipment Losses</strong></p>
+<p>Images data include <code>pictures</code> of Equipment Losses. More than <strong>18k (8 GB)</strong> images of destroyed equipment can be found here.</p>
+<p><img data-src="assets/images/t-80bv.jpg" style="position: absolute; top: 50; left: 0; width: 48%; height: 50%;"></p>
+<div class="r-stack">
+<p><img data-src="assets/images/t-80bv.png" class="fragment" style="position: absolute; top: 50; right: 0; width: 48%; height: 50%;"></p>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images-3" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p><strong>Main Columns:</strong></p>
+<ul>
+<li class="fragment"><p><code>equipment</code> - type of equipment (e.g., tank, helicopter, etc.)</p></li>
+<li class="fragment"><p><code>model</code> - exact model of the equipment (e.g., T-80BV, Mi-17V5, etc.)</p></li>
+<li class="fragment"><p><code>sub_model</code></p></li>
+<li class="fragment"><p><code>manufacturer</code> - country of manufacturer (e.g., Russia, Ukraine, etc.)</p></li>
+<li class="fragment"><p><code>losses_total</code> - number of destroyed equipment</p></li>
+</ul>
+</section>
+<section id="massive-missile-attacks-on-ukraine" class="slide level2">
+<h2>3. Massive Missile Attacks on Ukraine</h2>
+<div style="font-size: 70%;">
+<p>The dataset contains available information about launched and shot down missiles and drones during <a href="https://en.wikipedia.org/wiki/2022%E2%80%932023_Russian_strikes_against_Ukrainian_infrastructure">russian massive missile and drone (UAV) strikes on infrastructure</a> (since October 2022) as part of its invasion of Ukraine. The dataset also contains information about some single shot-down UAVs.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p><strong>Data:</strong></p>
+<ul>
+<li class="fragment"><code>time_start</code> - start attack time.</li>
+<li class="fragment"><code>time_end</code> - end attack time.</li>
+<li class="fragment"><code>model</code> - missile or UAV type.</li>
+<li class="fragment"><code>launch_place</code> - city or region from missiles were launched.</li>
+<li class="fragment"><code>target</code> - could be a city in Ukraine, or region of Ukraine or direction, or full Ukraine.</li>
+<li class="fragment"><code>carrier</code> - missile launch platform.</li>
+<li class="fragment"><code>launched</code> - number of launched missiles or UAVs.</li>
+<li class="fragment"><code>destroyed</code> - number of destroyed missiles or UAVs.</li>
+<li class="fragment"><code>source</code> - information source (mainly facebook posts).</li>
+</ul>
+</div>
+</div>
+</section></section>
+<section>
+<section id="data-processing" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Data Processing</h1>
+
+</section>
+<section id="data-correction" class="slide level2">
+<h2>Data Correction</h2>
+<div style="font-size: 70%;">
+<p>The first dataset <code>2022 Russia Ukraine War</code> had some inaccuracies in the data.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>Hopefully, the author provided a corrected version of the dataset - <code>russia_losses_equipment_correction.csv</code>. Let’s load it and check the data.</p>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>russia_losses_equipment_correction <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(general_folder, ru_ua_folder, <span class="st">"russia_losses_equipment_correction.csv"</span>))</span>
+<span id="cb1-2"><a href=""></a><span class="fu">glimpse</span>(russia_losses_equipment_correction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 21
+Columns: 15
+$ date                      &lt;date&gt; 2022-10-13, 2023-05-27, 2023-10-03, 2024-03…
+$ day                       &lt;dbl&gt; 231, 458, 587, 749, 802, 822, 826, 850, 850,…
+$ aircraft                  &lt;dbl&gt; 0, 3, -1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0…
+$ helicopter                &lt;dbl&gt; 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ tank                      &lt;dbl&gt; 0, -5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ APC                       &lt;dbl&gt; -25, 7, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ `field artillery`         &lt;dbl&gt; 32, 8, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ MRL                       &lt;dbl&gt; 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ drone                     &lt;dbl&gt; 20, 49, -1, -1, 0, 9, 0, 30, 0, -1, -5, 0, 0…
+$ `naval ship`              &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ submarines                &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
+$ `anti-aircraft warfare`   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0…
+$ `special equipment`       &lt;dbl&gt; 0, 0, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+$ `vehicles and fuel tanks` &lt;dbl&gt; 0, 11, 0, 0, 44, 0, 0, 0, 0, 0, 20, 0, 0, 0,…
+$ `cruise missiles`         &lt;dbl&gt; 0, 31, 0, -1, 19, 0, 1, 0, 6, -1, 2, 2, 3, -…</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-correction.-function" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Data Correction. Function</h2>
+<div style="font-size: 70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb3-1" class="hljs-ln-code"><a href=""></a>apply_corrections <span class="ot">&lt;-</span> <span class="cf">function</span>(main_data, corrections) {</span>
+<span id="cb3-2" class="hljs-ln-code"><a href=""></a>  </span>
+<span id="cb3-3" class="hljs-ln-code"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="data-correction.-function-1" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Data Correction. Function</h2>
+<div style="font-size: 70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb4-1" class="hljs-ln-code"><a href=""></a>apply_corrections <span class="ot">&lt;-</span> <span class="cf">function</span>(main_data, corrections) {</span>
+<span id="cb4-2" class="hljs-ln-code"><a href=""></a>    corrected_data <span class="ot">&lt;-</span> main_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-3" class="hljs-ln-code"><a href=""></a>        <span class="fu">left_join</span>(corrections, <span class="at">by =</span> <span class="st">"date"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"_correction"</span>))</span>
+<span id="cb4-4" class="hljs-ln-code"><a href=""></a>    corrected_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-5" class="hljs-ln-code"><a href=""></a>      <span class="st">"aircraft"</span>, <span class="st">"helicopter"</span>, <span class="st">"tank"</span>, <span class="st">"APC"</span>, <span class="st">"field_artillery"</span>,</span>
+<span id="cb4-6" class="hljs-ln-code"><a href=""></a>      <span class="st">"MRL"</span>, <span class="st">"drone"</span>, <span class="st">"naval_ship"</span>, <span class="st">"submarines"</span>, </span>
+<span id="cb4-7" class="hljs-ln-code"><a href=""></a>      <span class="st">"anti_aircraft_warfare"</span>, <span class="st">"special_equipment"</span>, </span>
+<span id="cb4-8" class="hljs-ln-code"><a href=""></a>      <span class="st">"vehicles_and_fuel_tanks"</span>, <span class="st">"cruise_missiles"</span></span>
+<span id="cb4-9" class="hljs-ln-code"><a href=""></a>    )</span>
+<span id="cb4-10" class="hljs-ln-code"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="data-correction.-function-2" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Data Correction. Function</h2>
+<div style="font-size: 70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb5-1" class="hljs-ln-code"><a href=""></a>apply_corrections <span class="ot">&lt;-</span> <span class="cf">function</span>(main_data, corrections) {</span>
+<span id="cb5-2" class="hljs-ln-code"><a href=""></a>    corrected_data <span class="ot">&lt;-</span> main_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-3" class="hljs-ln-code"><a href=""></a>        <span class="fu">left_join</span>(corrections, <span class="at">by =</span> <span class="st">"date"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"_correction"</span>))</span>
+<span id="cb5-4" class="hljs-ln-code"><a href=""></a>    corrected_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-5" class="hljs-ln-code"><a href=""></a>      <span class="st">"aircraft"</span>, <span class="st">"helicopter"</span>, <span class="st">"tank"</span>, <span class="st">"APC"</span>, <span class="st">"field_artillery"</span>,</span>
+<span id="cb5-6" class="hljs-ln-code"><a href=""></a>      <span class="st">"MRL"</span>, <span class="st">"drone"</span>, <span class="st">"naval_ship"</span>, <span class="st">"submarines"</span>, </span>
+<span id="cb5-7" class="hljs-ln-code"><a href=""></a>      <span class="st">"anti_aircraft_warfare"</span>, <span class="st">"special_equipment"</span>, </span>
+<span id="cb5-8" class="hljs-ln-code"><a href=""></a>      <span class="st">"vehicles_and_fuel_tanks"</span>, <span class="st">"cruise_missiles"</span></span>
+<span id="cb5-9" class="hljs-ln-code"><a href=""></a>    )</span>
+<span id="cb5-10" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb5-11" class="hljs-ln-code"><a href=""></a>    <span class="cf">for</span> (col <span class="cf">in</span> corrected_columns) {</span>
+<span id="cb5-12" class="hljs-ln-code"><a href=""></a>        correction_col <span class="ot">&lt;-</span> <span class="fu">paste0</span>(col, <span class="st">"_correction"</span>)</span>
+<span id="cb5-13" class="hljs-ln-code"><a href=""></a>        <span class="cf">if</span> (correction_col <span class="sc">%in%</span> <span class="fu">colnames</span>(corrected_data)) {</span>
+<span id="cb5-14" class="hljs-ln-code"><a href=""></a>            <span class="co"># replace NA in correction with 0 (на всяк випадок)</span></span>
+<span id="cb5-15" class="hljs-ln-code"><a href=""></a>            corrected_data[[correction_col]][<span class="fu">is.na</span>(corrected_data[[correction_col]])] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-16" class="hljs-ln-code"><a href=""></a>            <span class="co"># cumulative correction</span></span>
+<span id="cb5-17" class="hljs-ln-code"><a href=""></a>            corrected_data[[col]] <span class="ot">&lt;-</span> corrected_data[[col]] <span class="sc">+</span> <span class="fu">cumsum</span>(<span class="fu">replace_na</span>(corrected_data[[correction_col]], <span class="dv">0</span>))</span>
+<span id="cb5-18" class="hljs-ln-code"><a href=""></a>        }</span>
+<span id="cb5-19" class="hljs-ln-code"><a href=""></a>    }</span>
+<span id="cb5-20" class="hljs-ln-code"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="data-correction.-function-3" class="slide level2" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">Data Correction. Function</h2>
+<div style="font-size: 70%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy" data-id="quarto-animate-code"><code class="sourceCode r hljs"><span id="cb6-1" class="hljs-ln-code"><a href=""></a>apply_corrections <span class="ot">&lt;-</span> <span class="cf">function</span>(main_data, corrections) {</span>
+<span id="cb6-2" class="hljs-ln-code"><a href=""></a>    corrected_data <span class="ot">&lt;-</span> main_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-3" class="hljs-ln-code"><a href=""></a>        <span class="fu">left_join</span>(corrections, <span class="at">by =</span> <span class="st">"date"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"_correction"</span>))</span>
+<span id="cb6-4" class="hljs-ln-code"><a href=""></a>    corrected_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb6-5" class="hljs-ln-code"><a href=""></a>      <span class="st">"aircraft"</span>, <span class="st">"helicopter"</span>, <span class="st">"tank"</span>, <span class="st">"APC"</span>, <span class="st">"field_artillery"</span>,</span>
+<span id="cb6-6" class="hljs-ln-code"><a href=""></a>      <span class="st">"MRL"</span>, <span class="st">"drone"</span>, <span class="st">"naval_ship"</span>, <span class="st">"submarines"</span>, </span>
+<span id="cb6-7" class="hljs-ln-code"><a href=""></a>      <span class="st">"anti_aircraft_warfare"</span>, <span class="st">"special_equipment"</span>, </span>
+<span id="cb6-8" class="hljs-ln-code"><a href=""></a>      <span class="st">"vehicles_and_fuel_tanks"</span>, <span class="st">"cruise_missiles"</span></span>
+<span id="cb6-9" class="hljs-ln-code"><a href=""></a>    )</span>
+<span id="cb6-10" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb6-11" class="hljs-ln-code"><a href=""></a>    <span class="cf">for</span> (col <span class="cf">in</span> corrected_columns) {</span>
+<span id="cb6-12" class="hljs-ln-code"><a href=""></a>        correction_col <span class="ot">&lt;-</span> <span class="fu">paste0</span>(col, <span class="st">"_correction"</span>)</span>
+<span id="cb6-13" class="hljs-ln-code"><a href=""></a>        <span class="cf">if</span> (correction_col <span class="sc">%in%</span> <span class="fu">colnames</span>(corrected_data)) {</span>
+<span id="cb6-14" class="hljs-ln-code"><a href=""></a>            <span class="co"># replace NA in correction with 0 (на всяк випадок)</span></span>
+<span id="cb6-15" class="hljs-ln-code"><a href=""></a>            corrected_data[[correction_col]][<span class="fu">is.na</span>(corrected_data[[correction_col]])] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb6-16" class="hljs-ln-code"><a href=""></a>            <span class="co"># cumulative correction</span></span>
+<span id="cb6-17" class="hljs-ln-code"><a href=""></a>            corrected_data[[col]] <span class="ot">&lt;-</span> corrected_data[[col]] <span class="sc">+</span> <span class="fu">cumsum</span>(<span class="fu">replace_na</span>(corrected_data[[correction_col]], <span class="dv">0</span>))</span>
+<span id="cb6-18" class="hljs-ln-code"><a href=""></a>        }</span>
+<span id="cb6-19" class="hljs-ln-code"><a href=""></a>    }</span>
+<span id="cb6-20" class="hljs-ln-code"><a href=""></a>    corrected_data <span class="ot">&lt;-</span> corrected_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-21" class="hljs-ln-code"><a href=""></a>        <span class="fu">select</span>(<span class="sc">-</span><span class="fu">ends_with</span>(<span class="st">"_correction"</span>))</span>
+<span id="cb6-22" class="hljs-ln-code"><a href=""></a></span>
+<span id="cb6-23" class="hljs-ln-code"><a href=""></a>    <span class="fu">return</span>(corrected_data)</span>
+<span id="cb6-24" class="hljs-ln-code"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>And then we applied the function to the main dataset…</p>
+</div>
+</div>
+</section>
+<section id="data-correction.-evaluating-the-scores-12" class="slide level2">
+<h2>Data Correction. Evaluating the Scores 1/2</h2>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>What problems we faced: we have a lot of diffirent types of equipment and missiles, so we need to categorize them.</p>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>So, we decided to create a function that will give <code>score</code> to each type of missile.</p>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<div class="sourceCode" id="cb7" data-code-line-numbers="1-9|11-25|27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>categorize_missile <span class="ot">&lt;-</span> <span class="cf">function</span>(missile) {</span>
+<span id="cb7-2"><a href=""></a>  severity_scores <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-3"><a href=""></a>    <span class="st">"High-powered missiles"</span> <span class="ot">=</span> <span class="dv">10</span>,</span>
+<span id="cb7-4"><a href=""></a>    <span class="st">"Medium-powered missiles"</span> <span class="ot">=</span> <span class="dv">7</span>,</span>
+<span id="cb7-5"><a href=""></a>    <span class="st">"Drones"</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb7-6"><a href=""></a>    <span class="st">"Composite weapon types"</span> <span class="ot">=</span> <span class="dv">5</span>,</span>
+<span id="cb7-7"><a href=""></a>    <span class="st">"Low-powered missiles / Others"</span> <span class="ot">=</span> <span class="dv">2</span>,</span>
+<span id="cb7-8"><a href=""></a>    <span class="st">"Unknown"</span> <span class="ot">=</span> <span class="cn">NA_real_</span>  <span class="co"># Default for unknown categories</span></span>
+<span id="cb7-9"><a href=""></a>  )</span>
+<span id="cb7-10"><a href=""></a>  </span>
+<span id="cb7-11"><a href=""></a>  <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"3M22 Zircon|Iskander-M|Iskander-K|X-47 Kinzhal|Kalibr|X-101/X-555|X-22|P-800 Oniks|X-59"</span>, missile, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb7-12"><a href=""></a>    <span class="fu">return</span>(severity_scores[<span class="st">"High-powered missiles"</span>])</span>
+<span id="cb7-13"><a href=""></a>  }</span>
+<span id="cb7-14"><a href=""></a>  <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"C-300|C-400|C-300/C-400|C-300/C-400 and Iskander-M|C-400 and Iskander-M|Iskander-M/KN-23|X-22/X-31P|X-22/X-32|X-31PD|X-31|KAB"</span>, missile, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb7-15"><a href=""></a>    <span class="fu">return</span>(severity_scores[<span class="st">"Medium-powered missiles"</span>])</span>
+<span id="cb7-16"><a href=""></a>  }</span>
+<span id="cb7-17"><a href=""></a>  <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"Shahed-136/131|Lancet|Mohajer-6|Orion|Orlan-10|Orlan-30|ZALA|Supercam|Merlin-VR|Eleron|Reconnaissance UAV|Unknown UAV"</span>, missile, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb7-18"><a href=""></a>    <span class="fu">return</span>(severity_scores[<span class="st">"Drones"</span>])</span>
+<span id="cb7-19"><a href=""></a>  }</span>
+<span id="cb7-20"><a href=""></a>  <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"Orlan-10 and Supercam|Orlan-10 and ZALA|Shahed-136/131 and Lancet|Orlan-10 and ZALA and Supercam|Orlan-10 and Orlan-30 and ZALA and Supercam"</span>, missile, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb7-21"><a href=""></a>    <span class="fu">return</span>(severity_scores[<span class="st">"Composite weapon types"</span>])</span>
+<span id="cb7-22"><a href=""></a>  }</span>
+<span id="cb7-23"><a href=""></a>  <span class="cf">else</span> <span class="cf">if</span> (<span class="fu">grepl</span>(<span class="st">"Aerial Bomb|Grad/Urgan Rockets|Granat-4|Forpost|Картограф|Привет-82|Фенікс"</span>, missile, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb7-24"><a href=""></a>    <span class="fu">return</span>(severity_scores[<span class="st">"Low-powered missiles / Others"</span>])</span>
+<span id="cb7-25"><a href=""></a>  }</span>
+<span id="cb7-26"><a href=""></a>  </span>
+<span id="cb7-27"><a href=""></a>  <span class="fu">return</span>(severity_scores[<span class="st">"Unknown"</span>])  </span>
+<span id="cb7-28"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="data-correction.-evaluating-the-scores-22" class="slide level2">
+<h2>Data Correction. Evaluating the Scores 2/2</h2>
+<div class="fragment">
+<p>Also, we want to show our second scores_table, but for the equipment.</p>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>weights <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb8-2"><a href=""></a>  <span class="at">aircraft =</span> <span class="dv">69</span>,                 <span class="co"># Aircraft: High cost and strategic value</span></span>
+<span id="cb8-3"><a href=""></a>  <span class="at">helicopter =</span> <span class="dv">50</span>,               <span class="co"># Helicopter: Tactical support and mobility</span></span>
+<span id="cb8-4"><a href=""></a>  <span class="at">tank =</span> <span class="dv">30</span>,                     <span class="co"># Tank: Backbone of ground offensives</span></span>
+<span id="cb8-5"><a href=""></a>  <span class="at">APC =</span> <span class="dv">10</span>,                      <span class="co"># APC: Troop transport</span></span>
+<span id="cb8-6"><a href=""></a>  <span class="at">field.artillery =</span> <span class="dv">15</span>,          <span class="co"># Field Artillery: Combat support</span></span>
+<span id="cb8-7"><a href=""></a>  <span class="at">MRL =</span> <span class="dv">40</span>,                      <span class="co"># MRL: High-impact artillery strikes</span></span>
+<span id="cb8-8"><a href=""></a>  <span class="at">military.auto =</span> <span class="dv">10</span>,            <span class="co"># Military Auto: Logistics and mobility</span></span>
+<span id="cb8-9"><a href=""></a>  <span class="at">fuel.tank =</span> <span class="dv">10</span>,                <span class="co"># Fuel Tank: Operations sustainment</span></span>
+<span id="cb8-10"><a href=""></a>  <span class="at">drone =</span> <span class="dv">20</span>,                    <span class="co"># Drone: Reconnaissance and targeted strikes</span></span>
+<span id="cb8-11"><a href=""></a>  <span class="at">naval.ship =</span> <span class="dv">100</span>,              <span class="co"># Naval Ship: Maritime operations</span></span>
+<span id="cb8-12"><a href=""></a>  <span class="at">anti.aircraft.warfare =</span> <span class="dv">60</span>,    <span class="co"># Anti-Aircraft Warfare: Air defense</span></span>
+<span id="cb8-13"><a href=""></a>  <span class="at">special.equipment =</span> <span class="dv">40</span>,        <span class="co"># Special Equipment: Specialized operational roles</span></span>
+<span id="cb8-14"><a href=""></a>  <span class="at">mobile.SRBM.system =</span> <span class="dv">100</span>,      <span class="co"># Mobile SRBM System: Strategic deterrence</span></span>
+<span id="cb8-15"><a href=""></a>  <span class="at">vehicles.and.fuel.tanks =</span> <span class="dv">30</span>,  <span class="co"># Vehicles and Fuel Tanks: Logistics</span></span>
+<span id="cb8-16"><a href=""></a>  <span class="at">cruise.missiles =</span> <span class="dv">40</span>,          <span class="co"># Cruise Missiles: High-impact strikes</span></span>
+<span id="cb8-17"><a href=""></a>  <span class="at">submarines =</span> <span class="dv">1000</span>             <span class="co"># Submarines: Strategic naval supremacy</span></span>
+<span id="cb8-18"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="kvitkas-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Kvitka’s Hypothesis</h1>
+
+</section>
+<section id="the-missile-attacks-are-more-severe-on-significant-days" class="slide level2">
+<h2>The missile attacks are more severe on significant days?</h2>
+<div style="font-size: 90%;">
+<p>The severity level of missile attacks is determined based on the type of weapon used, categorized into six groups:</p>
+<ul>
+<li class="fragment">High-powered missiles</li>
+<li class="fragment">Medium-powered missiles</li>
+<li class="fragment">Drones</li>
+<li class="fragment">Composite weapon types</li>
+<li class="fragment">Low-powered missiles / Others</li>
+<li class="fragment">Unknown</li>
+</ul>
+</div>
+</section>
+<section id="the-missile-attacks-are-more-severe-on-significant-days-1" class="slide level2">
+<h2>The missile attacks are more severe on significant days?</h2>
+<div style="font-size: 70%;">
+<p>Each category is assigned a predefined score reflecting its destructive potential, with high-powered missiles scoring the highest and drones or low-powered weapons scoring lower.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>This scoring system standardizes the assessment of attack intensity, enabling comparative analysis across different events or time periods.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Weapon Category</th>
+<th>Severity Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High-powered missiles</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Medium-powered missiles</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>Drones</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Composite weapon types</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Low-powered missiles / Others</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Unknown</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="code-for-determining-the-significant-days" class="slide level2">
+<h2>Code for determining the significant days</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>significant_dates <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
+<span id="cb9-2"><a href=""></a>  <span class="st">"2022-08-24"</span>, <span class="st">"2023-08-24"</span>, <span class="st">"2024-08-24"</span>,  <span class="co"># Independence Day of Ukraine</span></span>
+<span id="cb9-3"><a href=""></a>  <span class="st">"2022-12-25"</span>, <span class="st">"2023-12-25"</span>, <span class="st">"2024-12-25"</span>,  <span class="co"># Christmas</span></span>
+<span id="cb9-4"><a href=""></a>  <span class="st">"2022-12-06"</span>, <span class="st">"2023-12-06"</span>, <span class="st">"2024-12-06"</span>,  <span class="co"># Armed Forces Day of Ukraine</span></span>
+<span id="cb9-5"><a href=""></a>  <span class="st">"2022-01-25"</span>, <span class="st">"2023-01-25"</span>, <span class="st">"2024-01-25"</span>,  <span class="co"># Volodymyr Zelenskyy's Birthday</span></span>
+<span id="cb9-6"><a href=""></a>  <span class="st">"2022-01-01"</span>, <span class="st">"2023-01-01"</span>, <span class="st">"2024-01-01"</span>,  <span class="co"># New Year</span></span>
+<span id="cb9-7"><a href=""></a>  <span class="st">"2022-06-28"</span>, <span class="st">"2023-06-28"</span>, <span class="st">"2024-06-28"</span>,  <span class="co"># Constitution Day of Ukraine</span></span>
+<span id="cb9-8"><a href=""></a>  <span class="st">"2022-05-09"</span>, <span class="st">"2023-05-09"</span>, <span class="st">"2024-05-09"</span>,  <span class="co"># Victory Day</span></span>
+<span id="cb9-9"><a href=""></a>  <span class="st">"2022-10-07"</span>, <span class="st">"2023-10-07"</span>, <span class="st">"2024-10-07"</span>,  <span class="co"># Vladimir Putin's Birthday</span></span>
+<span id="cb9-10"><a href=""></a>  <span class="st">"2022-04-24"</span>, <span class="st">"2023-04-16"</span>, <span class="st">"2024-04-16"</span>   <span class="co"># Easter (Pascha)</span></span>
+<span id="cb9-11"><a href=""></a>))</span>
+<span id="cb9-12"><a href=""></a></span>
+<span id="cb9-13"><a href=""></a>missile_attacks_score_per_day_significant <span class="ot">&lt;-</span> complete_dataset <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">significant_date =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb9-15"><a href=""></a>    date <span class="sc">%in%</span> significant_dates, <span class="cn">TRUE</span>, <span class="cn">FALSE</span></span>
+<span id="cb9-16"><a href=""></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ab-test" class="slide level2">
+<h2>AB test</h2>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p><span class="math inline">\(H_0\)</span> - the mean severity level are about <strong>the same</strong> in both groups</p>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p><span class="math inline">\(H_1\)</span> - the mean severity level in significant group <strong>is higher</strong>.</p>
+</div>
+</div>
+<div class="fragment">
+<div style="text-align: center;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/box%20plot-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="textt-test" class="slide level2">
+<h2><span class="math inline">\(\text{t}\)</span>-test</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(total_score_per_day <span class="sc">~</span> significant_date, missile_attacks_score_per_day_significant, <span class="at">alternative =</span> <span class="st">"less"</span>)</span>
+<span id="cb10-2"><a href=""></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  total_score_per_day by significant_date
+t = 0.7553, df = 21.985, p-value = 0.771
+alternative hypothesis: true difference in means between group FALSE and group TRUE is less than 0
+95 percent confidence interval:
+     -Inf 59.83921
+sample estimates:
+mean in group FALSE  mean in group TRUE 
+           104.3797             86.1000 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>As we can see the 0.7709577 &gt; 0.05. Meaning there is <code>no eveidence</code> to reject the <span class="math inline">\(H_0\)</span> hypothesis.</p>
+</div>
+</section>
+<section id="textt-test-for-filtered-data" class="slide level2">
+<h2><span class="math inline">\(\text{t}\)</span>-test for filtered data</h2>
+<p>The group of unsignificant days has a lot of outliers. Therefore i decided to filter out the anomal values using IQR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(missile_attacks_score_per_day_significant<span class="sc">$</span>total_score_per_day, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-2"><a href=""></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(missile_attacks_score_per_day_significant<span class="sc">$</span>total_score_per_day, <span class="fl">0.75</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a href=""></a>IQR <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
+<span id="cb12-4"><a href=""></a></span>
+<span id="cb12-5"><a href=""></a>upper_threshold <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
+<span id="cb12-6"><a href=""></a></span>
+<span id="cb12-7"><a href=""></a>filtered_date <span class="ot">&lt;-</span> missile_attacks_score_per_day_significant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(total_score_per_day <span class="sc">&lt;</span> upper_threshold)</span>
+<span id="cb12-8"><a href=""></a><span class="fu">summary</span>(filtered_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      date            total_score_per_day significant_date
+ Min.   :2022-09-28   Min.   :  0.00      Mode :logical   
+ 1st Qu.:2023-04-16   1st Qu.:  0.00      FALSE:727       
+ Median :2023-10-28   Median : 39.00      TRUE :19        
+ Mean   :2023-10-30   Mean   : 63.68                      
+ 3rd Qu.:2024-05-15   3rd Qu.: 99.00                      
+ Max.   :2024-12-12   Max.   :312.00                      </code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div style="text-align: center;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/box%20plot%202-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>As you can see the amount of outliers are now <code>much lower</code>. So, let`s conduct the <span class="math inline">\(\text{t}\)</span>-test one more time.</p>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(total_score_per_day <span class="sc">~</span> significant_date, filtered_date, <span class="at">alternative =</span> <span class="st">"less"</span>)</span>
+<span id="cb14-2"><a href=""></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  total_score_per_day by significant_date
+t = -0.38709, df = 18.813, p-value = 0.3515
+alternative hypothesis: true difference in means between group FALSE and group TRUE is less than 0
+95 percent confidence interval:
+     -Inf 25.13731
+sample estimates:
+mean in group FALSE  mean in group TRUE 
+           63.49106            70.73684 </code></pre>
+</div>
+</div>
+<p>As we can see the <strong>0.3515153 &gt; 0.05</strong>. Meaning there is still <code>no evidence</code> to reject the <span class="math inline">\(H_0\)</span> hypothesis.</p>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<p>The analysis revealed no evidence of a connection between significant dates and the severity of missile attacks.</p>
+<div class="fragment">
+<p>Statistical testing showed no significant difference in attack severity between significant and non-significant dates. This indicates that the chosen significant dates do not influence the intensity of missile strikes.</p>
+</div>
+</section></section>
+<section>
+<section id="zakhars-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Zakhar’s Hypothesis</h1>
+
+</section>
+<section id="model-1" class="slide level2">
+<h2>Model 1</h2>
+<p><strong>Equipment Loss Points vs.&nbsp;Shelling Points</strong></p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a><span class="fu">ggplot</span>(equipment_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> shelling_points, <span class="at">y =</span> equipment_daily_points)) <span class="sc">+</span></span>
+<span id="cb16-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb16-3"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-5"><a href=""></a>    <span class="at">title =</span> <span class="st">"Regression of Daily Equipment Loss Points on Shelling Points"</span>,</span>
+<span id="cb16-6"><a href=""></a>    <span class="at">x =</span> <span class="st">"Shelling Points (Missiles Launched)"</span>,</span>
+<span id="cb16-7"><a href=""></a>    <span class="at">y =</span> <span class="st">"Daily Equipment Loss Points"</span></span>
+<span id="cb16-8"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb16-9"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/model-1-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="regression-analysis-fit-model-1" class="slide level2">
+<h2>Regression Analysis Fit Model 1</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(equipment_daily_points <span class="sc">~</span> shelling_points, <span class="at">data =</span> equipment_shelling_merged)</span>
+<span id="cb17-2"><a href=""></a></span>
+<span id="cb17-3"><a href=""></a><span class="fu">summary</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = equipment_daily_points ~ shelling_points, data = equipment_shelling_merged)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+ -5753  -1127   -434    863  38615 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     2058.375     70.994   28.99   &lt;2e-16 ***
+shelling_points   24.461      1.971   12.41   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1951 on 1023 degrees of freedom
+Multiple R-squared:  0.1309,    Adjusted R-squared:   0.13 
+F-statistic:   154 on 1 and 1023 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="model-1.-summary" class="slide level2">
+<h2>Model 1. Summary</h2>
+<ul>
+<li class="fragment"><strong>Intercept</strong> (2058.375): Baseline equipment loss points when shelling points are zero.<br>
+</li>
+<li class="fragment"><strong>Slope</strong> (24.461): Each additional shelling point increases equipment loss by ~24.46 points.<br>
+</li>
+<li class="fragment"><strong>Significance</strong> (Pr(&gt;|t|) &lt; 2e-16): Both coefficients are highly significant.<br>
+</li>
+<li class="fragment"><strong>R-squared</strong> (0.1309): Shelling explains 13.09% of equipment loss variability, suggesting other factors play a major role.</li>
+</ul>
+</section>
+<section id="model-2" class="slide level2">
+<h2>Model 2</h2>
+<p><strong>Personnel Loss Points vs.&nbsp;Shelling Points</strong></p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href=""></a><span class="fu">ggplot</span>(personnel_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> shelling_points, <span class="at">y =</span> personnel_daily_points)) <span class="sc">+</span></span>
+<span id="cb19-2"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb19-3"><a href=""></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
+<span id="cb19-4"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb19-5"><a href=""></a>    <span class="at">title =</span> <span class="st">"Regression of Daily Personnel Points on Shelling Points"</span>,</span>
+<span id="cb19-6"><a href=""></a>    <span class="at">x =</span> <span class="st">"Shelling Points (Missiles Launched)"</span>,</span>
+<span id="cb19-7"><a href=""></a>    <span class="at">y =</span> <span class="st">"Daily Personnel Points (Killed)"</span></span>
+<span id="cb19-8"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb19-9"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/model-2-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="regression-analysis-fit-model-2" class="slide level2">
+<h2>Regression Analysis Fit Model 2</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href=""></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(personnel_daily_points <span class="sc">~</span> shelling_points, <span class="at">data =</span> personnel_shelling_merged)</span>
+<span id="cb20-2"><a href=""></a></span>
+<span id="cb20-3"><a href=""></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = personnel_daily_points ~ shelling_points, data = personnel_shelling_merged)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1052.89  -287.39   -17.39   262.86  2532.61 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     627.3928    13.3669   46.94   &lt;2e-16 ***
+shelling_points   6.3038     0.3711   16.99   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 367.4 on 1023 degrees of freedom
+Multiple R-squared:   0.22, Adjusted R-squared:  0.2192 
+F-statistic: 288.5 on 1 and 1023 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="model-2.-summary" class="slide level2">
+<h2>Model 2. Summary</h2>
+<ul>
+<li class="fragment"><strong>Intercept</strong> (627.39): Baseline personnel loss points when shelling points are zero.<br>
+</li>
+<li class="fragment"><strong>Slope</strong> (6.30): Each additional shelling point increases personnel losses by ~6.30 points.<br>
+</li>
+<li class="fragment"><strong>Significance</strong> (Pr(&gt;|t|) &lt; 2e-16): Both coefficients are highly significant.<br>
+</li>
+<li class="fragment"><strong>R-squared</strong> (0.22): Shelling explains 22% of personnel loss variability, indicating other influential factors.</li>
+</ul>
+</section>
+<section id="model-comparison" class="slide level2">
+<h2>Model Comparison</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href=""></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb22-2"><a href=""></a><span class="fu">plot</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="template_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<section id="model-comparison-1" class="slide level2">
+<h2>Model Comparison</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href=""></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb23-2"><a href=""></a><span class="fu">plot</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="template_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section>
+<section id="summary-1" class="slide level2">
+<h2>Summary</h2>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href=""></a>massive_shelling_threshold <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb24-2"><a href=""></a></span>
+<span id="cb24-3"><a href=""></a>equipment_shelling_merged <span class="ot">&lt;-</span> equipment_shelling_merged <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-5"><a href=""></a>    <span class="at">massive_shelling =</span> <span class="fu">ifelse</span>(shelling_points <span class="sc">&gt;</span> massive_shelling_threshold, <span class="st">"Massive"</span>, <span class="st">"Non-Massive"</span>)</span>
+<span id="cb24-6"><a href=""></a>  )</span>
+<span id="cb24-7"><a href=""></a></span>
+<span id="cb24-8"><a href=""></a>group_means_tech <span class="ot">&lt;-</span> equipment_shelling_merged <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href=""></a>  <span class="fu">group_by</span>(massive_shelling) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href=""></a>  <span class="fu">summarise</span>(</span>
+<span id="cb24-11"><a href=""></a>    <span class="at">mean_points =</span> <span class="fu">mean</span>(equipment_daily_points, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-12"><a href=""></a>    <span class="at">sd_points =</span> <span class="fu">sd</span>(equipment_daily_points, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb24-13"><a href=""></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb24-14"><a href=""></a>  )</span>
+<span id="cb24-15"><a href=""></a></span>
+<span id="cb24-16"><a href=""></a></span>
+<span id="cb24-17"><a href=""></a>t_test_tech <span class="ot">&lt;-</span> <span class="fu">t.test</span>(</span>
+<span id="cb24-18"><a href=""></a>  equipment_daily_points <span class="sc">~</span> massive_shelling,</span>
+<span id="cb24-19"><a href=""></a>  <span class="at">data =</span> equipment_shelling_merged</span>
+<span id="cb24-20"><a href=""></a>)</span>
+<span id="cb24-21"><a href=""></a></span>
+<span id="cb24-22"><a href=""></a></span>
+<span id="cb24-23"><a href=""></a><span class="fu">ggplot</span>(equipment_shelling_merged, <span class="fu">aes</span>(<span class="at">x =</span> massive_shelling, <span class="at">y =</span> equipment_daily_points)) <span class="sc">+</span></span>
+<span id="cb24-24"><a href=""></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"salmon"</span>)) <span class="sc">+</span></span>
+<span id="cb24-25"><a href=""></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">shape =</span> <span class="dv">23</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">fill =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb24-26"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb24-27"><a href=""></a>    <span class="at">title =</span> <span class="st">"Розподіл очок за техніку між масованими та немасованими обстрілами"</span>,</span>
+<span id="cb24-28"><a href=""></a>    <span class="at">x =</span> <span class="st">"Тип обстрілу"</span>,</span>
+<span id="cb24-29"><a href=""></a>    <span class="at">y =</span> <span class="st">"Кількість очок за техніку (daily points)"</span></span>
+<span id="cb24-30"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb24-31"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-summary-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="denyss-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Denys’s Hypothesis</h1>
+
+</section>
+<section id="distribution-of-equipment-losses" class="slide level2">
+<h2>Distribution of Equipment Losses</h2>
+<p>First, let’s split the data by seasons (winter, spring, summer, autumn) + year</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>SUMMER_HEX <span class="ot">&lt;-</span> <span class="st">"#e31a1c"</span></span>
+<span id="cb25-2"><a href=""></a>WINTER_HEX <span class="ot">&lt;-</span> <span class="st">"#1f78b4"</span></span>
+<span id="cb25-3"><a href=""></a>SPRING_HEX <span class="ot">&lt;-</span> <span class="st">"#33a02c"</span></span>
+<span id="cb25-4"><a href=""></a>AUTUMN_HEX <span class="ot">&lt;-</span> <span class="st">"#ff7f00"</span></span>
+<span id="cb25-5"><a href=""></a></span>
+<span id="cb25-6"><a href=""></a>disrtibution_data <span class="ot">&lt;-</span> ru_loss_equipment_evaluated_pdf <span class="sc">%&gt;%</span> </span>
+<span id="cb25-7"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-8"><a href=""></a>    <span class="at">season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb25-9"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">~</span> <span class="st">"Winter"</span>,</span>
+<span id="cb25-10"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring"</span>,</span>
+<span id="cb25-11"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer"</span>,</span>
+<span id="cb25-12"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Autumn"</span></span>
+<span id="cb25-13"><a href=""></a>    ),</span>
+<span id="cb25-14"><a href=""></a>    <span class="at">year =</span> <span class="fu">year</span>(date)</span>
+<span id="cb25-15"><a href=""></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-16"><a href=""></a>  <span class="fu">select</span>(pdf_loss_score, season, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2022" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2022</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb26-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb26-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb26-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb26-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb26-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb26-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb26-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb26-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb26-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2022"</span>,</span>
+<span id="cb26-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb26-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb26-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb26-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb26-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb26-21"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2022-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2023" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2023</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb27-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb27-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb27-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb27-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb27-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb27-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb27-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb27-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb27-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2023"</span>,</span>
+<span id="cb27-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb27-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb27-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb27-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb27-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb27-21"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2023-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2024" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2024</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb28-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb28-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb28-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb28-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb28-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb28-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb28-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb28-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb28-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2024"</span>,</span>
+<span id="cb28-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb28-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb28-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb28-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb28-21"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb28-22"><a href=""></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">quantile</span>(disrtibution_data<span class="sc">$</span>pdf_loss_score, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.95</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2024-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="searching-for-the-hypothesis" class="slide level2">
+<h2>Searching for the Hypothesis…</h2>
+<p>I was thinking a lot about the field to investigate.</p>
+<div class="fragment">
+<p>Suddenly, I remembered the <code>Ukrainian counterattacks</code> in Summer 2023.</p>
+</div>
+<div class="fragment">
+<p>I decided to check if there is a <strong>significant difference</strong> in statistical means of equipment losses between that period and the recent days.</p>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<p>Let’s visualize the distribution of equipment losses in <code>Summer 2023</code> and recent days (<code>Autumn 2024</code>).</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href=""></a>    <span class="fu">filter</span>((year <span class="sc">==</span> <span class="dv">2023</span> <span class="sc">&amp;</span> season <span class="sc">==</span> <span class="st">"Summer"</span>) <span class="sc">|</span> (year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> season <span class="sc">==</span> <span class="st">"Autumn"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href=""></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href=""></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href=""></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX)) <span class="sc">+</span></span>
+<span id="cb29-6"><a href=""></a>    <span class="fu">labs</span>(</span>
+<span id="cb29-7"><a href=""></a>      <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in Summer 2023 and Autumn 2024"</span>,</span>
+<span id="cb29-8"><a href=""></a>      <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb29-9"><a href=""></a>      <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb29-10"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb29-11"><a href=""></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb29-12"><a href=""></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb29-13"><a href=""></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">quantile</span>(disrtibution_data<span class="sc">$</span>pdf_loss_score, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.95</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-1-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-1" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>But there is one big problem. The data is not normally distributed :(</p>
+</div>
+<div class="fragment">
+<p>So, I decided to use Bootstrap to compare the means of equipment losses in <code>Summer 2023</code> and <code>Autumn 2024</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>bootstrap_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">n =</span> <span class="dv">10000</span>) {</span>
+<span id="cb30-2"><a href=""></a>  boot_means <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n, {</span>
+<span id="cb30-3"><a href=""></a>    <span class="fu">sample</span>(data, <span class="at">size =</span> <span class="fu">length</span>(data), <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href=""></a>      <span class="fu">mean</span>()</span>
+<span id="cb30-5"><a href=""></a>  })</span>
+<span id="cb30-6"><a href=""></a>  boot_means</span>
+<span id="cb30-7"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Remark.</strong></p>
+</div>
+<div class="callout-content">
+<p>I also removed some <strong>outliers</strong> from the data in <code>Autumn 2024</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-2" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>Now, our distributions look like this:</p>
+</div>
+<div class="fragment">
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-2"><a href=""></a>  <span class="fu">geom_density</span>(</span>
+<span id="cb31-3"><a href=""></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">value =</span> boot_summer, <span class="at">season =</span> <span class="st">"Summer 2023"</span>),</span>
+<span id="cb31-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> season), <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb31-5"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-6"><a href=""></a>  <span class="fu">geom_density</span>(</span>
+<span id="cb31-7"><a href=""></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">value =</span> boot_autumn, <span class="at">season =</span> <span class="st">"Autumn 2024"</span>),</span>
+<span id="cb31-8"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> season), <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb31-9"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-10"><a href=""></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb31-11"><a href=""></a>    <span class="at">data =</span> normal_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> density, <span class="at">color =</span> season), <span class="at">size =</span> <span class="dv">1</span></span>
+<span id="cb31-12"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-13"><a href=""></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb31-14"><a href=""></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer 2023"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn 2024"</span> <span class="ot">=</span> AUTUMN_HEX)</span>
+<span id="cb31-15"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-16"><a href=""></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb31-17"><a href=""></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer 2023"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn 2024"</span> <span class="ot">=</span> AUTUMN_HEX)</span>
+<span id="cb31-18"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-19"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-20"><a href=""></a>    <span class="at">title =</span> <span class="st">"Bootstrap and Fitted Normal Distributions"</span>,</span>
+<span id="cb31-21"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb31-22"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb31-23"><a href=""></a>    <span class="at">fill =</span> <span class="st">"Season"</span>,</span>
+<span id="cb31-24"><a href=""></a>    <span class="at">color =</span> <span class="st">"Fitted Normal"</span></span>
+<span id="cb31-25"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-26"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-1-bootstrap-plot-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-3" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<p><strong>Hypothesis Testing. <span class="math inline">\(\text{t}\)</span>-test</strong></p>
+<div style="font-size: 80%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(</span>
+<span id="cb32-2"><a href=""></a>  boot_summer,               <span class="co"># Bootstrapped means for Summer 2023</span></span>
+<span id="cb32-3"><a href=""></a>  boot_autumn,               <span class="co"># Bootstrapped means for Autumn 2024</span></span>
+<span id="cb32-4"><a href=""></a>  <span class="at">alternative =</span> <span class="st">"greater"</span>,   <span class="co"># One-tailed test (Summer 2023 &gt; Autumn 2024)</span></span>
+<span id="cb32-5"><a href=""></a>  <span class="at">var.equal =</span> <span class="cn">FALSE</span>          <span class="co"># Assume unequal variances (Welch's t-test)</span></span>
+<span id="cb32-6"><a href=""></a>)</span>
+<span id="cb32-7"><a href=""></a><span class="fu">cat</span>(<span class="st">"T-statistic:"</span>, t_test_result<span class="sc">$</span>statistic, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>T-statistic: 518.3571 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">cat</span>(<span class="st">"P-value:"</span>, t_test_result<span class="sc">$</span>p.value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P-value: 0 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a><span class="fu">cat</span>(<span class="st">"95% Confidence Interval:"</span>, t_test_result<span class="sc">$</span>conf.int, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>95% Confidence Interval: 537.7398 Inf </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a><span class="cf">if</span> (t_test_result<span class="sc">$</span>p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb38-2"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Reject the null hypothesis: There is a significant difference in means.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-3"><a href=""></a>} <span class="cf">else</span> {</span>
+<span id="cb38-4"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Fail to reject the null hypothesis: No significant difference in means.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-5"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reject the null hypothesis: There is a significant difference in means.</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>The second hypothesis I come up with is the question about the <strong>distribution</strong> of equipment losses in <code>Summer 2023</code>.</p>
+</div>
+<div class="fragment">
+<p>In this case, I want to check if the distribution of equipment losses in <code>Summer 2023</code> is close to the <strong>normal distribution</strong>.</p>
+</div>
+<div class="fragment">
+<p>I will use the <strong>Chi-Square Goodness of Fit Test</strong> to check this hypothesis.</p>
+</div>
+<div class="fragment">
+<p>Let’s dive into the code!</p>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks-1" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(summer_2023)</span>
+<span id="cb40-2"><a href=""></a>sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(summer_2023)</span>
+<span id="cb40-3"><a href=""></a></span>
+<span id="cb40-4"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(summer_2023)</span>
+<span id="cb40-5"><a href=""></a>breaks <span class="ot">&lt;-</span> <span class="fu">seq</span>(</span>
+<span id="cb40-6"><a href=""></a>  <span class="fu">min</span>(summer_2023),</span>
+<span id="cb40-7"><a href=""></a>  <span class="fu">max</span>(summer_2023),</span>
+<span id="cb40-8"><a href=""></a>  <span class="at">length.out =</span> <span class="fu">ceiling</span>(<span class="fu">log2</span>(n) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb40-9"><a href=""></a>)</span>
+<span id="cb40-10"><a href=""></a></span>
+<span id="cb40-11"><a href=""></a>observed <span class="ot">&lt;-</span> <span class="fu">hist</span>(summer_2023, <span class="at">breaks =</span> breaks, <span class="at">plot =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>counts</span>
+<span id="cb40-12"><a href=""></a></span>
+<span id="cb40-13"><a href=""></a>plot_normal_overlay_gg <span class="ot">&lt;-</span> <span class="cf">function</span>(data, mean, sd, breaks, <span class="at">hist_color =</span> <span class="st">"lightblue"</span>, <span class="at">line_color =</span> <span class="st">"red"</span>, <span class="at">line_size =</span> <span class="fl">1.5</span>) {</span>
+<span id="cb40-14"><a href=""></a>  data_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> data)</span>
+<span id="cb40-15"><a href=""></a>  hist_bins <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="fu">length</span>(breaks))</span>
+<span id="cb40-16"><a href=""></a>  normal_curve <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb40-17"><a href=""></a>    <span class="at">x =</span> <span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb40-18"><a href=""></a>    <span class="at">y =</span> <span class="fu">dnorm</span>(<span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="dv">1000</span>), <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)</span>
+<span id="cb40-19"><a href=""></a>  )</span>
+<span id="cb40-20"><a href=""></a>  </span>
+<span id="cb40-21"><a href=""></a>  <span class="fu">ggplot</span>(data_df, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb40-22"><a href=""></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="fu">length</span>(breaks) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">fill =</span> hist_color, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb40-23"><a href=""></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> normal_curve, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">color =</span> line_color, <span class="at">size =</span> line_size) <span class="sc">+</span></span>
+<span id="cb40-24"><a href=""></a>    <span class="fu">labs</span>(</span>
+<span id="cb40-25"><a href=""></a>      <span class="at">title =</span> <span class="st">"Histogram with Normal Distribution Overlay"</span>,</span>
+<span id="cb40-26"><a href=""></a>      <span class="at">x =</span> <span class="st">"Data"</span>,</span>
+<span id="cb40-27"><a href=""></a>      <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb40-28"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb40-29"><a href=""></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb40-30"><a href=""></a>}</span>
+<span id="cb40-31"><a href=""></a></span>
+<span id="cb40-32"><a href=""></a><span class="fu">plot_normal_overlay_gg</span>(summer_2023, <span class="at">mean =</span> mu, <span class="at">sd =</span> sd, <span class="at">breaks =</span> breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-2-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>But we need to verify our assumptions <code>mathematically</code>, not only visually!!!</p>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks-2" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>chi_squared_test <span class="ot">&lt;-</span> <span class="cf">function</span>(data, mean, sd, breaks) {</span>
+<span id="cb41-2"><a href=""></a>  hist_data <span class="ot">&lt;-</span> <span class="fu">hist</span>(data, <span class="at">breaks =</span> breaks, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-3"><a href=""></a>  observed <span class="ot">&lt;-</span> hist_data<span class="sc">$</span>counts</span>
+<span id="cb41-4"><a href=""></a>  </span>
+<span id="cb41-5"><a href=""></a>  n <span class="ot">&lt;-</span> <span class="fu">sum</span>(observed)</span>
+<span id="cb41-6"><a href=""></a>  </span>
+<span id="cb41-7"><a href=""></a>  expected <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(observed))</span>
+<span id="cb41-8"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(expected)) {</span>
+<span id="cb41-9"><a href=""></a>    <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb41-10"><a href=""></a>      <span class="co"># Smallest bin</span></span>
+<span id="cb41-11"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(breaks[i <span class="sc">+</span> <span class="dv">1</span>], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd) <span class="sc">*</span> n</span>
+<span id="cb41-12"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (i <span class="sc">==</span> <span class="fu">length</span>(expected)) {</span>
+<span id="cb41-13"><a href=""></a>      <span class="co"># Largest bin</span></span>
+<span id="cb41-14"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(breaks[i], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)) <span class="sc">*</span> n</span>
+<span id="cb41-15"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb41-16"><a href=""></a>      <span class="co"># Middle bins</span></span>
+<span id="cb41-17"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> (<span class="fu">pnorm</span>(breaks[i <span class="sc">+</span> <span class="dv">1</span>], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd) <span class="sc">-</span></span>
+<span id="cb41-18"><a href=""></a>                      <span class="fu">pnorm</span>(breaks[i], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)) <span class="sc">*</span> n</span>
+<span id="cb41-19"><a href=""></a>    }</span>
+<span id="cb41-20"><a href=""></a>  }</span>
+<span id="cb41-21"><a href=""></a>  </span>
+<span id="cb41-22"><a href=""></a>  <span class="co"># Combine bins with expected frequencies &lt; 5</span></span>
+<span id="cb41-23"><a href=""></a>  <span class="cf">while</span> (<span class="fu">any</span>(expected <span class="sc">&lt;</span> <span class="dv">5</span>)) {</span>
+<span id="cb41-24"><a href=""></a>    idx <span class="ot">&lt;-</span> <span class="fu">which.min</span>(expected)</span>
+<span id="cb41-25"><a href=""></a>    <span class="co"># if index is 1 or last, combine with next or previous bin</span></span>
+<span id="cb41-26"><a href=""></a>    <span class="cf">if</span> (idx <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb41-27"><a href=""></a>      <span class="co"># Combine with next bin</span></span>
+<span id="cb41-28"><a href=""></a>      observed[<span class="dv">2</span>] <span class="ot">&lt;-</span> observed[<span class="dv">2</span>] <span class="sc">+</span> observed[<span class="dv">1</span>]</span>
+<span id="cb41-29"><a href=""></a>      expected[<span class="dv">2</span>] <span class="ot">&lt;-</span> expected[<span class="dv">2</span>] <span class="sc">+</span> expected[<span class="dv">1</span>]</span>
+<span id="cb41-30"><a href=""></a>      observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-31"><a href=""></a>      expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-32"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (idx <span class="sc">==</span> <span class="fu">length</span>(expected)) {</span>
+<span id="cb41-33"><a href=""></a>      <span class="co"># Combine with previous bin</span></span>
+<span id="cb41-34"><a href=""></a>      observed[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> observed[<span class="fu">length</span>(expected)]</span>
+<span id="cb41-35"><a href=""></a>      expected[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> expected[<span class="fu">length</span>(expected)]</span>
+<span id="cb41-36"><a href=""></a>      observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span><span class="fu">length</span>(expected)]</span>
+<span id="cb41-37"><a href=""></a>      expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span><span class="fu">length</span>(expected)]</span>
+<span id="cb41-38"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb41-39"><a href=""></a>      <span class="co"># Combine with smaller of adjacent bins</span></span>
+<span id="cb41-40"><a href=""></a>      <span class="cf">if</span> (expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">&lt;</span> expected[idx <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb41-41"><a href=""></a>        observed[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> observed[idx]</span>
+<span id="cb41-42"><a href=""></a>        expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> expected[idx]</span>
+<span id="cb41-43"><a href=""></a>        observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span>idx]</span>
+<span id="cb41-44"><a href=""></a>        expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span>idx]</span>
+<span id="cb41-45"><a href=""></a>      } <span class="cf">else</span> {</span>
+<span id="cb41-46"><a href=""></a>        observed[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">+</span> observed[idx]</span>
+<span id="cb41-47"><a href=""></a>        expected[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">+</span> expected[idx]</span>
+<span id="cb41-48"><a href=""></a>        observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span>idx]</span>
+<span id="cb41-49"><a href=""></a>        expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span>idx]</span>
+<span id="cb41-50"><a href=""></a>      }</span>
+<span id="cb41-51"><a href=""></a>    }</span>
+<span id="cb41-52"><a href=""></a>  }</span>
+<span id="cb41-53"><a href=""></a>  </span>
+<span id="cb41-54"><a href=""></a>  chi_sq_stat <span class="ot">&lt;-</span> <span class="fu">sum</span>((observed <span class="sc">-</span> expected)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> expected)</span>
+<span id="cb41-55"><a href=""></a>  df <span class="ot">&lt;-</span> <span class="fu">length</span>(observed) <span class="sc">-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="dv">2</span>  <span class="co"># we estimate mean and sd</span></span>
+<span id="cb41-56"><a href=""></a>  p_value <span class="ot">&lt;-</span> <span class="fu">pchisq</span>(chi_sq_stat, df, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-57"><a href=""></a>  critical_value <span class="ot">&lt;-</span> <span class="fu">qchisq</span>(<span class="fl">0.95</span>, df)</span>
+<span id="cb41-58"><a href=""></a>  </span>
+<span id="cb41-59"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Chi-Squared Statistic:"</span>, chi_sq_stat, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-60"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Degrees of Freedom:"</span>, df, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-61"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"P-value:"</span>, p_value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-62"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Critical Value (alpha = 0.05):"</span>, critical_value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-63"><a href=""></a>  </span>
+<span id="cb41-64"><a href=""></a>  <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb41-65"><a href=""></a>    <span class="fu">cat</span>(<span class="st">"Reject the null hypothesis: The data does not follow the assumed normal distribution.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-66"><a href=""></a>  } <span class="cf">else</span> {</span>
+<span id="cb41-67"><a href=""></a>    <span class="fu">cat</span>(<span class="st">"Fail to reject the null hypothesis: The data follows the assumed normal distribution.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-68"><a href=""></a>  }</span>
+<span id="cb41-69"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a><span class="fu">chi_squared_test</span>(summer_2023, <span class="at">mean =</span> mu, <span class="at">sd =</span> sd, <span class="at">breaks =</span> breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chi-Squared Statistic: 1.784502 
+Degrees of Freedom: 3 
+P-value: 0.6183132 
+Critical Value (alpha = 0.05): 7.814728 
+Fail to reject the null hypothesis: The data follows the assumed normal distribution.</code></pre>
+</div>
+</div>
+</section></section>
+<section>
+<section id="conclusion" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Conclusion</h1>
+
+</section>
+<section id="conclusion-1" class="slide level2">
+<h2>Conclusion</h2>
+<div class="fragment">
+<p>Our analysis of the Russo-Ukrainian War data, using various statistical methods, provides significant insights into the patterns of equipment and personnel losses as well as the dynamics of missile attacks. Here’s a summary of our findings:</p>
+</div>
+</section>
+<section id="kvitkas-hypothesis-1" class="slide level2">
+<h2>1. Kvitka’s Hypothesis</h2>
+<ul>
+<li class="fragment"><strong>Hypothesis</strong>: Missile attacks are more severe on significant dates.</li>
+<li class="fragment"><strong>Result</strong>: Statistical testing (t-tests) revealed no evidence to support the hypothesis. The severity of missile attacks appears independent of significant dates.</li>
+<li class="fragment"><strong>Implications</strong>: Other factors, such as military strategy or available resources, may influence the intensity of missile attacks rather than symbolic dates.</li>
+</ul>
+</section>
+<section id="zakhars-hypothesis-1" class="slide level2">
+<h2>2. Zakhar’s Hypothesis</h2>
+<div style="font-size: 90%;">
+<ul>
+<li class="fragment"><strong>Hypothesis</strong>: Shelling points (missiles launched) are positively associated with equipment and personnel losses.</li>
+<li class="fragment"><strong>Model 1 (Equipment Losses)</strong>:
+<ul>
+<li class="fragment">Each additional shelling point increases equipment losses by ~24.46 points.</li>
+<li class="fragment"><strong>R²</strong>: 13.09% variability explained.</li>
+</ul></li>
+<li class="fragment"><strong>Model 2 (Personnel Losses)</strong>:
+<ul>
+<li class="fragment">Each additional shelling point increases personnel losses by ~6.30 points.</li>
+<li class="fragment"><strong>R²</strong>: 22% variability explained.</li>
+</ul></li>
+<li class="fragment"><strong>Implications</strong>: While the relationships are statistically significant, a substantial portion of the variability remains unexplained, highlighting the influence of other battlefield conditions.</li>
+</ul>
+</div>
+</section>
+<section id="denyss-hypothesis-1" class="slide level2">
+<h2>3. Denys’s Hypothesis</h2>
+<div style="font-size: 80%;">
+<ul>
+<li class="fragment"><strong>Hypothesis I</strong>: Significant differences exist between equipment losses in Summer 2023 (Ukrainian counterattacks) and Autumn 2024.</li>
+<li class="fragment"><strong>Result</strong>: Bootstrapped t-tests revealed a significant difference between the two periods, supporting the hypothesis that loss rates in Summer 2023 (Ukrainian counterattacks) were higher.</li>
+<li class="fragment"><strong>Hypothesis II</strong>: The distribution of equipment losses in Summer 2023 follows a normal distribution.</li>
+<li class="fragment"><strong>Result</strong>: A Chi-Square Goodness-of-Fit test confirmed the hypothesis, as the test failed to reject the null hypothesis, indicating that the data aligns with a normal distribution.</li>
+</ul>
+</div>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p>This finding suggests that the <code>Ukrainian counterattacks</code> during Summer 2023 resulted in higher equipment losses compared to Autumn 2024, while the statistical distribution of losses during Summer 2023 is consistent with a normal pattern. These results provide further evidence of the intensity of operations during key periods of the conflict.</p>
+</div>
+</div>
+</section>
+<section id="final-insights" class="slide level2">
+<h2>Final Insights</h2>
+<ul>
+<li class="fragment">Statistical models confirm the relationships between shelling points and losses, but they also emphasize the need for further exploration of additional factors.</li>
+<li class="fragment">Seasonal and temporal patterns reveal no significant deviations in equipment losses during key periods like counterattacks.</li>
+<li class="fragment">Our findings suggest a balance between statistical rigor and the understanding that war data is influenced by myriad complex and often unpredictable factors.</li>
+</ul>
+</section>
+<section id="future-work" class="slide level2">
+<h2>Future Work</h2>
+<ul>
+<li class="fragment">Integrate additional variables (e.g., geographical or operational data) to enhance the explanatory power of models.</li>
+<li class="fragment">Explore nonlinear relationships and machine learning methods for pattern detection.</li>
+<li class="fragment">Investigate other significant dates or contextual factors influencing the severity of attacks.</li>
+</ul>
+<div class="fragment">
+<p>This comprehensive statistical approach sheds light on the dynamics of the conflict while acknowledging its complexities and limitations.</p>
+</div>
+</section></section>
+<section id="thank-you-for-your-attention" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Thank you for your attention!</h1>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="assets/images/logo_primary_color.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p><a href="https://github.com/slash4r/scam-project">GitHub Repository</a></p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="template_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="template_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="template_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="template_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="template_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="template_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="template_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="template_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="template_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="template_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="template_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'h.v',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1500,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+
+    <script>
+
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+
+      // slide changes (different for each slide format).
+
+      (function () {
+
+        // dispatch for htmlwidgets
+
+        function fireSlideEnter() {
+
+          const event = window.document.createEvent("Event");
+
+          event.initEvent("slideenter", true, true);
+
+          window.document.dispatchEvent(event);
+
+        }
+
+    
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+
+          fireSlideEnter();
+
+    
+
+          // dispatch for shiny
+
+          if (window.jQuery) {
+
+            if (previousSlide) {
+
+              window.jQuery(previousSlide).trigger("hidden");
+
+            }
+
+            if (currentSlide) {
+
+              window.jQuery(currentSlide).trigger("shown");
+
+            }
+
+          }
+
+        }
+
+    
+
+        // hookup for slidy
+
+        if (window.w3c_slidy) {
+
+          window.w3c_slidy.add_observer(function (slide_num) {
+
+            // slide_num starts at position 1
+
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+
+          });
+
+        }
+
+    
+
+      })();
+
+    </script>
+
+    
+
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>

@@ -1,0 +1,1427 @@
+---
+title: "The Russo-Ukrainian War Analysis"
+subtitle: "Descriptive Statistics"
+author: Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
+institute: Kyiv School of Economics
+date: "2024-12-20"
+date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
+embed-resources: false
+format:
+  revealjs:
+    title-slide-attributes:
+      data-background-iframe: "template_files/libs/index.html"
+    theme: styles.scss
+    css: styles.scss
+    slideNumber: true
+    progress: true
+    transition: fade
+    incremental: true
+    logo: "assets/images/logo_primary_color.png"
+    navigation-mode: vertical
+    footer: "[GitHub Repository](https://github.com/slash4r/scam-project)"
+    width: 1500
+    chalkboard: true
+engines:
+  python: python3
+  r: Rscript
+execute:
+  echo: true
+  eval: true
+---
+
+::: {style="left: 10%;"}
+
+# Table of Contents {background-iframe="template_files/libs/index.html"}
+
+::: {.nonincremental}
+
+1. [Introduction and Objectives](#introduction-and-objectives)
+
+2. [Data Description](#data-description)
+
+3. [Data Processing](#data-processing)
+
+4. [Kvitka's Hypothesis](#kvitkas-hypothesis)
+
+5. [Zakhar's Hypothesis](#zakhars-hypothesis)
+
+6. [Denys's Hypothesis](#denyss-hypothesis)
+
+7. [Conclusion](#conclusion)
+
+:::
+
+:::
+
+# Introduction and Objectives {background-iframe="template_files/libs/index.html"}
+
+
+## What our project is about?
+
+The `Russo-Ukrainian War` is an ongoing conflict between Russia and Ukraine that began in 2014. The war has had a significant impact on both countries, with thousands of people killed and millions displaced. In this presentation, we will analyze the conflict using descriptive statistics to see some patterns and trends in the data.
+
+. . .
+
+So we decided to scroll [Kaggle](https://www.kaggle.com/datasets?search=ukraine) and find a dataset that would help us to analyze the conflict in recent years.
+
+# Data Description {background-iframe="template_files/libs/index.html"}
+
+## Data Description
+
+As it was mentioned before, we found some datasets on [Kaggle](https://www.kaggle.com/datasets?search=ukraine). The dataset we chose contains information about the conflict in Ukraine from 2014 to 2021. It includes data on the number of casualties, attacks, and other relevant information.
+
+. . .
+
+So, the datasets:
+
+1. [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+2. [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+3. [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
+
+## 1. 2022 Russia Ukraine War
+
+This dataset describes Equipment Losses & Death Toll & Military Wounded & Prisoner of War of russians in 2022-2024 Ukraine russia War by each day.
+
+. . .
+
+All data are official and additionally structured by the author ([Petro](https://www.kaggle.com/piterfm)).
+
+. . .
+
+**Data:**
+
+- `russia_losses_personnel.csv` - contains Personnel Losses during the war.
+
+- `russia_losses_equipment.csv` - contains Equipment Losses during the war.
+
+- `russia_losses_equipment_correction.csv` - contains some data correction *(dates: 2022-10-13, date: 2023-05-27)*.
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+The dataset describes russian and Ukrainian Equipment Losses During The 2022 Russian Invasion Of Ukraine.
+
+. . .
+
+The dataset was created based on [Oryx](https://www.oryxspioenkop.com/) by scraping [Ukrainian losses](https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html) and [russian losses](https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html) pages.
+
+. . .
+
+::: {.callout-note style="font-size: 90%;"}
+## Note
+The datasets mentioned above are updated regularly and provide a comprehensive overview of the ongoing conflict. It is important to cross-verify the data with other sources for accuracy and reliability.
+:::
+
+. . .
+
+::: {.callout-warning style="font-size: 90%;"}
+## Warning!
+This list only includes destroyed vehicles and equipment of which photo or videographic evidence is available. Therefore, the amount of equipment destroyed is significantly higher than recorded!
+:::
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Images data of Equipment Losses**
+
+Images data include `pictures` of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
+
+. . .
+
+::: {.r-stack}
+
+![](assets/images/daf_yad.jpg){.fragment style="position: absolute; top: 50; left: 0; height: 60%;"}
+
+![](assets/images/mi-17v5.png){.fragment style="position: absolute; top: 50; left: 350px; height: 60%;"}
+
+![](assets/images/strizh-class-boat-dam.jpg){.fragment style="position: absolute; top: 50; right: 0; width: 50%; height: 50%;"}
+
+:::
+
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Images data of Equipment Losses**
+
+Images data include `pictures` of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
+
+
+![](assets/images/t-80bv.jpg){style="position: absolute; top: 50; left: 0; width: 48%; height: 50%;"}
+
+::: {.r-stack}
+![](assets/images/t-80bv.png){.fragment style="position: absolute; top: 50; right: 0; width: 48%; height: 50%;"}
+:::
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Main Columns:**
+
+- `equipment` - type of equipment (e.g., tank, helicopter, etc.)
+
+- `model` - exact model of the equipment (e.g., T-80BV, Mi-17V5, etc.)
+
+- `sub_model` 
+
+- `manufacturer` - country of manufacturer (e.g., Russia, Ukraine, etc.)
+
+- `losses_total` - number of destroyed equipment
+
+## 3. Massive Missile Attacks on Ukraine
+
+::: {style="font-size: 70%;"}
+The dataset contains available information about launched and shot down missiles and drones during [russian massive missile and drone (UAV) strikes on infrastructure](https://en.wikipedia.org/wiki/2022%E2%80%932023_Russian_strikes_against_Ukrainian_infrastructure) (since October 2022) as part of its invasion of Ukraine. The dataset also contains information about some single shot-down UAVs.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+**Data:**
+
+- `time_start` - start attack time.
+- `time_end` - end attack time.
+- `model` - missile or UAV type.
+- `launch_place` - city or region from missiles were launched.
+- `target` - could be a city in Ukraine, or region of Ukraine or direction, or full Ukraine.
+- `carrier` - missile launch platform.
+- `launched` - number of launched missiles or UAVs.
+- `destroyed` - number of destroyed missiles or UAVs.
+- `source` - information source (mainly facebook posts).
+:::
+
+# Data Processing {background-iframe="template_files/libs/index.html"}
+
+## Data Correction
+```{r}
+#| label: load-packages
+#| message: false
+#| echo: false
+library(tidyverse)
+library(tidymodels)
+
+general_folder <- "../data"
+ru_ua_folder <- "2022 Russia Ukraine War"
+ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
+missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
+```
+
+::: {style="font-size: 70%;"}
+The first dataset `2022 Russia Ukraine War` had some inaccuracies in the data.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+Hopefully, the author provided a corrected version of the dataset - `russia_losses_equipment_correction.csv`. Let's load it and check the data.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: load-data
+russia_losses_equipment_correction <- read_csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+glimpse(russia_losses_equipment_correction)
+```
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-1
+apply_corrections <- function(main_data, corrections) {
+  
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-2
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-3
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-4
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+
+    return(corrected_data)
+}
+```
+
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+And then we applied the function to the main dataset...
+:::
+
+## Data Correction. Evaluating the Scores 1/2
+
+. . .
+
+::: {style="font-size: 70%;"}
+What problems we faced: we have a lot of diffirent types of equipment and missiles, so we need to categorize them.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+So, we decided to create a function that will give `score` to each type of missile.
+:::
+
+. . . 
+
+::: {style="font-size: 70%;"}
+```{.r code-line-numbers="1-9|11-25|27"}
+categorize_missile <- function(missile) {
+  severity_scores <- c(
+    "High-powered missiles" = 10,
+    "Medium-powered missiles" = 7,
+    "Drones" = 3,
+    "Composite weapon types" = 5,
+    "Low-powered missiles / Others" = 2,
+    "Unknown" = NA_real_  # Default for unknown categories
+  )
+  
+  if (grepl("3M22 Zircon|Iskander-M|Iskander-K|X-47 Kinzhal|Kalibr|X-101/X-555|X-22|P-800 Oniks|X-59", missile, ignore.case = TRUE)) {
+    return(severity_scores["High-powered missiles"])
+  }
+  else if (grepl("C-300|C-400|C-300/C-400|C-300/C-400 and Iskander-M|C-400 and Iskander-M|Iskander-M/KN-23|X-22/X-31P|X-22/X-32|X-31PD|X-31|KAB", missile, ignore.case = TRUE)) {
+    return(severity_scores["Medium-powered missiles"])
+  }
+  else if (grepl("Shahed-136/131|Lancet|Mohajer-6|Orion|Orlan-10|Orlan-30|ZALA|Supercam|Merlin-VR|Eleron|Reconnaissance UAV|Unknown UAV", missile, ignore.case = TRUE)) {
+    return(severity_scores["Drones"])
+  }
+  else if (grepl("Orlan-10 and Supercam|Orlan-10 and ZALA|Shahed-136/131 and Lancet|Orlan-10 and ZALA and Supercam|Orlan-10 and Orlan-30 and ZALA and Supercam", missile, ignore.case = TRUE)) {
+    return(severity_scores["Composite weapon types"])
+  }
+  else if (grepl("Aerial Bomb|Grad/Urgan Rockets|Granat-4|Forpost|Картограф|Привет-82|Фенікс", missile, ignore.case = TRUE)) {
+    return(severity_scores["Low-powered missiles / Others"])
+  }
+  
+  return(severity_scores["Unknown"])  
+}
+```
+:::
+
+## Data Correction. Evaluating the Scores 2/2
+
+. . .
+
+Also, we want to show our second scores_table, but for the equipment.
+
+. . .
+
+```{r}
+#| label: equipment-weights
+
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000             # Submarines: Strategic naval supremacy
+)
+```
+
+```{r}
+#| label: background-calculations
+#| echo: false
+#| message: false
+#| output: false
+
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+
+###
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>% 
+    arrange(desc(date))
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+# use weights to evaluate the score for each type of equipment
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>% 
+  head()
+
+# calculate the score for each row (cumulative)
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>% 
+  arrange(date)
+
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>% 
+  head()
+
+```
+
+# Kvitka's Hypothesis {background-iframe="template_files/libs/index.html"}
+
+## The missile attacks are more severe on significant days?
+
+::: {style="font-size: 90%;"}
+The severity level of missile attacks is determined based on the type of weapon used, categorized into six groups: 
+
+- High-powered missiles
+- Medium-powered missiles
+- Drones
+- Composite weapon types
+- Low-powered missiles / Others
+- Unknown
+:::
+
+
+
+## The missile attacks are more severe on significant days?
+
+::: {style="font-size: 70%;"}
+Each category is assigned a predefined score reflecting its destructive potential, with high-powered missiles scoring the highest and drones or low-powered weapons scoring lower. 
+
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+This scoring system standardizes the assessment of attack intensity, enabling comparative analysis across different events or time periods.
+
+| Weapon Category               | Severity Score |
+|-------------------------------|----------------|
+| High-powered missiles         | 10             |
+| Medium-powered missiles       | 7              |
+| Drones                        | 3              |
+| Composite weapon types        | 5              |
+| Low-powered missiles / Others | 2              |
+| Unknown                       | N/A            |
+
+:::
+
+## Code for determining the significant days
+```{r}
+#| label: clear dataset 2
+#| echo: false
+#| warning: false
+#| message: false
+#| code-fold: true
+missile_attacks <- read_csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+
+categorize_missile <- function(missile) {
+  severity_scores <- c(
+    "High-powered missiles" = 10,
+    "Medium-powered missiles" = 7,
+    "Drones" = 3,
+    "Composite weapon types" = 5,
+    "Low-powered missiles / Others" = 2,
+    "Unknown" = NA_real_  # Default for unknown categories
+  )
+  
+  if (grepl("3M22 Zircon|Iskander-M|Iskander-K|X-47 Kinzhal|Kalibr|X-101/X-555|X-22|P-800 Oniks|X-59", missile, ignore.case = TRUE)) {
+    return(severity_scores["High-powered missiles"])
+  }
+  else if (grepl("C-300|C-400|C-300/C-400|C-300/C-400 and Iskander-M|C-400 and Iskander-M|Iskander-M/KN-23|X-22/X-31P|X-22/X-32|X-31PD|X-31|KAB", missile, ignore.case = TRUE)) {
+    return(severity_scores["Medium-powered missiles"])
+  }
+  else if (grepl("Shahed-136/131|Lancet|Mohajer-6|Orion|Orlan-10|Orlan-30|ZALA|Supercam|Merlin-VR|Eleron|Reconnaissance UAV|Unknown UAV", missile, ignore.case = TRUE)) {
+    return(severity_scores["Drones"])
+  }
+  else if (grepl("Orlan-10 and Supercam|Orlan-10 and ZALA|Shahed-136/131 and Lancet|Orlan-10 and ZALA and Supercam|Orlan-10 and Orlan-30 and ZALA and Supercam", missile, ignore.case = TRUE)) {
+    return(severity_scores["Composite weapon types"])
+  }
+  else if (grepl("Aerial Bomb|Grad/Urgan Rockets|Granat-4|Forpost|Картограф|Привет-82|Фенікс", missile, ignore.case = TRUE)) {
+    return(severity_scores["Low-powered missiles / Others"])
+  }
+  
+  return(severity_scores["Unknown"])  
+}
+
+missile_attacks <- missile_attacks %>% 
+    mutate(
+        missile_scoring = sapply(model, categorize_missile), 
+        total_score = missile_scoring * launched,
+        date = as.Date(time_end))
+        
+missile_attacks <- missile_attacks[!is.na(missile_attacks$total_score), ]
+missile_attacks_score_per_day <- missile_attacks %>% 
+group_by(date)%>%
+summarize(total_score_per_day = sum(total_score))
+
+full_date_range <- seq.Date(from = min(missile_attacks$date), to = max(missile_attacks$date), by = "day")
+
+complete_dataset <- tibble(date = full_date_range) %>%
+  left_join(missile_attacks_score_per_day, by = "date") %>%
+  replace_na(list(total_score_per_day = 0))
+```
+
+```{r}
+#| label: sig dates
+#| message: false
+#| code-fold: false
+significant_dates <- as.Date(c(
+  "2022-08-24", "2023-08-24", "2024-08-24",  # Independence Day of Ukraine
+  "2022-12-25", "2023-12-25", "2024-12-25",  # Christmas
+  "2022-12-06", "2023-12-06", "2024-12-06",  # Armed Forces Day of Ukraine
+  "2022-01-25", "2023-01-25", "2024-01-25",  # Volodymyr Zelenskyy's Birthday
+  "2022-01-01", "2023-01-01", "2024-01-01",  # New Year
+  "2022-06-28", "2023-06-28", "2024-06-28",  # Constitution Day of Ukraine
+  "2022-05-09", "2023-05-09", "2024-05-09",  # Victory Day
+  "2022-10-07", "2023-10-07", "2024-10-07",  # Vladimir Putin's Birthday
+  "2022-04-24", "2023-04-16", "2024-04-16"   # Easter (Pascha)
+))
+
+missile_attacks_score_per_day_significant <- complete_dataset %>%
+  mutate(significant_date = ifelse(
+    date %in% significant_dates, TRUE, FALSE
+  ))
+```
+
+## AB test
+
+. . . 
+
+::: {style="font-size: 80%;"}
+$H_0$ - the mean severity level are about **the same** in both groups
+:::
+
+. . .
+
+::: {style="font-size: 80%;"}
+$H_1$ - the mean severity level in significant group **is higher**.
+:::
+
+. . . 
+
+::: {style="text-align: center;"}
+```{r}
+#| label: box plot
+#| warning: false
+#| fig-width: 9
+#| fig-asp: 0.618
+#| echo: false
+ggplot(missile_attacks_score_per_day_significant, aes(x = significant_date, y = total_score_per_day, fill = significant_date)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Severity of missile attacks ",
+    x = "Significant date",
+    y = "Severity score",
+    fill = "Significant day"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 20),
+    axis.text = element_text(size = 10)
+  )
+```
+
+:::
+
+## $\text{t}$-test
+
+```{r} 
+result <- t.test(total_score_per_day ~ significant_date, missile_attacks_score_per_day_significant, alternative = "less")
+result
+```
+
+. . .
+
+As we can see the `{r} result$p.value` > 0.05. Meaning there is `no eveidence` to reject the $H_0$ hypothesis.
+
+## $\text{t}$-test for filtered data
+
+The  group of unsignificant days has a lot of outliers. Therefore i decided to filter out the anomal values using IQR.
+```{r}
+Q1 <- quantile(missile_attacks_score_per_day_significant$total_score_per_day, 0.25, na.rm = TRUE)
+Q3 <- quantile(missile_attacks_score_per_day_significant$total_score_per_day, 0.75, na.rm=TRUE)
+IQR <- Q3 - Q1
+
+upper_threshold <- Q3 + 1.5 * IQR
+
+filtered_date <- missile_attacks_score_per_day_significant %>% filter(total_score_per_day < upper_threshold)
+summary(filtered_date)
+```
+
+--- 
+
+::: {style="text-align: center;"}
+```{r}
+#| label: box plot 2
+#| warning: false
+#| fig-width: 9
+#| fig-asp: 0.618
+#| echo: false  
+
+ggplot(filtered_date, aes(x = significant_date, y = total_score_per_day, fill = significant_date)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Severity of missile attacks ",
+    x = "Significant date",
+    y = "Severity score",
+    fill = "Significant day"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    plot.title = element_text(size = 20),
+    axis.text = element_text(size = 10)
+  )
+```
+
+:::
+
+As you can see the amount of outliers are now `much lower`.
+So, let`s conduct the $\text{t}$-test one more time.
+
+--- 
+
+```{r} 
+result <- t.test(total_score_per_day ~ significant_date, filtered_date, alternative = "less")
+result
+```
+
+As we can see the **`{r} result$p.value` > 0.05**. Meaning there is still `no evidence` to reject the $H_0$ hypothesis.
+
+## Summary 
+The analysis revealed no evidence of a connection between significant dates and the severity of missile attacks. 
+
+. . .
+
+Statistical testing showed no significant difference in attack severity between significant and non-significant dates. This indicates that the chosen significant dates do not influence the intensity of missile strikes.
+
+# Zakhar's Hypothesis {background-iframe="template_files/libs/index.html"}
+
+```{r}
+#| label: background-calculations-Zakhar
+#| echo: false
+#| message: false
+#| output: false
+#| warning: false
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date)
+
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated_pdf %>%
+  arrange(date)
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date)
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  arrange(date) %>%
+  mutate(equipment_daily_points = cdf_loss_score - lag(cdf_loss_score, default = 0))
+
+head(ru_loss_equipment_evaluated %>% select(date, cdf_loss_score, equipment_daily_points))
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = as.numeric(gsub("[^0-9]", "", personnel)))  # Remove non-numeric characters
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(personnel = replace_na(personnel, 0))
+
+ru_loss_persons <- ru_loss_persons %>%
+  arrange(date) %>%
+  mutate(personnel_daily_points = personnel - lag(personnel, default = 0))
+
+head(ru_loss_persons %>% select(date, personnel, personnel_daily_points))
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>%
+  mutate(date = as.Date(date))
+
+ru_loss_persons <- ru_loss_persons %>%
+  mutate(date = as.Date(date))
+
+missiles_daily <- missiles_daily %>%
+  mutate(date = as.Date(time_end))
+
+shelling_per_day <- missiles_daily %>%
+  group_by(date) %>%
+  summarise(shelling_points = sum(launched, na.rm = TRUE))
+
+head(shelling_per_day)
+equipment_shelling_merged <- ru_loss_equipment_evaluated %>%
+  select(date, equipment_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(equipment_shelling_merged)
+personnel_shelling_merged <- ru_loss_persons %>%
+  select(date, personnel_daily_points) %>%
+  left_join(shelling_per_day, by = "date")
+
+personnel_shelling_merged <- personnel_shelling_merged %>%
+  mutate(shelling_points = replace_na(shelling_points, 0))
+
+head(personnel_shelling_merged)
+```
+
+## Model 1
+
+**Equipment Loss Points vs. Shelling Points**
+
+::: {style="text-align: center;"}
+```{r}
+#| label: model-1
+#| code-fold: true
+
+ggplot(equipment_shelling_merged, aes(x = shelling_points, y = equipment_daily_points)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +
+  labs(
+    title = "Regression of Daily Equipment Loss Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Equipment Loss Points"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Regression Analysis Fit Model 1
+
+```{r}
+model1 <- lm(equipment_daily_points ~ shelling_points, data = equipment_shelling_merged)
+
+summary(model1)
+```
+
+---
+
+## Model 1. Summary
+
+- **Intercept** (2058.375): Baseline equipment loss points when shelling points are zero.  
+- **Slope** (24.461): Each additional shelling point increases equipment loss by ~24.46 points.  
+- **Significance** (Pr(>|t|) < 2e-16): Both coefficients are highly significant.  
+- **R-squared** (0.1309): Shelling explains 13.09% of equipment loss variability, suggesting other factors play a major role.  
+
+## Model 2
+
+**Personnel Loss Points vs. Shelling Points**
+
+
+::: {style="text-align: center;"}
+
+```{r}
+#| label: model-2
+#| code-fold: true
+
+ggplot(personnel_shelling_merged, aes(x = shelling_points, y = personnel_daily_points)) +
+  geom_point(alpha = 0.6, color = "red") +
+  geom_smooth(method = "lm", se = TRUE, color = "darkred") +
+  labs(
+    title = "Regression of Daily Personnel Points on Shelling Points",
+    x = "Shelling Points (Missiles Launched)",
+    y = "Daily Personnel Points (Killed)"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Regression Analysis Fit Model 2
+
+```{r}
+model2 <- lm(personnel_daily_points ~ shelling_points, data = personnel_shelling_merged)
+
+summary(model2)
+```
+
+---
+
+## Model 2. Summary
+
+- **Intercept** (627.39): Baseline personnel loss points when shelling points are zero.  
+- **Slope** (6.30): Each additional shelling point increases personnel losses by ~6.30 points.  
+- **Significance** (Pr(>|t|) < 2e-16): Both coefficients are highly significant.  
+- **R-squared** (0.22): Shelling explains 22% of personnel loss variability, indicating other influential factors.  
+
+## Model Comparison
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model1)
+```
+
+## Model Comparison
+
+```{r}
+par(mfrow = c(2, 2))
+plot(model2)
+```
+
+---
+
+## Summary
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-summary
+#| code-fold: true
+
+massive_shelling_threshold <- 50
+
+equipment_shelling_merged <- equipment_shelling_merged %>%
+  mutate(
+    massive_shelling = ifelse(shelling_points > massive_shelling_threshold, "Massive", "Non-Massive")
+  )
+
+group_means_tech <- equipment_shelling_merged %>%
+  group_by(massive_shelling) %>%
+  summarise(
+    mean_points = mean(equipment_daily_points, na.rm = TRUE),
+    sd_points = sd(equipment_daily_points, na.rm = TRUE),
+    n = n()
+  )
+
+
+t_test_tech <- t.test(
+  equipment_daily_points ~ massive_shelling,
+  data = equipment_shelling_merged
+)
+
+
+ggplot(equipment_shelling_merged, aes(x = massive_shelling, y = equipment_daily_points)) +
+  geom_boxplot(fill = c("lightblue", "salmon")) +
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, fill = "white") +
+  labs(
+    title = "Розподіл очок за техніку між масованими та немасованими обстрілами",
+    x = "Тип обстрілу",
+    y = "Кількість очок за техніку (daily points)"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+# Denys's Hypothesis {background-iframe="template_files/libs/index.html"}
+
+## Distribution of Equipment Losses
+
+First, let's split the data by seasons (winter, spring, summer, autumn) + year
+
+```{r}
+SUMMER_HEX <- "#e31a1c"
+WINTER_HEX <- "#1f78b4"
+SPRING_HEX <- "#33a02c"
+AUTUMN_HEX <- "#ff7f00"
+
+disrtibution_data <- ru_loss_equipment_evaluated_pdf %>% 
+  mutate(
+    season = case_when(
+      month(date) %in% c(12, 1, 2) ~ "Winter",
+      month(date) %in% c(3, 4, 5) ~ "Spring",
+      month(date) %in% c(6, 7, 8) ~ "Summer",
+      month(date) %in% c(9, 10, 11) ~ "Autumn"
+    ),
+    year = year(date)
+  ) %>%
+  select(pdf_loss_score, season, year)
+```
+
+## Distribution of Equipment Losses. Visualization 2022
+
+Now, let's build the distribution of equipment losses! by each season
+
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2022
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2022) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2022",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+:::
+
+## Distribution of Equipment Losses. Visualization 2023
+
+Now, let's build the distribution of equipment losses! by each season
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2023
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2023) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2023",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+:::
+
+## Distribution of Equipment Losses. Visualization 2024
+
+Now, let's build the distribution of equipment losses! by each season
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2024
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2024) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2024",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+:::
+
+## Searching for the Hypothesis...
+
+I was thinking a lot about the field to investigate. 
+
+. . .
+
+Suddenly, I remembered the `Ukrainian counterattacks` in Summer 2023.
+
+. . .
+
+I decided to check if there is a **significant difference** in statistical means of equipment losses between that period and the recent days.
+
+## Hypothesis I. Ukrainian Counterattacks
+
+Let's visualize the distribution of equipment losses in `Summer 2023` and recent days (`Autumn 2024`).
+
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-1
+#| code-fold: true
+disrtibution_data %>%
+    filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+    ggplot(aes(x = pdf_loss_score, fill = season)) +
+    geom_density(alpha = 0.5) +
+    scale_fill_manual(values = c("Summer" = SUMMER_HEX, "Autumn" = AUTUMN_HEX)) +
+    labs(
+      title = "Distribution of Equipment Losses in Summer 2023 and Autumn 2024",
+      x = "PDF Loss Score",
+      y = "Density"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom") +
+    scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+:::
+
+## Hypothesis I. Ukrainian Counterattacks
+
+. . .
+
+But there is one big problem. The data is not normally distributed :(
+
+. . .
+
+So, I decided to use Bootstrap to compare the means of equipment losses in `Summer 2023` and `Autumn 2024`.
+
+```{r}
+#| label: hypothesis-1-bootstrap
+
+bootstrap_normal <- function(data, n = 10000) {
+  boot_means <- replicate(n, {
+    sample(data, size = length(data), replace = TRUE) %>%
+      mean()
+  })
+  boot_means
+}
+
+```
+
+. . .
+
+::: {.callout-note}
+## Remark.
+I also removed some **outliers** from the data in `Autumn 2024`.
+:::
+
+```{r}
+#| label: background-calculations-3
+#| echo: false
+#| message: false
+#| warning: false
+
+data_filtered <- disrtibution_data %>%
+  filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+  mutate(season_year = paste(season, year))
+
+summer_2023 <- data_filtered %>% filter(season_year == "Summer 2023") %>% pull(pdf_loss_score)
+autumn_2024 <- data_filtered %>% filter(season_year == "Autumn 2024") %>% pull(pdf_loss_score)
+
+# IQR because... why not?
+Q1 <- quantile(autumn_2024, 0.05)
+Q3 <- quantile(autumn_2024, 0.95)
+IQR <- Q3 - Q1
+autumn_2024_filtered <- autumn_2024[autumn_2024 > (Q1 - 1.5 * IQR) & autumn_2024 < (Q3 + 1.5 * IQR)]
+
+set.seed(123)
+boot_summer <- bootstrap_normal(summer_2023)
+boot_autumn <- bootstrap_normal(autumn_2024_filtered)
+
+fit_summer <- list(mean = mean(boot_summer), sd = sd(boot_summer))
+fit_autumn <- list(mean = mean(boot_autumn), sd = sd(boot_autumn))
+
+summer_normal <- data.frame(
+  x = seq(min(boot_summer), max(boot_summer), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_summer), max(boot_summer), length.out = 1000), 
+    mean = fit_summer$mean, 
+    sd = fit_summer$sd
+  ),
+  season = "Summer 2023"
+)
+
+autumn_normal <- data.frame(
+  x = seq(min(boot_autumn), max(boot_autumn), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
+    mean = fit_autumn$mean, 
+    sd = fit_autumn$sd
+  ),
+  season = "Autumn 2024"
+)
+
+# Combine for plotting
+normal_data <- bind_rows(summer_normal, autumn_normal)
+```
+
+## Hypothesis I. Ukrainian Counterattacks
+
+. . .
+
+Now, our distributions look like this:
+
+. . .
+
+::: {style="text-align: center;"}
+
+```{r}
+#| label: hypothesis-1-bootstrap-plot
+#| code-fold: true
+ggplot() +
+  geom_density(
+    data = data.frame(value = boot_summer, season = "Summer 2023"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_density(
+    data = data.frame(value = boot_autumn, season = "Autumn 2024"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_line(
+    data = normal_data, aes(x = x, y = density, color = season), size = 1
+  ) +
+  scale_fill_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  scale_color_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  labs(
+    title = "Bootstrap and Fitted Normal Distributions",
+    x = "PDF Loss Score",
+    y = "Density",
+    fill = "Season",
+    color = "Fitted Normal"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Hypothesis I. Ukrainian Counterattacks
+
+**Hypothesis Testing. $\text{t}$-test**
+
+::: {style="font-size: 80%;"}
+```{r}
+#| label: hypothesis-1-t-test
+
+t_test_result <- t.test(
+  boot_summer,               # Bootstrapped means for Summer 2023
+  boot_autumn,               # Bootstrapped means for Autumn 2024
+  alternative = "greater",   # One-tailed test (Summer 2023 > Autumn 2024)
+  var.equal = FALSE          # Assume unequal variances (Welch's t-test)
+)
+cat("T-statistic:", t_test_result$statistic, "\n")
+cat("P-value:", t_test_result$p.value, "\n")
+cat("95% Confidence Interval:", t_test_result$conf.int, "\n")
+
+if (t_test_result$p.value < 0.05) {
+  cat("Reject the null hypothesis: There is a significant difference in means.\n")
+} else {
+  cat("Fail to reject the null hypothesis: No significant difference in means.\n")
+}
+```
+
+:::
+
+## Hypothesis II. Ukrainian Counterattacks
+
+. . .
+
+The second hypothesis I come up with is the question about the **distribution** of equipment losses in `Summer 2023`.
+
+. . .
+
+In this case, I want to check if the distribution of equipment losses in `Summer 2023` is close to the **normal distribution**.
+
+. . . 
+
+I will use the **Chi-Square Goodness of Fit Test** to check this hypothesis.
+
+. . .
+
+Let's dive into the code!
+
+## Hypothesis II. Ukrainian Counterattacks
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-2
+#| code-fold: true
+#| fig-width: 6
+#| fig-asp: 0.618
+
+mu <- mean(summer_2023)
+sd <- sd(summer_2023)
+
+n <- length(summer_2023)
+breaks <- seq(
+  min(summer_2023),
+  max(summer_2023),
+  length.out = ceiling(log2(n) + 1)
+)
+
+observed <- hist(summer_2023, breaks = breaks, plot = FALSE)$counts
+
+plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightblue", line_color = "red", line_size = 1.5) {
+  data_df <- data.frame(x = data)
+  hist_bins <- seq(min(data), max(data), length.out = length(breaks))
+  normal_curve <- data.frame(
+    x = seq(min(data), max(data), length.out = 1000),
+    y = dnorm(seq(min(data), max(data), length.out = 1000), mean = mean, sd = sd)
+  )
+  
+  ggplot(data_df, aes(x)) +
+    geom_histogram(aes(y = ..density..), bins = length(breaks) - 1, fill = hist_color, color = "black", alpha = 0.7) +
+    geom_line(data = normal_curve, aes(x = x, y = y), color = line_color, size = line_size) +
+    labs(
+      title = "Histogram with Normal Distribution Overlay",
+      x = "Data",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+
+plot_normal_overlay_gg(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
+
+:::
+
+. . . 
+
+But we need to verify our assumptions `mathematically`, not only visually!!!
+
+## Hypothesis II. Ukrainian Counterattacks
+
+```{r}
+#| label: hypothesis-2-chi-square-hided
+#| code-fold: true
+
+chi_squared_test <- function(data, mean, sd, breaks) {
+  hist_data <- hist(data, breaks = breaks, plot = FALSE)
+  observed <- hist_data$counts
+  
+  n <- sum(observed)
+  
+  expected <- numeric(length(observed))
+  for (i in seq_along(expected)) {
+    if (i == 1) {
+      # Smallest bin
+      expected[i] <- pnorm(breaks[i + 1], mean = mean, sd = sd) * n
+    } else if (i == length(expected)) {
+      # Largest bin
+      expected[i] <- (1 - pnorm(breaks[i], mean = mean, sd = sd)) * n
+    } else {
+      # Middle bins
+      expected[i] <- (pnorm(breaks[i + 1], mean = mean, sd = sd) -
+                      pnorm(breaks[i], mean = mean, sd = sd)) * n
+    }
+  }
+  
+  # Combine bins with expected frequencies < 5
+  while (any(expected < 5)) {
+    idx <- which.min(expected)
+    # if index is 1 or last, combine with next or previous bin
+    if (idx == 1) {
+      # Combine with next bin
+      observed[2] <- observed[2] + observed[1]
+      expected[2] <- expected[2] + expected[1]
+      observed <- observed[-1]
+      expected <- expected[-1]
+    } else if (idx == length(expected)) {
+      # Combine with previous bin
+      observed[length(expected) - 1] <- observed[length(expected) - 1] + observed[length(expected)]
+      expected[length(expected) - 1] <- expected[length(expected) - 1] + expected[length(expected)]
+      observed <- observed[-length(expected)]
+      expected <- expected[-length(expected)]
+    } else {
+      # Combine with smaller of adjacent bins
+      if (expected[idx - 1] < expected[idx + 1]) {
+        observed[idx - 1] <- observed[idx - 1] + observed[idx]
+        expected[idx - 1] <- expected[idx - 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      } else {
+        observed[idx + 1] <- observed[idx + 1] + observed[idx]
+        expected[idx + 1] <- expected[idx + 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      }
+    }
+  }
+  
+  chi_sq_stat <- sum((observed - expected)^2 / expected)
+  df <- length(observed) - 1 - 2  # we estimate mean and sd
+  p_value <- pchisq(chi_sq_stat, df, lower.tail = FALSE)
+  critical_value <- qchisq(0.95, df)
+  
+  cat("Chi-Squared Statistic:", chi_sq_stat, "\n")
+  cat("Degrees of Freedom:", df, "\n")
+  cat("P-value:", p_value, "\n")
+  cat("Critical Value (alpha = 0.05):", critical_value, "\n")
+  
+  if (p_value < 0.05) {
+    cat("Reject the null hypothesis: The data does not follow the assumed normal distribution.\n")
+  } else {
+    cat("Fail to reject the null hypothesis: The data follows the assumed normal distribution.\n")
+  }
+}
+
+```
+
+```{r}
+chi_squared_test(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
+
+# Conclusion {background-iframe="template_files/libs/index.html"}
+
+## Conclusion
+
+. . .
+
+Our analysis of the Russo-Ukrainian War data, using various statistical methods, provides significant insights into the patterns of equipment and personnel losses as well as the dynamics of missile attacks. Here's a summary of our findings:
+
+## 1. Kvitka's Hypothesis
+- **Hypothesis**: Missile attacks are more severe on significant dates.
+- **Result**: Statistical testing (t-tests) revealed no evidence to support the hypothesis. The severity of missile attacks appears independent of significant dates.
+- **Implications**: Other factors, such as military strategy or available resources, may influence the intensity of missile attacks rather than symbolic dates.
+
+## 2. Zakhar's Hypothesis
+
+::: {style="font-size: 90%;"}
+- **Hypothesis**: Shelling points (missiles launched) are positively associated with equipment and personnel losses.
+- **Model 1 (Equipment Losses)**:
+  - Each additional shelling point increases equipment losses by ~24.46 points.
+  - **R²**: 13.09% variability explained.
+- **Model 2 (Personnel Losses)**:
+  - Each additional shelling point increases personnel losses by ~6.30 points.
+  - **R²**: 22% variability explained.
+- **Implications**: While the relationships are statistically significant, a substantial portion of the variability remains unexplained, highlighting the influence of other battlefield conditions.
+:::
+
+## 3. Denys's Hypothesis
+
+::: {style="font-size: 80%;"}
+- **Hypothesis I**: Significant differences exist between equipment losses in Summer 2023 (Ukrainian counterattacks) and Autumn 2024.
+- **Result**: Bootstrapped t-tests revealed a significant difference between the two periods, supporting the hypothesis that loss rates in Summer 2023 (Ukrainian counterattacks) were higher.
+- **Hypothesis II**: The distribution of equipment losses in Summer 2023 follows a normal distribution.
+- **Result**: A Chi-Square Goodness-of-Fit test confirmed the hypothesis, as the test failed to reject the null hypothesis, indicating that the data aligns with a normal distribution.
+:::
+
+. . .
+
+::: {style="font-size: 80%;"}
+This finding suggests that the `Ukrainian counterattacks` during Summer 2023 resulted in higher equipment losses compared to Autumn 2024, while the statistical distribution of losses during Summer 2023 is consistent with a normal pattern. These results provide further evidence of the intensity of operations during key periods of the conflict.
+:::
+
+## Final Insights
+
+- Statistical models confirm the relationships between shelling points and losses, but they also emphasize the need for further exploration of additional factors.
+- Seasonal and temporal patterns reveal no significant deviations in equipment losses during key periods like counterattacks.
+- Our findings suggest a balance between statistical rigor and the understanding that war data is influenced by myriad complex and often unpredictable factors.
+
+
+## Future Work
+
+- Integrate additional variables (e.g., geographical or operational data) to enhance the explanatory power of models.
+- Explore nonlinear relationships and machine learning methods for pattern detection.
+- Investigate other significant dates or contextual factors influencing the severity of attacks.  
+
+. . .
+
+This comprehensive statistical approach sheds light on the dynamics of the conflict while acknowledging its complexities and limitations.
+
+# Thank you for your attention! {background-iframe="template_files/libs/index.html"}

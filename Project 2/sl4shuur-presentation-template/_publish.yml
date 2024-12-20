@@ -1,0 +1,8 @@
+- source: template.qmd
+  quarto-pub:
+    - id: f9783547-b539-4b48-9e73-45cc0cbff63b
+      url: https://sl4shuur.quarto.pub/template
+    - id: 76296af6-940a-4500-9b29-9001535cc804
+      url: https://sl4shuur.quarto.pub/ru-ua-war-analysis
+    - id: 477b2907-9622-467f-bbd1-2fda134a17b7
+      url: https://sl4shuur.quarto.pub/project-2
