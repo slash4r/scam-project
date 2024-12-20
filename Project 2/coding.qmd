@@ -173,3 +173,103 @@ ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
 ru_loss_equipment_evaluated_pdf %>% 
   head()
 ```
+
+## Distribution of Equipment Losses
+
+First, let's split the data by seasons (winter, spring, summer, autumn) + year
+
+```{r}
+SUMMER_HEX <- "#e31a1c"
+WINTER_HEX <- "#1f78b4"
+SPRING_HEX <- "#33a02c"
+AUTUMN_HEX <- "#ff7f00"
+
+disrtibution_data <- ru_loss_equipment_evaluated_pdf %>% 
+  mutate(
+    season = case_when(
+      month(date) %in% c(12, 1, 2) ~ "Winter",
+      month(date) %in% c(3, 4, 5) ~ "Spring",
+      month(date) %in% c(6, 7, 8) ~ "Summer",
+      month(date) %in% c(9, 10, 11) ~ "Autumn"
+    ),
+    year = year(date)
+  ) %>%
+  select(pdf_loss_score, season, year)
+```
+
+Now, let's build the distribution of equipment losses! by each season
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2022) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2022",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2023) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2023",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+```{r}
+disrtibution_data %>%
+  filter(year == 2024) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2024",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
