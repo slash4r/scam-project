@@ -39,13 +39,15 @@ execute:
 
 2. [Data Description](#data-description)
 
-3. [Kvitka's Hypothesis](#kvitkas-hypothesis)
+3. [Data Processing](#data-processing)
 
-4. [Zakhar's Hypothesis](#zakhars-hypothesis)
+4. [Kvitka's Hypothesis](#kvitkas-hypothesis)
 
-5. [Denys's Hypothesis](#denyss-hypothesis)
+5. [Zakhar's Hypothesis](#zakhars-hypothesis)
 
-6. [Conclusion](#conclusion)
+6. [Denys's Hypothesis](#denyss-hypothesis)
+
+7. [Conclusion](#conclusion)
 
 :::
 
@@ -186,3 +188,278 @@ The dataset contains available information about launched and shot down missiles
 - `destroyed` - number of destroyed missiles or UAVs.
 - `source` - information source (mainly facebook posts).
 :::
+
+# Data Processing {background-iframe="template_files/libs/index.html"}
+
+## Data Correction
+```{r}
+#| label: load-packages
+#| message: false
+#| echo: false
+library(tidyverse)
+library(tidymodels)
+
+general_folder <- "../data"
+ru_ua_folder <- "2022 Russia Ukraine War"
+ru_ua_oryx_folder <- "2022 Russia Ukraine War, Losses, Oryx + Images"
+missile_atcks_folder <- "Massive Missile Attacks on Ukraine"
+```
+
+::: {style="font-size: 70%;"}
+The first dataset `2022 Russia Ukraine War` had some inaccuracies in the data.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+Hopefully, the author provided a corrected version of the dataset - `russia_losses_equipment_correction.csv`. Let's load it and check the data.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: load-data
+russia_losses_equipment_correction <- read_csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+glimpse(russia_losses_equipment_correction)
+```
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-1
+apply_corrections <- function(main_data, corrections) {
+  
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-2
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-3
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+}
+```
+
+:::
+
+## Data Correction. Function {auto-animate="true"}
+
+::: {style="font-size: 70%;"}
+```{r}
+#| label: data-correction-function-4
+apply_corrections <- function(main_data, corrections) {
+    corrected_data <- main_data %>%
+        left_join(corrections, by = "date", suffix = c("", "_correction"))
+    corrected_columns <- c(
+      "aircraft", "helicopter", "tank", "APC", "field_artillery",
+      "MRL", "drone", "naval_ship", "submarines", 
+      "anti_aircraft_warfare", "special_equipment", 
+      "vehicles_and_fuel_tanks", "cruise_missiles"
+    )
+
+    for (col in corrected_columns) {
+        correction_col <- paste0(col, "_correction")
+        if (correction_col %in% colnames(corrected_data)) {
+            # replace NA in correction with 0 (на всяк випадок)
+            corrected_data[[correction_col]][is.na(corrected_data[[correction_col]])] <- 0
+            # cumulative correction
+            corrected_data[[col]] <- corrected_data[[col]] + cumsum(replace_na(corrected_data[[correction_col]], 0))
+        }
+    }
+    corrected_data <- corrected_data %>%
+        select(-ends_with("_correction"))
+
+    return(corrected_data)
+}
+```
+
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+And then we applied the function to the main dataset...
+:::
+
+## Data Correction. Evaluating the Scores 1/2
+
+. . .
+
+::: {style="font-size: 70%;"}
+What problems we faced: we have a lot of diffirent types of equipment and missiles, so we need to categorize them.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+So, we decided to create a function that will give `score` to each type of missile.
+:::
+
+. . . 
+
+::: {style="font-size: 70%;"}
+```{.r code-line-numbers="1-9|11-25|27"}
+categorize_missile <- function(missile) {
+  severity_scores <- c(
+    "High-powered missiles" = 10,
+    "Medium-powered missiles" = 7,
+    "Drones" = 3,
+    "Composite weapon types" = 5,
+    "Low-powered missiles / Others" = 2,
+    "Unknown" = NA_real_  # Default for unknown categories
+  )
+  
+  if (grepl("3M22 Zircon|Iskander-M|Iskander-K|X-47 Kinzhal|Kalibr|X-101/X-555|X-22|P-800 Oniks|X-59", missile, ignore.case = TRUE)) {
+    return(severity_scores["High-powered missiles"])
+  }
+  else if (grepl("C-300|C-400|C-300/C-400|C-300/C-400 and Iskander-M|C-400 and Iskander-M|Iskander-M/KN-23|X-22/X-31P|X-22/X-32|X-31PD|X-31|KAB", missile, ignore.case = TRUE)) {
+    return(severity_scores["Medium-powered missiles"])
+  }
+  else if (grepl("Shahed-136/131|Lancet|Mohajer-6|Orion|Orlan-10|Orlan-30|ZALA|Supercam|Merlin-VR|Eleron|Reconnaissance UAV|Unknown UAV", missile, ignore.case = TRUE)) {
+    return(severity_scores["Drones"])
+  }
+  else if (grepl("Orlan-10 and Supercam|Orlan-10 and ZALA|Shahed-136/131 and Lancet|Orlan-10 and ZALA and Supercam|Orlan-10 and Orlan-30 and ZALA and Supercam", missile, ignore.case = TRUE)) {
+    return(severity_scores["Composite weapon types"])
+  }
+  else if (grepl("Aerial Bomb|Grad/Urgan Rockets|Granat-4|Forpost|Картограф|Привет-82|Фенікс", missile, ignore.case = TRUE)) {
+    return(severity_scores["Low-powered missiles / Others"])
+  }
+  
+  return(severity_scores["Unknown"])  
+}
+```
+:::
+
+## Data Correction. Evaluating the Scores 2/2
+
+. . .
+
+Also, we want to show our second scores_table, but for the equipment.
+
+. . .
+
+```{r}
+#| label: equipment-weights
+
+weights <- list(
+  aircraft = 69,                 # Aircraft: High cost and strategic value
+  helicopter = 50,               # Helicopter: Tactical support and mobility
+  tank = 30,                     # Tank: Backbone of ground offensives
+  APC = 10,                      # APC: Troop transport
+  field.artillery = 15,          # Field Artillery: Combat support
+  MRL = 40,                      # MRL: High-impact artillery strikes
+  military.auto = 10,            # Military Auto: Logistics and mobility
+  fuel.tank = 10,                # Fuel Tank: Operations sustainment
+  drone = 20,                    # Drone: Reconnaissance and targeted strikes
+  naval.ship = 100,              # Naval Ship: Maritime operations
+  anti.aircraft.warfare = 60,    # Anti-Aircraft Warfare: Air defense
+  special.equipment = 40,        # Special Equipment: Specialized operational roles
+  mobile.SRBM.system = 100,      # Mobile SRBM System: Strategic deterrence
+  vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
+  cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
+  submarines = 1000             # Submarines: Strategic naval supremacy
+)
+```
+
+```{r}
+#| label: background-calculations
+#| echo: false
+#| message: false
+#| output: false
+
+ru_loss_persons <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_personnel.csv"))
+ru_loss_equipment <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment.csv"))
+ru_loss_equipment_correction <- read.csv(file.path(general_folder, ru_ua_folder, "russia_losses_equipment_correction.csv"))
+
+losses_ru <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_russia.csv"))
+losses_ua <- read.csv(file.path(general_folder, ru_ua_oryx_folder, "losses_ukraine.csv"))
+
+missiles_daily <- read.csv(file.path(general_folder, missile_atcks_folder, "missile_attacks_daily.csv"))
+missiles_and_uav <- read.csv(file.path(general_folder, missile_atcks_folder, "missiles_and_uav.csv"))
+
+###
+
+ru_loss_equipment <- ru_loss_equipment %>%
+    arrange(date)
+
+ru_loss_equipment_correction <- ru_loss_equipment_correction %>%
+    arrange(date)
+
+ru_loss_equipment_corrected <- apply_corrections(ru_loss_equipment, ru_loss_equipment_correction)
+
+ru_loss_equipment_corrected <- ru_loss_equipment_corrected %>% 
+    arrange(desc(date))
+ru_loss_equipment_temp <- ru_loss_equipment_corrected %>%
+  select(-c(date, day, greatest.losses.direction))
+
+# use weights to evaluate the score for each type of equipment
+for (equipment in names(weights)) {
+  if (equipment %in% colnames(ru_loss_equipment_temp)) {
+    ru_loss_equipment_temp[[equipment]] <- ru_loss_equipment_temp[[equipment]] * weights[[equipment]]
+  }
+}
+
+ru_loss_equipment_temp %>% 
+  head()
+
+# calculate the score for each row (cumulative)
+ru_loss_equipment_temp$cdf_loss_score <- rowSums(ru_loss_equipment_temp, na.rm = TRUE)
+
+ru_loss_equipment_evaluated <- cbind(ru_loss_equipment_corrected, cdf_loss_score = ru_loss_equipment_temp$cdf_loss_score)
+glimpse(ru_loss_equipment_evaluated)
+summary(ru_loss_equipment_temp$cdf_loss_score)
+
+ru_loss_equipment_evaluated <- ru_loss_equipment_evaluated %>% 
+  arrange(date)
+
+ru_loss_equipment_evaluated_pdf <- ru_loss_equipment_evaluated %>%
+  arrange(desc(date)) %>%
+  mutate(pdf_loss_score = c(ru_loss_equipment_evaluated$cdf_loss_score[1], diff(ru_loss_equipment_evaluated$cdf_loss_score)))
+
+ru_loss_equipment_evaluated_pdf %>% 
+  head()
+
+```

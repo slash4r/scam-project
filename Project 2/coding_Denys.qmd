@@ -85,7 +85,6 @@ apply_corrections <- function(main_data, corrections) {
     # Remove correction columns
     corrected_data <- corrected_data %>%
         select(-ends_with("_correction"))
-    
     return(corrected_data)
 }
 ```
