@@ -1,0 +1,4 @@
+- source: template.qmd
+  quarto-pub:
+    - id: f9783547-b539-4b48-9e73-45cc0cbff63b
+      url: https://sl4shuur.quarto.pub/template

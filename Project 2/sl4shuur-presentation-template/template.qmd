@@ -1,0 +1,43 @@
+---
+title: "The Russo-Ukrainian War Analysis"
+subtitle: "Descriptive Statistics"
+author: Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
+institute: Kyiv School of Economics
+date: "2024-12-20"
+date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</sup>] [of] MMMM, YYYY"
+embed-resources: false
+format:
+  revealjs:
+    title-slide-attributes: 
+      data-background-iframe: "template_files/libs/index.html"
+    theme: styles.scss
+    css: styles.scss
+    slideNumber: true
+    transition: fade
+    incremental: true
+    logo: "assets/images/logo_primary_color.png"
+    navigation-mode: vertical
+    footer: "[GitHub Repository](https://github.com/slash4r/scam-project)"
+engines:
+  python: python3
+  r: Rscript
+
+execute:
+  echo: true
+  eval: true
+---
+
+
+# Title Slide {background-iframe="template_files/libs/index.html"}
+
+asd
+
+## Slide 2
+```{r include=TRUE}
+asd <- 22
+word1 = "Misha"
+word2 = "is"
+word3 = "gay!"
+
+print(paste(word1, word2, word3))
+```
