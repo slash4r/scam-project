@@ -273,3 +273,21 @@ disrtibution_data %>%
   ) +
   scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
 ```
+
+## Build two distributions for the hypothesis testing
+
+  ```{r}
+  disrtibution_data %>%
+    filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+    ggplot(aes(x = pdf_loss_score, fill = season)) +
+    geom_density(alpha = 0.5) +
+    scale_fill_manual(values = c("Summer" = SUMMER_HEX, "Autumn" = AUTUMN_HEX)) +
+    labs(
+      title = "Distribution of Equipment Losses in Summer 2023 and Autumn 2024",
+      x = "PDF Loss Score",
+      y = "Density"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom") +
+    scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
