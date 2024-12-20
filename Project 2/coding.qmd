@@ -366,3 +366,31 @@ ggplot() +
   ) +
   theme_minimal()
 ```
+
+## Hypothesis Testing
+
+```{r}
+# Perform t-test
+t_test_result <- t.test(
+  boot_summer,               # Bootstrapped means for Summer 2023
+  boot_autumn,               # Bootstrapped means for Autumn 2024
+  alternative = "greater",   # One-tailed test (Summer 2023 > Autumn 2024)
+  var.equal = FALSE          # Assume unequal variances (Welch's t-test)
+)
+
+# Print results
+print(t_test_result)
+
+# Extract key values
+cat("T-statistic:", t_test_result$statistic, "\n")
+cat("P-value:", t_test_result$p.value, "\n")
+cat("95% Confidence Interval:", t_test_result$conf.int, "\n")
+
+# Interpret results
+if (t_test_result$p.value < 0.05) {
+  cat("Reject the null hypothesis: There is a significant difference in means.\n")
+} 
+else {
+  cat("Fail to reject the null hypothesis: No significant difference in means.\n")
+}
+```
