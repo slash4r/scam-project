@@ -291,3 +291,78 @@ disrtibution_data %>%
     theme(legend.position = "bottom") +
     scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
 ```
+
+# Hypothesis
+
+## Bootstrapping
+
+```{r}
+# Function to generate bootstrap samples and compute means
+bootstrap_normal <- function(data, n = 10000) {
+  boot_means <- replicate(n, {
+    sample(data, size = length(data), replace = TRUE) %>%
+      mean()
+  })
+  boot_means
+}
+
+data_filtered <- disrtibution_data %>%
+  filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+  mutate(season_year = paste(season, year))
+
+# Extract data for Summer 2023 and Autumn 2024
+summer_2023 <- data_filtered %>% filter(season_year == "Summer 2023") %>% pull(pdf_loss_score)
+autumn_2024 <- data_filtered %>% filter(season_year == "Autumn 2024") %>% pull(pdf_loss_score)
+
+
+
+Q1 <- quantile(autumn_2024, 0.05)
+Q3 <- quantile(autumn_2024, 0.95)
+IQR <- Q3 - Q1
+autumn_2024_filtered <- autumn_2024[autumn_2024 > (Q1 - 1.5 * IQR) & autumn_2024 < (Q3 + 1.5 * IQR)]
+
+# Perform bootstrapping for each group
+set.seed(123) # for reproducibility
+boot_summer <- bootstrap_normal(summer_2023)
+boot_autumn <- bootstrap_normal(autumn_2024_filtered)
+
+# Fit normal distributions (mean and SD) for each season
+fit_summer <- list(mean = mean(boot_summer), sd = sd(boot_summer))
+fit_autumn <- list(mean = mean(boot_autumn), sd = sd(boot_autumn))
+
+# Generate data for visualization of fitted normal distributions
+summer_normal <- data.frame(
+  x = seq(min(boot_summer), max(boot_summer), length.out = 1000),
+  density = dnorm(seq(min(boot_summer), max(boot_summer), length.out = 1000), 
+                  mean = fit_summer$mean, sd = fit_summer$sd),
+  season = "Summer 2023"
+)
+
+autumn_normal <- data.frame(
+  x = seq(min(boot_autumn), max(boot_autumn), length.out = 1000),
+  density = dnorm(seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
+                  mean = fit_autumn$mean, sd = fit_autumn$sd),
+  season = "Autumn 2024"
+)
+
+# Combine for plotting
+normal_data <- bind_rows(summer_normal, autumn_normal)
+
+# Plot bootstrap distributions and fitted normals
+ggplot() +
+  geom_density(data = data.frame(value = boot_summer, season = "Summer 2023"),
+               aes(x = value, fill = season), alpha = 0.5) +
+  geom_density(data = data.frame(value = boot_autumn, season = "Autumn 2024"),
+               aes(x = value, fill = season), alpha = 0.5) +
+  geom_line(data = normal_data, aes(x = x, y = density, color = season), size = 1) +
+  scale_fill_manual(values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)) +
+  scale_color_manual(values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)) +
+  labs(
+    title = "Bootstrap and Fitted Normal Distributions",
+    x = "PDF Loss Score",
+    y = "Density",
+    fill = "Season",
+    color = "Fitted Normal"
+  ) +
+  theme_minimal()
+```
