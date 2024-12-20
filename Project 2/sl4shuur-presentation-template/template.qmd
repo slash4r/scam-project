@@ -123,4 +123,66 @@ This list only includes destroyed vehicles and equipment of which photo or video
 
 **Images data of Equipment Losses**
 
-Images data include pictures of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
+Images data include `pictures` of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
+
+. . .
+
+::: {.r-stack}
+
+![](assets/images/daf_yad.jpg){.fragment style="position: absolute; top: 50; left: 0; height: 60%;"}
+
+![](assets/images/mi-17v5.png){.fragment style="position: absolute; top: 50; left: 350px; height: 60%;"}
+
+![](assets/images/strizh-class-boat-dam.jpg){.fragment style="position: absolute; top: 50; right: 0; width: 50%; height: 50%;"}
+
+:::
+
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Images data of Equipment Losses**
+
+Images data include `pictures` of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
+
+
+![](assets/images/t-80bv.jpg){style="position: absolute; top: 50; left: 0; width: 48%; height: 50%;"}
+
+::: {.r-stack}
+![](assets/images/t-80bv.png){.fragment style="position: absolute; top: 50; right: 0; width: 48%; height: 50%;"}
+:::
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Main Columns:**
+
+- `equipment` - type of equipment (e.g., tank, helicopter, etc.)
+
+- `model` - exact model of the equipment (e.g., T-80BV, Mi-17V5, etc.)
+
+- `sub_model` 
+
+- `manufacturer` - country of manufacturer (e.g., Russia, Ukraine, etc.)
+
+- `losses_total` - number of destroyed equipment
+
+## 3. Massive Missile Attacks on Ukraine
+
+::: {style="font-size: 70%;"}
+The dataset contains available information about launched and shot down missiles and drones during [russian massive missile and drone (UAV) strikes on infrastructure](https://en.wikipedia.org/wiki/2022%E2%80%932023_Russian_strikes_against_Ukrainian_infrastructure) (since October 2022) as part of its invasion of Ukraine. The dataset also contains information about some single shot-down UAVs.
+:::
+
+. . .
+
+::: {style="font-size: 70%;"}
+**Data:**
+
+- `time_start` - start attack time.
+- `time_end` - end attack time.
+- `model` - missile or UAV type.
+- `launch_place` - city or region from missiles were launched.
+- `target` - could be a city in Ukraine, or region of Ukraine or direction, or full Ukraine.
+- `carrier` - missile launch platform.
+- `launched` - number of launched missiles or UAVs.
+- `destroyed` - number of destroyed missiles or UAVs.
+- `source` - information source (mainly facebook posts).
+:::
