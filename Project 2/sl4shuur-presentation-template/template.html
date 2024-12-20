@@ -28,77 +28,14 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="template_files/libs/revealjs/dist/theme/quarto-d10dbd41eb55e826001c60c0d8dc561d.css">
+  <link rel="stylesheet" href="template_files/libs/revealjs/dist/theme/quarto-aa40653b10d5fc8fbb10ee8656ecb3cf.css">
   <link rel="stylesheet" href="styles.scss">
   <link href="template_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="template_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="template_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="template_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="template_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
     .reveal div.sourceCode {
@@ -209,24 +146,109 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
 
   <p class="date">Friday, the 20<sup style="font-size:65%;font-style:italic;">th</sup> of December, 2024</p>
 </section>
-<section>
-<section id="title-slide" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
-<h1>Title Slide</h1>
-<p>asd</p>
+<section id="table-of-contents" class="title-slide slide level1 center" style="left: 10%;" data-background-iframe="template_files/libs/index.html">
+<h1>Table of Contents</h1>
+<div>
+<ol type="1">
+<li><p><a href="#/introduction-and-objectives">Introduction and Objectives</a></p></li>
+<li><p><a href="#/data-description">Data Description</a></p></li>
+<li><p><a href="#/kvitkas-hypothesis">Kvitka’s Hypothesis</a></p></li>
+<li><p><a href="#/zakhars-hypothesis">Zakhar’s Hypothesis</a></p></li>
+<li><p><a href="#/denyss-hypothesis">Denys’s Hypothesis</a></p></li>
+<li><p><a href="#/conclusion">Conclusion</a></p></li>
+</ol>
+</div>
 </section>
-<section id="slide-2" class="slide level2">
-<h2>Slide 2</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>asd <span class="ot">&lt;-</span> <span class="dv">22</span></span>
-<span id="cb1-2"><a href=""></a>word1 <span class="ot">=</span> <span class="st">"Misha"</span></span>
-<span id="cb1-3"><a href=""></a>word2 <span class="ot">=</span> <span class="st">"is"</span></span>
-<span id="cb1-4"><a href=""></a>word3 <span class="ot">=</span> <span class="st">"gay!"</span></span>
-<span id="cb1-5"><a href=""></a></span>
-<span id="cb1-6"><a href=""></a><span class="fu">print</span>(<span class="fu">paste</span>(word1, word2, word3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Misha is gay!"</code></pre>
+
+<section>
+<section id="introduction-and-objectives" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Introduction and Objectives</h1>
+
+</section>
+<section id="what-our-project-is-about" class="slide level2">
+<h2>What our project is about?</h2>
+<p>The <code>Russo-Ukrainian War</code> is an ongoing conflict between Russia and Ukraine that began in 2014. The war has had a significant impact on both countries, with thousands of people killed and millions displaced. In this presentation, we will analyze the conflict using descriptive statistics to see some patterns and trends in the data.</p>
+<div class="fragment">
+<p>So we decided to scroll <a href="https://www.kaggle.com/datasets?search=ukraine">Kaggle</a> and find a dataset that would help us to analyze the conflict in recent years.</p>
+</div>
+</section></section>
+<section>
+<section id="data-description" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Data Description</h1>
+
+</section>
+<section id="data-description-1" class="slide level2">
+<h2>Data Description</h2>
+<p>As it was mentioned before, we found some datasets on <a href="https://www.kaggle.com/datasets?search=ukraine">Kaggle</a>. The dataset we chose contains information about the conflict in Ukraine from 2014 to 2021. It includes data on the number of casualties, attacks, and other relevant information.</p>
+<div class="fragment">
+<p>So, the datasets:</p>
+<ol type="1">
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war">2022 Russia Ukraine War</a> (updated weekly)</p></li>
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx">2022 Russia Ukraine War, Losses, Oryx + Images</a></p></li>
+<li class="fragment"><p><a href="https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv">Massive Missile Attacks on Ukraine</a></p></li>
+</ol>
+</div>
+</section>
+<section id="russia-ukraine-war" class="slide level2">
+<h2>1. 2022 Russia Ukraine War</h2>
+<p>This dataset describes Equipment Losses &amp; Death Toll &amp; Military Wounded &amp; Prisoner of War of russians in 2022-2024 Ukraine russia War by each day.</p>
+<div class="fragment">
+<p>All data are official and additionally structured by the author (<a href="https://www.kaggle.com/piterfm">Petro</a>).</p>
+</div>
+<div class="fragment">
+<p><strong>Data:</strong></p>
+<ul>
+<li class="fragment"><p><code>russia_losses_personnel.csv</code> - contains Personnel Losses during the war.</p></li>
+<li class="fragment"><p><code>russia_losses_equipment.csv</code> - contains Equipment Losses during the war.</p></li>
+<li class="fragment"><p><code>russia_losses_equipment_correction.csv</code> - contains some data correction <em>(dates: 2022-10-13, date: 2023-05-27)</em>.</p></li>
+</ul>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p>The dataset describes russian and Ukrainian Equipment Losses During The 2022 Russian Invasion Of Ukraine.</p>
+<div class="fragment">
+<p>The dataset was created based on <a href="https://www.oryxspioenkop.com/">Oryx</a> by scraping <a href="https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html">Ukrainian losses</a> and <a href="https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html">russian losses</a> pages.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 90%;">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>The datasets mentioned above are updated regularly and provide a comprehensive overview of the ongoing conflict. It is important to cross-verify the data with other sources for accuracy and reliability.</p>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 90%;">
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Warning!</strong></p>
+</div>
+<div class="callout-content">
+<p>This list only includes destroyed vehicles and equipment of which photo or videographic evidence is available. Therefore, the amount of equipment destroyed is significantly higher than recorded!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="russia-ukraine-war-losses-oryx-images-1" class="slide level2">
+<h2>2. 2022 Russia Ukraine War, Losses, Oryx + Images</h2>
+<p><strong>Images data of Equipment Losses</strong></p>
+<p>Images data include pictures of Equipment Losses. More than <strong>18k (8 GB)</strong> images of destroyed equipment can be found here.</p>
 
 </section></section>
     </div>
@@ -244,6 +266,7 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
   <script src="template_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="template_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="template_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="template_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="template_files/libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -265,7 +288,8 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -411,7 +435,7 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1500,
 
         height: 700,
 
@@ -436,7 +460,7 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
           RevealNotes,
@@ -445,82 +469,6 @@ Zakhar Staryk, Kvitka Yarish, Denys Mykhailov
         ]
       });
     </script>
-    
-
-    <script>
-
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
-      // slide changes (different for each slide format).
-
-      (function () {
-
-        // dispatch for htmlwidgets
-
-        function fireSlideEnter() {
-
-          const event = window.document.createEvent("Event");
-
-          event.initEvent("slideenter", true, true);
-
-          window.document.dispatchEvent(event);
-
-        }
-
-    
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          fireSlideEnter();
-
-    
-
-          // dispatch for shiny
-
-          if (window.jQuery) {
-
-            if (previousSlide) {
-
-              window.jQuery(previousSlide).trigger("hidden");
-
-            }
-
-            if (currentSlide) {
-
-              window.jQuery(currentSlide).trigger("shown");
-
-            }
-
-          }
-
-        }
-
-    
-
-        // hookup for slidy
-
-        if (window.w3c_slidy) {
-
-          window.w3c_slidy.add_observer(function (slide_num) {
-
-            // slide_num starts at position 1
-
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
-          });
-
-        }
-
-    
-
-      })();
-
-    </script>
-
-    
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {

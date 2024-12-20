@@ -5,8 +5,8 @@ $body-bg: #fefefe !default;
 $body-color: #000000 !default;
 // $link-color: $body-color !default;
 
-// $code-bg: #cccccc !default;
-// $code-color: #000000 !default;
+$code-bg: #f1f3f4 !default;
+$code-color: #9913ba !default;
 
 // $code-block-bg: #cccccc !default;
 // $code-block-border-color: #000000 !default;
@@ -97,9 +97,9 @@ code.sourceCode {
 .slide-logo {
   display: block !important;
   position: fixed !important;
-  bottom: 30px !important;
+  bottom: 10px !important;
   right: 30px !important;
-  max-height: 7% !important;
+  max-height: 5% !important;
   height: auto !important;
   width: auto !important;
   color: $body-color !important;
@@ -138,4 +138,19 @@ code.sourceCode {
   left: 50%;
   -ms-transform: translateY(-50%), translateX(-50%);
   transform: translateY(-50%), translateX(-50%);
+}
+
+/*-- scss:new-styles --*/
+
+code {
+  border-radius: 8px;
+  padding: 0.1em 0.2em;
+}
+
+.slide-number,
+.reveal.has-logo .slide-number {
+  top: 10px !important;
+  right: 10px !important;
+  bottom: unset !important;
+  color: gray !important;
 }

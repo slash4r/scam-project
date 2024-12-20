@@ -8,36 +8,119 @@ date-format: "dddd, [the] D[<sup style='font-size:65%;font-style:italic;'>th</su
 embed-resources: false
 format:
   revealjs:
-    title-slide-attributes: 
+    title-slide-attributes:
       data-background-iframe: "template_files/libs/index.html"
     theme: styles.scss
     css: styles.scss
     slideNumber: true
+    progress: true
     transition: fade
     incremental: true
     logo: "assets/images/logo_primary_color.png"
     navigation-mode: vertical
     footer: "[GitHub Repository](https://github.com/slash4r/scam-project)"
+    width: 1500
+    chalkboard: true
 engines:
   python: python3
   r: Rscript
-
 execute:
   echo: true
   eval: true
 ---
 
+::: {style="left: 10%;"}
 
-# Title Slide {background-iframe="template_files/libs/index.html"}
+# Table of Contents {background-iframe="template_files/libs/index.html"}
 
-asd
+::: {.nonincremental}
 
-## Slide 2
-```{r include=TRUE}
-asd <- 22
-word1 = "Misha"
-word2 = "is"
-word3 = "gay!"
+1. [Introduction and Objectives](#introduction-and-objectives)
 
-print(paste(word1, word2, word3))
-```
+2. [Data Description](#data-description)
+
+3. [Kvitka's Hypothesis](#kvitkas-hypothesis)
+
+4. [Zakhar's Hypothesis](#zakhars-hypothesis)
+
+5. [Denys's Hypothesis](#denyss-hypothesis)
+
+6. [Conclusion](#conclusion)
+
+:::
+
+:::
+
+# Introduction and Objectives {background-iframe="template_files/libs/index.html"}
+
+
+## What our project is about?
+
+The `Russo-Ukrainian War` is an ongoing conflict between Russia and Ukraine that began in 2014. The war has had a significant impact on both countries, with thousands of people killed and millions displaced. In this presentation, we will analyze the conflict using descriptive statistics to see some patterns and trends in the data.
+
+. . .
+
+So we decided to scroll [Kaggle](https://www.kaggle.com/datasets?search=ukraine) and find a dataset that would help us to analyze the conflict in recent years.
+
+# Data Description {background-iframe="template_files/libs/index.html"}
+
+## Data Description
+
+As it was mentioned before, we found some datasets on [Kaggle](https://www.kaggle.com/datasets?search=ukraine). The dataset we chose contains information about the conflict in Ukraine from 2014 to 2021. It includes data on the number of casualties, attacks, and other relevant information.
+
+. . .
+
+So, the datasets:
+
+1. [2022 Russia Ukraine War](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) (updated weekly)
+
+2. [2022 Russia Ukraine War, Losses, Oryx + Images](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russia-war-equipment-losses-oryx)
+
+3. [Massive Missile Attacks on Ukraine](https://www.kaggle.com/datasets/piterfm/massive-missile-attacks-on-ukraine?select=missiles_and_uav.csv)
+
+
+## 1. 2022 Russia Ukraine War
+
+This dataset describes Equipment Losses & Death Toll & Military Wounded & Prisoner of War of russians in 2022-2024 Ukraine russia War by each day.
+
+. . .
+
+All data are official and additionally structured by the author ([Petro](https://www.kaggle.com/piterfm)).
+
+. . .
+
+**Data:**
+
+- `russia_losses_personnel.csv` - contains Personnel Losses during the war.
+
+- `russia_losses_equipment.csv` - contains Equipment Losses during the war.
+
+- `russia_losses_equipment_correction.csv` - contains some data correction *(dates: 2022-10-13, date: 2023-05-27)*.
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+The dataset describes russian and Ukrainian Equipment Losses During The 2022 Russian Invasion Of Ukraine.
+
+. . .
+
+The dataset was created based on [Oryx](https://www.oryxspioenkop.com/) by scraping [Ukrainian losses](https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-ukrainian.html) and [russian losses](https://www.oryxspioenkop.com/2022/02/attack-on-europe-documenting-equipment.html) pages.
+
+. . .
+
+::: {.callout-note style="font-size: 90%;"}
+## Note
+The datasets mentioned above are updated regularly and provide a comprehensive overview of the ongoing conflict. It is important to cross-verify the data with other sources for accuracy and reliability.
+:::
+
+. . .
+
+::: {.callout-warning style="font-size: 90%;"}
+## Warning!
+This list only includes destroyed vehicles and equipment of which photo or videographic evidence is available. Therefore, the amount of equipment destroyed is significantly higher than recorded!
+:::
+
+## 2. 2022 Russia Ukraine War, Losses, Oryx + Images
+
+**Images data of Equipment Losses**
+
+Images data include pictures of Equipment Losses. More than **18k (8 GB)** images of destroyed equipment can be found here.
