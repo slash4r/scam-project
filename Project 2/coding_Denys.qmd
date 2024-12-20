@@ -130,7 +130,6 @@ weights <- list(
   vehicles.and.fuel.tanks = 30,  # Vehicles and Fuel Tanks: Logistics
   cruise.missiles = 40,          # Cruise Missiles: High-impact strikes
   submarines = 1000,             # Submarines: Strategic naval supremacy
-  greatest.losses.direction = 1  # skip this column
 )
 ```
 

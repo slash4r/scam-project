@@ -975,14 +975,537 @@ F-statistic: 288.5 on 1 and 1023 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </section></section>
 <section>
-<section id="deniss-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
-<h1>Denis’s Hypothesis</h1>
+<section id="denyss-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Denys’s Hypothesis</h1>
 
 </section>
-<section id="hypothesis" class="slide level2">
-<h2>Hypothesis</h2>
-
+<section id="distribution-of-equipment-losses" class="slide level2">
+<h2>Distribution of Equipment Losses</h2>
+<p>First, let’s split the data by seasons (winter, spring, summer, autumn) + year</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href=""></a>SUMMER_HEX <span class="ot">&lt;-</span> <span class="st">"#e31a1c"</span></span>
+<span id="cb25-2"><a href=""></a>WINTER_HEX <span class="ot">&lt;-</span> <span class="st">"#1f78b4"</span></span>
+<span id="cb25-3"><a href=""></a>SPRING_HEX <span class="ot">&lt;-</span> <span class="st">"#33a02c"</span></span>
+<span id="cb25-4"><a href=""></a>AUTUMN_HEX <span class="ot">&lt;-</span> <span class="st">"#ff7f00"</span></span>
+<span id="cb25-5"><a href=""></a></span>
+<span id="cb25-6"><a href=""></a>disrtibution_data <span class="ot">&lt;-</span> ru_loss_equipment_evaluated_pdf <span class="sc">%&gt;%</span> </span>
+<span id="cb25-7"><a href=""></a>  <span class="fu">mutate</span>(</span>
+<span id="cb25-8"><a href=""></a>    <span class="at">season =</span> <span class="fu">case_when</span>(</span>
+<span id="cb25-9"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">1</span>, <span class="dv">2</span>) <span class="sc">~</span> <span class="st">"Winter"</span>,</span>
+<span id="cb25-10"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="sc">~</span> <span class="st">"Spring"</span>,</span>
+<span id="cb25-11"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>) <span class="sc">~</span> <span class="st">"Summer"</span>,</span>
+<span id="cb25-12"><a href=""></a>      <span class="fu">month</span>(date) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>) <span class="sc">~</span> <span class="st">"Autumn"</span></span>
+<span id="cb25-13"><a href=""></a>    ),</span>
+<span id="cb25-14"><a href=""></a>    <span class="at">year =</span> <span class="fu">year</span>(date)</span>
+<span id="cb25-15"><a href=""></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb25-16"><a href=""></a>  <span class="fu">select</span>(pdf_loss_score, season, year)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2022" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2022</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb26-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb26-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb26-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb26-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb26-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb26-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb26-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb26-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb26-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2022"</span>,</span>
+<span id="cb26-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb26-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb26-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb26-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb26-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb26-21"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2022-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2023" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2023</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2023</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb27-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb27-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb27-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb27-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb27-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb27-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb27-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb27-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb27-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2023"</span>,</span>
+<span id="cb27-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb27-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb27-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb27-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb27-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb27-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb27-21"><a href=""></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2023-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-equipment-losses.-visualization-2024" class="slide level2">
+<h2>Distribution of Equipment Losses. Visualization 2024</h2>
+<p>Now, let’s build the distribution of equipment losses! by each season</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href=""></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href=""></a>  <span class="fu">ggplot</span>(</span>
+<span id="cb28-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)</span>
+<span id="cb28-5"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb28-6"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb28-8"><a href=""></a>    <span class="st">"Winter"</span> <span class="ot">=</span> WINTER_HEX,</span>
+<span id="cb28-9"><a href=""></a>    <span class="st">"Spring"</span> <span class="ot">=</span> SPRING_HEX,</span>
+<span id="cb28-10"><a href=""></a>    <span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX,</span>
+<span id="cb28-11"><a href=""></a>    <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX</span>
+<span id="cb28-12"><a href=""></a>  )) <span class="sc">+</span></span>
+<span id="cb28-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb28-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in 2024"</span>,</span>
+<span id="cb28-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb28-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb28-17"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb28-18"><a href=""></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-19"><a href=""></a>  <span class="fu">theme</span>(</span>
+<span id="cb28-20"><a href=""></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span></span>
+<span id="cb28-21"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb28-22"><a href=""></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">quantile</span>(disrtibution_data<span class="sc">$</span>pdf_loss_score, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.95</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/distribution-2024-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="searching-for-the-hypothesis" class="slide level2">
+<h2>Searching for the Hypothesis…</h2>
+<p>I was thinking a lot about the field to investigate.</p>
+<div class="fragment">
+<p>Suddenly, I remembered the <code>Ukrainian counterattacks</code> in Summer 2023.</p>
+</div>
+<div class="fragment">
+<p>I decided to check if there is a <strong>significant difference</strong> in statistical means of equipment losses between that period and the recent days.</p>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<p>Let’s visualize the distribution of equipment losses in <code>Summer 2023</code> and recent days (<code>Autumn 2024</code>).</p>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href=""></a>disrtibution_data <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href=""></a>    <span class="fu">filter</span>((year <span class="sc">==</span> <span class="dv">2023</span> <span class="sc">&amp;</span> season <span class="sc">==</span> <span class="st">"Summer"</span>) <span class="sc">|</span> (year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> season <span class="sc">==</span> <span class="st">"Autumn"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href=""></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> pdf_loss_score, <span class="at">fill =</span> season)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href=""></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href=""></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn"</span> <span class="ot">=</span> AUTUMN_HEX)) <span class="sc">+</span></span>
+<span id="cb29-6"><a href=""></a>    <span class="fu">labs</span>(</span>
+<span id="cb29-7"><a href=""></a>      <span class="at">title =</span> <span class="st">"Distribution of Equipment Losses in Summer 2023 and Autumn 2024"</span>,</span>
+<span id="cb29-8"><a href=""></a>      <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb29-9"><a href=""></a>      <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb29-10"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb29-11"><a href=""></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb29-12"><a href=""></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb29-13"><a href=""></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">quantile</span>(disrtibution_data<span class="sc">$</span>pdf_loss_score, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.95</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-1-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-1" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>But there is one big problem. The data is not normally distributed :(</p>
+</div>
+<div class="fragment">
+<p>So, I decided to use Bootstrap to compare the means of equipment losses in <code>Summer 2023</code> and <code>Autumn 2024</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href=""></a>bootstrap_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(data, <span class="at">n =</span> <span class="dv">10000</span>) {</span>
+<span id="cb30-2"><a href=""></a>  boot_means <span class="ot">&lt;-</span> <span class="fu">replicate</span>(n, {</span>
+<span id="cb30-3"><a href=""></a>    <span class="fu">sample</span>(data, <span class="at">size =</span> <span class="fu">length</span>(data), <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href=""></a>      <span class="fu">mean</span>()</span>
+<span id="cb30-5"><a href=""></a>  })</span>
+<span id="cb30-6"><a href=""></a>  boot_means</span>
+<span id="cb30-7"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Remark.</strong></p>
+</div>
+<div class="callout-content">
+<p>I also removed some <strong>outliers</strong> from the data in <code>Autumn 2024</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-2" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>Now, our distributions look like this:</p>
+</div>
+<div class="fragment">
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href=""></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb31-2"><a href=""></a>  <span class="fu">geom_density</span>(</span>
+<span id="cb31-3"><a href=""></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">value =</span> boot_summer, <span class="at">season =</span> <span class="st">"Summer 2023"</span>),</span>
+<span id="cb31-4"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> season), <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb31-5"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-6"><a href=""></a>  <span class="fu">geom_density</span>(</span>
+<span id="cb31-7"><a href=""></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(<span class="at">value =</span> boot_autumn, <span class="at">season =</span> <span class="st">"Autumn 2024"</span>),</span>
+<span id="cb31-8"><a href=""></a>    <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> season), <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb31-9"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-10"><a href=""></a>  <span class="fu">geom_line</span>(</span>
+<span id="cb31-11"><a href=""></a>    <span class="at">data =</span> normal_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> density, <span class="at">color =</span> season), <span class="at">size =</span> <span class="dv">1</span></span>
+<span id="cb31-12"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-13"><a href=""></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb31-14"><a href=""></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer 2023"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn 2024"</span> <span class="ot">=</span> AUTUMN_HEX)</span>
+<span id="cb31-15"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-16"><a href=""></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb31-17"><a href=""></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Summer 2023"</span> <span class="ot">=</span> SUMMER_HEX, <span class="st">"Autumn 2024"</span> <span class="ot">=</span> AUTUMN_HEX)</span>
+<span id="cb31-18"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-19"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-20"><a href=""></a>    <span class="at">title =</span> <span class="st">"Bootstrap and Fitted Normal Distributions"</span>,</span>
+<span id="cb31-21"><a href=""></a>    <span class="at">x =</span> <span class="st">"PDF Loss Score"</span>,</span>
+<span id="cb31-22"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb31-23"><a href=""></a>    <span class="at">fill =</span> <span class="st">"Season"</span>,</span>
+<span id="cb31-24"><a href=""></a>    <span class="at">color =</span> <span class="st">"Fitted Normal"</span></span>
+<span id="cb31-25"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb31-26"><a href=""></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-1-bootstrap-plot-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-i.-ukrainian-counterattacks-3" class="slide level2">
+<h2>Hypothesis I. Ukrainian Counterattacks</h2>
+<p><strong>Hypothesis Testing. <span class="math inline">\(\text{t}\)</span>-test</strong></p>
+<div style="font-size: 80%;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href=""></a>t_test_result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(</span>
+<span id="cb32-2"><a href=""></a>  boot_summer,               <span class="co"># Bootstrapped means for Summer 2023</span></span>
+<span id="cb32-3"><a href=""></a>  boot_autumn,               <span class="co"># Bootstrapped means for Autumn 2024</span></span>
+<span id="cb32-4"><a href=""></a>  <span class="at">alternative =</span> <span class="st">"greater"</span>,   <span class="co"># One-tailed test (Summer 2023 &gt; Autumn 2024)</span></span>
+<span id="cb32-5"><a href=""></a>  <span class="at">var.equal =</span> <span class="cn">FALSE</span>          <span class="co"># Assume unequal variances (Welch's t-test)</span></span>
+<span id="cb32-6"><a href=""></a>)</span>
+<span id="cb32-7"><a href=""></a><span class="fu">cat</span>(<span class="st">"T-statistic:"</span>, t_test_result<span class="sc">$</span>statistic, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>T-statistic: 518.3571 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href=""></a><span class="fu">cat</span>(<span class="st">"P-value:"</span>, t_test_result<span class="sc">$</span>p.value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>P-value: 0 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href=""></a><span class="fu">cat</span>(<span class="st">"95% Confidence Interval:"</span>, t_test_result<span class="sc">$</span>conf.int, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>95% Confidence Interval: 537.7398 Inf </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href=""></a><span class="cf">if</span> (t_test_result<span class="sc">$</span>p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb38-2"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Reject the null hypothesis: There is a significant difference in means.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-3"><a href=""></a>} <span class="cf">else</span> {</span>
+<span id="cb38-4"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Fail to reject the null hypothesis: No significant difference in means.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb38-5"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reject the null hypothesis: There is a significant difference in means.</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div class="fragment">
+<p>The second hypothesis I come up with is the question about the <strong>distribution</strong> of equipment losses in <code>Summer 2023</code>.</p>
+</div>
+<div class="fragment">
+<p>In this case, I want to check if the distribution of equipment losses in <code>Summer 2023</code> is close to the <strong>normal distribution</strong>.</p>
+</div>
+<div class="fragment">
+<p>I will use the <strong>Chi-Square Goodness of Fit Test</strong> to check this hypothesis.</p>
+</div>
+<div class="fragment">
+<p>Let’s dive into the code!</p>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks-1" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div style="text-align: center;">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href=""></a>mu <span class="ot">&lt;-</span> <span class="fu">mean</span>(summer_2023)</span>
+<span id="cb40-2"><a href=""></a>sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(summer_2023)</span>
+<span id="cb40-3"><a href=""></a></span>
+<span id="cb40-4"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(summer_2023)</span>
+<span id="cb40-5"><a href=""></a>breaks <span class="ot">&lt;-</span> <span class="fu">seq</span>(</span>
+<span id="cb40-6"><a href=""></a>  <span class="fu">min</span>(summer_2023),</span>
+<span id="cb40-7"><a href=""></a>  <span class="fu">max</span>(summer_2023),</span>
+<span id="cb40-8"><a href=""></a>  <span class="at">length.out =</span> <span class="fu">ceiling</span>(<span class="fu">log2</span>(n) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb40-9"><a href=""></a>)</span>
+<span id="cb40-10"><a href=""></a></span>
+<span id="cb40-11"><a href=""></a>observed <span class="ot">&lt;-</span> <span class="fu">hist</span>(summer_2023, <span class="at">breaks =</span> breaks, <span class="at">plot =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>counts</span>
+<span id="cb40-12"><a href=""></a></span>
+<span id="cb40-13"><a href=""></a>plot_normal_overlay_gg <span class="ot">&lt;-</span> <span class="cf">function</span>(data, mean, sd, breaks, <span class="at">hist_color =</span> <span class="st">"lightblue"</span>, <span class="at">line_color =</span> <span class="st">"red"</span>, <span class="at">line_size =</span> <span class="fl">1.5</span>) {</span>
+<span id="cb40-14"><a href=""></a>  data_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> data)</span>
+<span id="cb40-15"><a href=""></a>  hist_bins <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="fu">length</span>(breaks))</span>
+<span id="cb40-16"><a href=""></a>  normal_curve <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb40-17"><a href=""></a>    <span class="at">x =</span> <span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb40-18"><a href=""></a>    <span class="at">y =</span> <span class="fu">dnorm</span>(<span class="fu">seq</span>(<span class="fu">min</span>(data), <span class="fu">max</span>(data), <span class="at">length.out =</span> <span class="dv">1000</span>), <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)</span>
+<span id="cb40-19"><a href=""></a>  )</span>
+<span id="cb40-20"><a href=""></a>  </span>
+<span id="cb40-21"><a href=""></a>  <span class="fu">ggplot</span>(data_df, <span class="fu">aes</span>(x)) <span class="sc">+</span></span>
+<span id="cb40-22"><a href=""></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="fu">length</span>(breaks) <span class="sc">-</span> <span class="dv">1</span>, <span class="at">fill =</span> hist_color, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb40-23"><a href=""></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> normal_curve, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">color =</span> line_color, <span class="at">size =</span> line_size) <span class="sc">+</span></span>
+<span id="cb40-24"><a href=""></a>    <span class="fu">labs</span>(</span>
+<span id="cb40-25"><a href=""></a>      <span class="at">title =</span> <span class="st">"Histogram with Normal Distribution Overlay"</span>,</span>
+<span id="cb40-26"><a href=""></a>      <span class="at">x =</span> <span class="st">"Data"</span>,</span>
+<span id="cb40-27"><a href=""></a>      <span class="at">y =</span> <span class="st">"Density"</span></span>
+<span id="cb40-28"><a href=""></a>    ) <span class="sc">+</span></span>
+<span id="cb40-29"><a href=""></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb40-30"><a href=""></a>}</span>
+<span id="cb40-31"><a href=""></a></span>
+<span id="cb40-32"><a href=""></a><span class="fu">plot_normal_overlay_gg</span>(summer_2023, <span class="at">mean =</span> mu, <span class="at">sd =</span> sd, <span class="at">breaks =</span> breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/hypothesis-2-1.png" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>But we need to verify our assumptions <code>mathematically</code>, not only visually!!!</p>
+</div>
+</section>
+<section id="hypothesis-ii.-ukrainian-counterattacks-2" class="slide level2">
+<h2>Hypothesis II. Ukrainian Counterattacks</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href=""></a>chi_squared_test <span class="ot">&lt;-</span> <span class="cf">function</span>(data, mean, sd, breaks) {</span>
+<span id="cb41-2"><a href=""></a>  hist_data <span class="ot">&lt;-</span> <span class="fu">hist</span>(data, <span class="at">breaks =</span> breaks, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-3"><a href=""></a>  observed <span class="ot">&lt;-</span> hist_data<span class="sc">$</span>counts</span>
+<span id="cb41-4"><a href=""></a>  </span>
+<span id="cb41-5"><a href=""></a>  n <span class="ot">&lt;-</span> <span class="fu">sum</span>(observed)</span>
+<span id="cb41-6"><a href=""></a>  </span>
+<span id="cb41-7"><a href=""></a>  expected <span class="ot">&lt;-</span> <span class="fu">numeric</span>(<span class="fu">length</span>(observed))</span>
+<span id="cb41-8"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(expected)) {</span>
+<span id="cb41-9"><a href=""></a>    <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb41-10"><a href=""></a>      <span class="co"># Smallest bin</span></span>
+<span id="cb41-11"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(breaks[i <span class="sc">+</span> <span class="dv">1</span>], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd) <span class="sc">*</span> n</span>
+<span id="cb41-12"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (i <span class="sc">==</span> <span class="fu">length</span>(expected)) {</span>
+<span id="cb41-13"><a href=""></a>      <span class="co"># Largest bin</span></span>
+<span id="cb41-14"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(breaks[i], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)) <span class="sc">*</span> n</span>
+<span id="cb41-15"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb41-16"><a href=""></a>      <span class="co"># Middle bins</span></span>
+<span id="cb41-17"><a href=""></a>      expected[i] <span class="ot">&lt;-</span> (<span class="fu">pnorm</span>(breaks[i <span class="sc">+</span> <span class="dv">1</span>], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd) <span class="sc">-</span></span>
+<span id="cb41-18"><a href=""></a>                      <span class="fu">pnorm</span>(breaks[i], <span class="at">mean =</span> mean, <span class="at">sd =</span> sd)) <span class="sc">*</span> n</span>
+<span id="cb41-19"><a href=""></a>    }</span>
+<span id="cb41-20"><a href=""></a>  }</span>
+<span id="cb41-21"><a href=""></a>  </span>
+<span id="cb41-22"><a href=""></a>  <span class="co"># Combine bins with expected frequencies &lt; 5</span></span>
+<span id="cb41-23"><a href=""></a>  <span class="cf">while</span> (<span class="fu">any</span>(expected <span class="sc">&lt;</span> <span class="dv">5</span>)) {</span>
+<span id="cb41-24"><a href=""></a>    idx <span class="ot">&lt;-</span> <span class="fu">which.min</span>(expected)</span>
+<span id="cb41-25"><a href=""></a>    <span class="co"># if index is 1 or last, combine with next or previous bin</span></span>
+<span id="cb41-26"><a href=""></a>    <span class="cf">if</span> (idx <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb41-27"><a href=""></a>      <span class="co"># Combine with next bin</span></span>
+<span id="cb41-28"><a href=""></a>      observed[<span class="dv">2</span>] <span class="ot">&lt;-</span> observed[<span class="dv">2</span>] <span class="sc">+</span> observed[<span class="dv">1</span>]</span>
+<span id="cb41-29"><a href=""></a>      expected[<span class="dv">2</span>] <span class="ot">&lt;-</span> expected[<span class="dv">2</span>] <span class="sc">+</span> expected[<span class="dv">1</span>]</span>
+<span id="cb41-30"><a href=""></a>      observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-31"><a href=""></a>      expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb41-32"><a href=""></a>    } <span class="cf">else</span> <span class="cf">if</span> (idx <span class="sc">==</span> <span class="fu">length</span>(expected)) {</span>
+<span id="cb41-33"><a href=""></a>      <span class="co"># Combine with previous bin</span></span>
+<span id="cb41-34"><a href=""></a>      observed[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> observed[<span class="fu">length</span>(expected)]</span>
+<span id="cb41-35"><a href=""></a>      expected[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[<span class="fu">length</span>(expected) <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> expected[<span class="fu">length</span>(expected)]</span>
+<span id="cb41-36"><a href=""></a>      observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span><span class="fu">length</span>(expected)]</span>
+<span id="cb41-37"><a href=""></a>      expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span><span class="fu">length</span>(expected)]</span>
+<span id="cb41-38"><a href=""></a>    } <span class="cf">else</span> {</span>
+<span id="cb41-39"><a href=""></a>      <span class="co"># Combine with smaller of adjacent bins</span></span>
+<span id="cb41-40"><a href=""></a>      <span class="cf">if</span> (expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">&lt;</span> expected[idx <span class="sc">+</span> <span class="dv">1</span>]) {</span>
+<span id="cb41-41"><a href=""></a>        observed[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> observed[idx]</span>
+<span id="cb41-42"><a href=""></a>        expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[idx <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">+</span> expected[idx]</span>
+<span id="cb41-43"><a href=""></a>        observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span>idx]</span>
+<span id="cb41-44"><a href=""></a>        expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span>idx]</span>
+<span id="cb41-45"><a href=""></a>      } <span class="cf">else</span> {</span>
+<span id="cb41-46"><a href=""></a>        observed[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> observed[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">+</span> observed[idx]</span>
+<span id="cb41-47"><a href=""></a>        expected[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> expected[idx <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">+</span> expected[idx]</span>
+<span id="cb41-48"><a href=""></a>        observed <span class="ot">&lt;-</span> observed[<span class="sc">-</span>idx]</span>
+<span id="cb41-49"><a href=""></a>        expected <span class="ot">&lt;-</span> expected[<span class="sc">-</span>idx]</span>
+<span id="cb41-50"><a href=""></a>      }</span>
+<span id="cb41-51"><a href=""></a>    }</span>
+<span id="cb41-52"><a href=""></a>  }</span>
+<span id="cb41-53"><a href=""></a>  </span>
+<span id="cb41-54"><a href=""></a>  chi_sq_stat <span class="ot">&lt;-</span> <span class="fu">sum</span>((observed <span class="sc">-</span> expected)<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> expected)</span>
+<span id="cb41-55"><a href=""></a>  df <span class="ot">&lt;-</span> <span class="fu">length</span>(observed) <span class="sc">-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="dv">2</span>  <span class="co"># we estimate mean and sd</span></span>
+<span id="cb41-56"><a href=""></a>  p_value <span class="ot">&lt;-</span> <span class="fu">pchisq</span>(chi_sq_stat, df, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb41-57"><a href=""></a>  critical_value <span class="ot">&lt;-</span> <span class="fu">qchisq</span>(<span class="fl">0.95</span>, df)</span>
+<span id="cb41-58"><a href=""></a>  </span>
+<span id="cb41-59"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Chi-Squared Statistic:"</span>, chi_sq_stat, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-60"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Degrees of Freedom:"</span>, df, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-61"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"P-value:"</span>, p_value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-62"><a href=""></a>  <span class="fu">cat</span>(<span class="st">"Critical Value (alpha = 0.05):"</span>, critical_value, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-63"><a href=""></a>  </span>
+<span id="cb41-64"><a href=""></a>  <span class="cf">if</span> (p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb41-65"><a href=""></a>    <span class="fu">cat</span>(<span class="st">"Reject the null hypothesis: The data does not follow the assumed normal distribution.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-66"><a href=""></a>  } <span class="cf">else</span> {</span>
+<span id="cb41-67"><a href=""></a>    <span class="fu">cat</span>(<span class="st">"Fail to reject the null hypothesis: The data follows the assumed normal distribution.</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb41-68"><a href=""></a>  }</span>
+<span id="cb41-69"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href=""></a><span class="fu">chi_squared_test</span>(summer_2023, <span class="at">mean =</span> mu, <span class="at">sd =</span> sd, <span class="at">breaks =</span> breaks)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Chi-Squared Statistic: 1.784502 
+Degrees of Freedom: 3 
+P-value: 0.6183132 
+Critical Value (alpha = 0.05): 7.814728 
+Fail to reject the null hypothesis: The data follows the assumed normal distribution.</code></pre>
+</div>
+</div>
 </section></section>
+<section>
+<section id="conclusion" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Conclusion</h1>
+
+</section>
+<section id="conclusion-1" class="slide level2">
+<h2>Conclusion</h2>
+<div class="fragment">
+<p>Our analysis of the Russo-Ukrainian War data, using various statistical methods, provides significant insights into the patterns of equipment and personnel losses as well as the dynamics of missile attacks. Here’s a summary of our findings:</p>
+</div>
+</section>
+<section id="kvitkas-hypothesis-1" class="slide level2">
+<h2>1. Kvitka’s Hypothesis</h2>
+<ul>
+<li class="fragment"><strong>Hypothesis</strong>: Missile attacks are more severe on significant dates.</li>
+<li class="fragment"><strong>Result</strong>: Statistical testing (t-tests) revealed no evidence to support the hypothesis. The severity of missile attacks appears independent of significant dates.</li>
+<li class="fragment"><strong>Implications</strong>: Other factors, such as military strategy or available resources, may influence the intensity of missile attacks rather than symbolic dates.</li>
+</ul>
+</section>
+<section id="zakhars-hypothesis-1" class="slide level2">
+<h2>2. Zakhar’s Hypothesis</h2>
+<div style="font-size: 90%;">
+<ul>
+<li class="fragment"><strong>Hypothesis</strong>: Shelling points (missiles launched) are positively associated with equipment and personnel losses.</li>
+<li class="fragment"><strong>Model 1 (Equipment Losses)</strong>:
+<ul>
+<li class="fragment">Each additional shelling point increases equipment losses by ~24.46 points.</li>
+<li class="fragment"><strong>R²</strong>: 13.09% variability explained.</li>
+</ul></li>
+<li class="fragment"><strong>Model 2 (Personnel Losses)</strong>:
+<ul>
+<li class="fragment">Each additional shelling point increases personnel losses by ~6.30 points.</li>
+<li class="fragment"><strong>R²</strong>: 22% variability explained.</li>
+</ul></li>
+<li class="fragment"><strong>Implications</strong>: While the relationships are statistically significant, a substantial portion of the variability remains unexplained, highlighting the influence of other battlefield conditions.</li>
+</ul>
+</div>
+</section>
+<section id="denyss-hypothesis-1" class="slide level2">
+<h2>3. Denys’s Hypothesis</h2>
+<div style="font-size: 80%;">
+<ul>
+<li class="fragment"><strong>Hypothesis I</strong>: Significant differences exist between equipment losses in Summer 2023 (Ukrainian counterattacks) and Autumn 2024.</li>
+<li class="fragment"><strong>Result</strong>: Bootstrapped t-tests revealed a significant difference between the two periods, supporting the hypothesis that loss rates in Summer 2023 (Ukrainian counterattacks) were higher.</li>
+<li class="fragment"><strong>Hypothesis II</strong>: The distribution of equipment losses in Summer 2023 follows a normal distribution.</li>
+<li class="fragment"><strong>Result</strong>: A Chi-Square Goodness-of-Fit test confirmed the hypothesis, as the test failed to reject the null hypothesis, indicating that the data aligns with a normal distribution.</li>
+</ul>
+</div>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p>This finding suggests that the Ukrainian counterattacks during Summer 2023 resulted in higher equipment losses compared to Autumn 2024, while the statistical distribution of losses during Summer 2023 is consistent with a normal pattern. These results provide further evidence of the intensity of operations during key periods of the conflict.</p>
+</div>
+</div>
+</section>
+<section id="final-insights" class="slide level2">
+<h2>Final Insights</h2>
+<ul>
+<li class="fragment">Statistical models confirm the relationships between shelling points and losses, but they also emphasize the need for further exploration of additional factors.</li>
+<li class="fragment">Seasonal and temporal patterns reveal no significant deviations in equipment losses during key periods like counterattacks.</li>
+<li class="fragment">Our findings suggest a balance between statistical rigor and the understanding that war data is influenced by myriad complex and often unpredictable factors.</li>
+</ul>
+</section>
+<section id="future-work" class="slide level2">
+<h2>Future Work</h2>
+<ul>
+<li class="fragment">Integrate additional variables (e.g., geographical or operational data) to enhance the explanatory power of models.</li>
+<li class="fragment">Explore nonlinear relationships and machine learning methods for pattern detection.</li>
+<li class="fragment">Investigate other significant dates or contextual factors influencing the severity of attacks.</li>
+</ul>
+<div class="fragment">
+<p>This comprehensive statistical approach sheds light on the dynamics of the conflict while acknowledging its complexities and limitations.</p>
+</div>
+</section></section>
+<section id="thank-you-for-your-attention" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Thank you for your attention!</h1>
+
+</section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="assets/images/logo_primary_color.png" class="slide-logo"></p>

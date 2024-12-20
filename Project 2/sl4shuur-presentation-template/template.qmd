@@ -901,4 +901,527 @@ ggplot(equipment_shelling_merged, aes(x = massive_shelling, y = equipment_daily_
 
 # Denys's Hypothesis {background-iframe="template_files/libs/index.html"}
 
-## Hypothesis
+## Distribution of Equipment Losses
+
+First, let's split the data by seasons (winter, spring, summer, autumn) + year
+
+```{r}
+SUMMER_HEX <- "#e31a1c"
+WINTER_HEX <- "#1f78b4"
+SPRING_HEX <- "#33a02c"
+AUTUMN_HEX <- "#ff7f00"
+
+disrtibution_data <- ru_loss_equipment_evaluated_pdf %>% 
+  mutate(
+    season = case_when(
+      month(date) %in% c(12, 1, 2) ~ "Winter",
+      month(date) %in% c(3, 4, 5) ~ "Spring",
+      month(date) %in% c(6, 7, 8) ~ "Summer",
+      month(date) %in% c(9, 10, 11) ~ "Autumn"
+    ),
+    year = year(date)
+  ) %>%
+  select(pdf_loss_score, season, year)
+```
+
+## Distribution of Equipment Losses. Visualization 2022
+
+Now, let's build the distribution of equipment losses! by each season
+
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2022
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2022) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2022",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+
+```
+
+:::
+
+## Distribution of Equipment Losses. Visualization 2023
+
+Now, let's build the distribution of equipment losses! by each season
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2023
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2023) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2023",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  )
+```
+
+:::
+
+## Distribution of Equipment Losses. Visualization 2024
+
+Now, let's build the distribution of equipment losses! by each season
+
+::: {style="text-align: center;"}
+```{r}
+#| label: distribution-2024
+#| code-fold: true
+
+disrtibution_data %>%
+  filter(year == 2024) %>%
+  ggplot(
+    aes(x = pdf_loss_score, fill = season)
+    ) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(values = c(
+    "Winter" = WINTER_HEX,
+    "Spring" = SPRING_HEX,
+    "Summer" = SUMMER_HEX,
+    "Autumn" = AUTUMN_HEX
+  )) +
+  labs(
+    title = "Distribution of Equipment Losses in 2024",
+    x = "PDF Loss Score",
+    y = "Density"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom"
+  ) +
+  scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+:::
+
+## Searching for the Hypothesis...
+
+I was thinking a lot about the field to investigate. 
+
+. . .
+
+Suddenly, I remembered the `Ukrainian counterattacks` in Summer 2023.
+
+. . .
+
+I decided to check if there is a **significant difference** in statistical means of equipment losses between that period and the recent days.
+
+## Hypothesis I. Ukrainian Counterattacks
+
+Let's visualize the distribution of equipment losses in `Summer 2023` and recent days (`Autumn 2024`).
+
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-1
+#| code-fold: true
+disrtibution_data %>%
+    filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+    ggplot(aes(x = pdf_loss_score, fill = season)) +
+    geom_density(alpha = 0.5) +
+    scale_fill_manual(values = c("Summer" = SUMMER_HEX, "Autumn" = AUTUMN_HEX)) +
+    labs(
+      title = "Distribution of Equipment Losses in Summer 2023 and Autumn 2024",
+      x = "PDF Loss Score",
+      y = "Density"
+    ) +
+    theme_minimal() +
+    theme(legend.position = "bottom") +
+    scale_x_continuous(limits = quantile(disrtibution_data$pdf_loss_score, c(0, 0.95), na.rm = TRUE))
+```
+
+:::
+
+## Hypothesis I. Ukrainian Counterattacks
+
+. . .
+
+But there is one big problem. The data is not normally distributed :(
+
+. . .
+
+So, I decided to use Bootstrap to compare the means of equipment losses in `Summer 2023` and `Autumn 2024`.
+
+```{r}
+#| label: hypothesis-1-bootstrap
+
+bootstrap_normal <- function(data, n = 10000) {
+  boot_means <- replicate(n, {
+    sample(data, size = length(data), replace = TRUE) %>%
+      mean()
+  })
+  boot_means
+}
+
+```
+
+. . .
+
+::: {.callout-note}
+## Remark.
+I also removed some **outliers** from the data in `Autumn 2024`.
+:::
+
+```{r}
+#| label: background-calculations-3
+#| echo: false
+#| message: false
+#| warning: false
+
+data_filtered <- disrtibution_data %>%
+  filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
+  mutate(season_year = paste(season, year))
+
+summer_2023 <- data_filtered %>% filter(season_year == "Summer 2023") %>% pull(pdf_loss_score)
+autumn_2024 <- data_filtered %>% filter(season_year == "Autumn 2024") %>% pull(pdf_loss_score)
+
+# IQR because... why not?
+Q1 <- quantile(autumn_2024, 0.05)
+Q3 <- quantile(autumn_2024, 0.95)
+IQR <- Q3 - Q1
+autumn_2024_filtered <- autumn_2024[autumn_2024 > (Q1 - 1.5 * IQR) & autumn_2024 < (Q3 + 1.5 * IQR)]
+
+set.seed(123)
+boot_summer <- bootstrap_normal(summer_2023)
+boot_autumn <- bootstrap_normal(autumn_2024_filtered)
+
+fit_summer <- list(mean = mean(boot_summer), sd = sd(boot_summer))
+fit_autumn <- list(mean = mean(boot_autumn), sd = sd(boot_autumn))
+
+summer_normal <- data.frame(
+  x = seq(min(boot_summer), max(boot_summer), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_summer), max(boot_summer), length.out = 1000), 
+    mean = fit_summer$mean, 
+    sd = fit_summer$sd
+  ),
+  season = "Summer 2023"
+)
+
+autumn_normal <- data.frame(
+  x = seq(min(boot_autumn), max(boot_autumn), length.out = 1000),
+  density = dnorm(
+    seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
+    mean = fit_autumn$mean, 
+    sd = fit_autumn$sd
+  ),
+  season = "Autumn 2024"
+)
+
+# Combine for plotting
+normal_data <- bind_rows(summer_normal, autumn_normal)
+```
+
+## Hypothesis I. Ukrainian Counterattacks
+
+. . .
+
+Now, our distributions look like this:
+
+. . .
+
+::: {style="text-align: center;"}
+
+```{r}
+#| label: hypothesis-1-bootstrap-plot
+#| code-fold: true
+ggplot() +
+  geom_density(
+    data = data.frame(value = boot_summer, season = "Summer 2023"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_density(
+    data = data.frame(value = boot_autumn, season = "Autumn 2024"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_line(
+    data = normal_data, aes(x = x, y = density, color = season), size = 1
+  ) +
+  scale_fill_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  scale_color_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  labs(
+    title = "Bootstrap and Fitted Normal Distributions",
+    x = "PDF Loss Score",
+    y = "Density",
+    fill = "Season",
+    color = "Fitted Normal"
+  ) +
+  theme_minimal()
+```
+
+:::
+
+## Hypothesis I. Ukrainian Counterattacks
+
+**Hypothesis Testing. $\text{t}$-test**
+
+::: {style="font-size: 80%;"}
+```{r}
+#| label: hypothesis-1-t-test
+
+t_test_result <- t.test(
+  boot_summer,               # Bootstrapped means for Summer 2023
+  boot_autumn,               # Bootstrapped means for Autumn 2024
+  alternative = "greater",   # One-tailed test (Summer 2023 > Autumn 2024)
+  var.equal = FALSE          # Assume unequal variances (Welch's t-test)
+)
+cat("T-statistic:", t_test_result$statistic, "\n")
+cat("P-value:", t_test_result$p.value, "\n")
+cat("95% Confidence Interval:", t_test_result$conf.int, "\n")
+
+if (t_test_result$p.value < 0.05) {
+  cat("Reject the null hypothesis: There is a significant difference in means.\n")
+} else {
+  cat("Fail to reject the null hypothesis: No significant difference in means.\n")
+}
+```
+
+:::
+
+## Hypothesis II. Ukrainian Counterattacks
+
+. . .
+
+The second hypothesis I come up with is the question about the **distribution** of equipment losses in `Summer 2023`.
+
+. . .
+
+In this case, I want to check if the distribution of equipment losses in `Summer 2023` is close to the **normal distribution**.
+
+. . . 
+
+I will use the **Chi-Square Goodness of Fit Test** to check this hypothesis.
+
+. . .
+
+Let's dive into the code!
+
+## Hypothesis II. Ukrainian Counterattacks
+
+::: {style="text-align: center;"}
+```{r}
+#| label: hypothesis-2
+#| code-fold: true
+#| fig-width: 6
+#| fig-asp: 0.618
+
+mu <- mean(summer_2023)
+sd <- sd(summer_2023)
+
+n <- length(summer_2023)
+breaks <- seq(
+  min(summer_2023),
+  max(summer_2023),
+  length.out = ceiling(log2(n) + 1)
+)
+
+observed <- hist(summer_2023, breaks = breaks, plot = FALSE)$counts
+
+plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightblue", line_color = "red", line_size = 1.5) {
+  data_df <- data.frame(x = data)
+  hist_bins <- seq(min(data), max(data), length.out = length(breaks))
+  normal_curve <- data.frame(
+    x = seq(min(data), max(data), length.out = 1000),
+    y = dnorm(seq(min(data), max(data), length.out = 1000), mean = mean, sd = sd)
+  )
+  
+  ggplot(data_df, aes(x)) +
+    geom_histogram(aes(y = ..density..), bins = length(breaks) - 1, fill = hist_color, color = "black", alpha = 0.7) +
+    geom_line(data = normal_curve, aes(x = x, y = y), color = line_color, size = line_size) +
+    labs(
+      title = "Histogram with Normal Distribution Overlay",
+      x = "Data",
+      y = "Density"
+    ) +
+    theme_minimal()
+}
+
+plot_normal_overlay_gg(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
+
+:::
+
+. . . 
+
+But we need to verify our assumptions `mathematically`, not only visually!!!
+
+## Hypothesis II. Ukrainian Counterattacks
+
+```{r}
+#| label: hypothesis-2-chi-square-hided
+#| code-fold: true
+
+chi_squared_test <- function(data, mean, sd, breaks) {
+  hist_data <- hist(data, breaks = breaks, plot = FALSE)
+  observed <- hist_data$counts
+  
+  n <- sum(observed)
+  
+  expected <- numeric(length(observed))
+  for (i in seq_along(expected)) {
+    if (i == 1) {
+      # Smallest bin
+      expected[i] <- pnorm(breaks[i + 1], mean = mean, sd = sd) * n
+    } else if (i == length(expected)) {
+      # Largest bin
+      expected[i] <- (1 - pnorm(breaks[i], mean = mean, sd = sd)) * n
+    } else {
+      # Middle bins
+      expected[i] <- (pnorm(breaks[i + 1], mean = mean, sd = sd) -
+                      pnorm(breaks[i], mean = mean, sd = sd)) * n
+    }
+  }
+  
+  # Combine bins with expected frequencies < 5
+  while (any(expected < 5)) {
+    idx <- which.min(expected)
+    # if index is 1 or last, combine with next or previous bin
+    if (idx == 1) {
+      # Combine with next bin
+      observed[2] <- observed[2] + observed[1]
+      expected[2] <- expected[2] + expected[1]
+      observed <- observed[-1]
+      expected <- expected[-1]
+    } else if (idx == length(expected)) {
+      # Combine with previous bin
+      observed[length(expected) - 1] <- observed[length(expected) - 1] + observed[length(expected)]
+      expected[length(expected) - 1] <- expected[length(expected) - 1] + expected[length(expected)]
+      observed <- observed[-length(expected)]
+      expected <- expected[-length(expected)]
+    } else {
+      # Combine with smaller of adjacent bins
+      if (expected[idx - 1] < expected[idx + 1]) {
+        observed[idx - 1] <- observed[idx - 1] + observed[idx]
+        expected[idx - 1] <- expected[idx - 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      } else {
+        observed[idx + 1] <- observed[idx + 1] + observed[idx]
+        expected[idx + 1] <- expected[idx + 1] + expected[idx]
+        observed <- observed[-idx]
+        expected <- expected[-idx]
+      }
+    }
+  }
+  
+  chi_sq_stat <- sum((observed - expected)^2 / expected)
+  df <- length(observed) - 1 - 2  # we estimate mean and sd
+  p_value <- pchisq(chi_sq_stat, df, lower.tail = FALSE)
+  critical_value <- qchisq(0.95, df)
+  
+  cat("Chi-Squared Statistic:", chi_sq_stat, "\n")
+  cat("Degrees of Freedom:", df, "\n")
+  cat("P-value:", p_value, "\n")
+  cat("Critical Value (alpha = 0.05):", critical_value, "\n")
+  
+  if (p_value < 0.05) {
+    cat("Reject the null hypothesis: The data does not follow the assumed normal distribution.\n")
+  } else {
+    cat("Fail to reject the null hypothesis: The data follows the assumed normal distribution.\n")
+  }
+}
+
+```
+
+```{r}
+chi_squared_test(summer_2023, mean = mu, sd = sd, breaks = breaks)
+```
+
+# Conclusion {background-iframe="template_files/libs/index.html"}
+
+## Conclusion
+
+. . .
+
+Our analysis of the Russo-Ukrainian War data, using various statistical methods, provides significant insights into the patterns of equipment and personnel losses as well as the dynamics of missile attacks. Here's a summary of our findings:
+
+## 1. Kvitka's Hypothesis
+- **Hypothesis**: Missile attacks are more severe on significant dates.
+- **Result**: Statistical testing (t-tests) revealed no evidence to support the hypothesis. The severity of missile attacks appears independent of significant dates.
+- **Implications**: Other factors, such as military strategy or available resources, may influence the intensity of missile attacks rather than symbolic dates.
+
+## 2. Zakhar's Hypothesis
+
+::: {style="font-size: 90%;"}
+- **Hypothesis**: Shelling points (missiles launched) are positively associated with equipment and personnel losses.
+- **Model 1 (Equipment Losses)**:
+  - Each additional shelling point increases equipment losses by ~24.46 points.
+  - **R²**: 13.09% variability explained.
+- **Model 2 (Personnel Losses)**:
+  - Each additional shelling point increases personnel losses by ~6.30 points.
+  - **R²**: 22% variability explained.
+- **Implications**: While the relationships are statistically significant, a substantial portion of the variability remains unexplained, highlighting the influence of other battlefield conditions.
+:::
+
+## 3. Denys's Hypothesis
+
+::: {style="font-size: 80%;"}
+- **Hypothesis I**: Significant differences exist between equipment losses in Summer 2023 (Ukrainian counterattacks) and Autumn 2024.
+- **Result**: Bootstrapped t-tests revealed a significant difference between the two periods, supporting the hypothesis that loss rates in Summer 2023 (Ukrainian counterattacks) were higher.
+- **Hypothesis II**: The distribution of equipment losses in Summer 2023 follows a normal distribution.
+- **Result**: A Chi-Square Goodness-of-Fit test confirmed the hypothesis, as the test failed to reject the null hypothesis, indicating that the data aligns with a normal distribution.
+:::
+
+. . .
+
+::: {style="font-size: 80%;"}
+This finding suggests that the Ukrainian counterattacks during Summer 2023 resulted in higher equipment losses compared to Autumn 2024, while the statistical distribution of losses during Summer 2023 is consistent with a normal pattern. These results provide further evidence of the intensity of operations during key periods of the conflict.
+:::
+
+## Final Insights
+
+- Statistical models confirm the relationships between shelling points and losses, but they also emphasize the need for further exploration of additional factors.
+- Seasonal and temporal patterns reveal no significant deviations in equipment losses during key periods like counterattacks.
+- Our findings suggest a balance between statistical rigor and the understanding that war data is influenced by myriad complex and often unpredictable factors.
+
+
+## Future Work
+
+- Integrate additional variables (e.g., geographical or operational data) to enhance the explanatory power of models.
+- Explore nonlinear relationships and machine learning methods for pattern detection.
+- Investigate other significant dates or contextual factors influencing the severity of attacks.  
+
+. . .
+
+This comprehensive statistical approach sheds light on the dynamics of the conflict while acknowledging its complexities and limitations.
+
+# Thank you for your attention! {background-iframe="template_files/libs/index.html"}
