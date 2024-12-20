@@ -26,7 +26,7 @@ The severity level of missile attacks is determined based on the type of weapon 
 #| label: clear dataset
 #| message: false
 #| code-fold: true
-missile_attacks <- read_csv("data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
+missile_attacks <- read_csv("Project 2/data/Massive Missile Attacks on Ukraine/missile_attacks_daily.csv")
 
 categorize_missile <- function(missile) {
   severity_scores <- c(
@@ -102,36 +102,16 @@ complete_dataset <- tibble(date = full_date_range) %>%
 #| label: sig dates
 #| message: false
 #| code-fold: true
-significant_dates <- as.Date(c("2022-08-24",
-    "2023-08-24",
-    "2024-08-24",
-    "2022-12-25",
-    "2023-12-25",
-    "2024-12-25",
-    "2022-12-06",
-    "2023-12-06",
-    "2024-12-06",
-    "2022-01-25",
-    "2023-01-25",
-    "2024-01-25",
-    "2022-01-01",
-    "2023-01-01",
-    "2024-01-01",
-    "2022-01-01",
-    "2023-01-01",
-    "2024-01-01",
-    "2022-06-28",
-    "2023-06-28",
-    "2024-06-28",
-    "2022-05-09",
-    "2023-05-09",
-    "2024-05-09",
-    "2022-10-07",
-    "2023-10-07",
-    "2024-10-07",
-    "2022-04-24",
-    "2023-04-16",
-    "2024-04-16"
+significant_dates <- as.Date(c(
+  "2022-08-24", "2023-08-24", "2024-08-24",  # Independence Day of Ukraine
+  "2022-12-25", "2023-12-25", "2024-12-25",  # Christmas
+  "2022-12-06", "2023-12-06", "2024-12-06",  # Armed Forces Day of Ukraine
+  "2022-01-25", "2023-01-25", "2024-01-25",  # Volodymyr Zelenskyy's Birthday
+  "2022-01-01", "2023-01-01", "2024-01-01",  # New Year
+  "2022-06-28", "2023-06-28", "2024-06-28",  # Constitution Day of Ukraine
+  "2022-05-09", "2023-05-09", "2024-05-09",  # Victory Day
+  "2022-10-07", "2023-10-07", "2024-10-07",  # Vladimir Putin's Birthday
+  "2022-04-24", "2023-04-16", "2024-04-16"   # Easter (Pascha)
 ))
 
 missile_attacks_score_per_day_significant <- complete_dataset %>%
@@ -144,7 +124,7 @@ missile_attacks_score_per_day_significant <- complete_dataset %>%
 $H_0$ - the mean severity level are about the same in both groups
 $H_1$ - the mean severity level in significant group is higher
 
-```{r}
+```{r }
 #| label: box plot
 #| warning: false
 #| fig-width: 9

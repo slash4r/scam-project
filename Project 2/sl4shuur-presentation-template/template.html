@@ -569,6 +569,206 @@ $ `cruise missiles`         &lt;dbl&gt; 0, 31, 0, -1, 19, 0, 1, 0, 6, -1, 2, 2, 
 <span id="cb8-17"><a href=""></a>  <span class="at">submarines =</span> <span class="dv">1000</span>             <span class="co"># Submarines: Strategic naval supremacy</span></span>
 <span id="cb8-18"><a href=""></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+</section></section>
+<section>
+<section id="kvitkas-hypothesis" class="title-slide slide level1 center" data-background-iframe="template_files/libs/index.html">
+<h1>Kvitka’s Hypothesis</h1>
+
+</section>
+<section id="the-missile-attacks-are-more-severe-on-significant-days" class="slide level2">
+<h2>The missile attacks are more severe on significant days?</h2>
+<div style="font-size: 90%;">
+<p>The severity level of missile attacks is determined based on the type of weapon used, categorized into six groups:</p>
+<ul>
+<li class="fragment">High-powered missiles</li>
+<li class="fragment">Medium-powered missiles</li>
+<li class="fragment">Drones</li>
+<li class="fragment">Composite weapon types</li>
+<li class="fragment">Low-powered missiles / Others</li>
+<li class="fragment">Unknown</li>
+</ul>
+</div>
+</section>
+<section id="the-missile-attacks-are-more-severe-on-significant-days-1" class="slide level2">
+<h2>The missile attacks are more severe on significant days?</h2>
+<div style="font-size: 70%;">
+<p>Each category is assigned a predefined score reflecting its destructive potential, with high-powered missiles scoring the highest and drones or low-powered weapons scoring lower.</p>
+</div>
+<div class="fragment">
+<div style="font-size: 70%;">
+<p>This scoring system standardizes the assessment of attack intensity, enabling comparative analysis across different events or time periods.</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Weapon Category</th>
+<th>Severity Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High-powered missiles</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Medium-powered missiles</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>Drones</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Composite weapon types</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Low-powered missiles / Others</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Unknown</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="code-for-determining-the-significant-days" class="slide level2">
+<h2>Code for determining the significant days</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>significant_dates <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(</span>
+<span id="cb9-2"><a href=""></a>  <span class="st">"2022-08-24"</span>, <span class="st">"2023-08-24"</span>, <span class="st">"2024-08-24"</span>,  <span class="co"># Independence Day of Ukraine</span></span>
+<span id="cb9-3"><a href=""></a>  <span class="st">"2022-12-25"</span>, <span class="st">"2023-12-25"</span>, <span class="st">"2024-12-25"</span>,  <span class="co"># Christmas</span></span>
+<span id="cb9-4"><a href=""></a>  <span class="st">"2022-12-06"</span>, <span class="st">"2023-12-06"</span>, <span class="st">"2024-12-06"</span>,  <span class="co"># Armed Forces Day of Ukraine</span></span>
+<span id="cb9-5"><a href=""></a>  <span class="st">"2022-01-25"</span>, <span class="st">"2023-01-25"</span>, <span class="st">"2024-01-25"</span>,  <span class="co"># Volodymyr Zelenskyy's Birthday</span></span>
+<span id="cb9-6"><a href=""></a>  <span class="st">"2022-01-01"</span>, <span class="st">"2023-01-01"</span>, <span class="st">"2024-01-01"</span>,  <span class="co"># New Year</span></span>
+<span id="cb9-7"><a href=""></a>  <span class="st">"2022-06-28"</span>, <span class="st">"2023-06-28"</span>, <span class="st">"2024-06-28"</span>,  <span class="co"># Constitution Day of Ukraine</span></span>
+<span id="cb9-8"><a href=""></a>  <span class="st">"2022-05-09"</span>, <span class="st">"2023-05-09"</span>, <span class="st">"2024-05-09"</span>,  <span class="co"># Victory Day</span></span>
+<span id="cb9-9"><a href=""></a>  <span class="st">"2022-10-07"</span>, <span class="st">"2023-10-07"</span>, <span class="st">"2024-10-07"</span>,  <span class="co"># Vladimir Putin's Birthday</span></span>
+<span id="cb9-10"><a href=""></a>  <span class="st">"2022-04-24"</span>, <span class="st">"2023-04-16"</span>, <span class="st">"2024-04-16"</span>   <span class="co"># Easter (Pascha)</span></span>
+<span id="cb9-11"><a href=""></a>))</span>
+<span id="cb9-12"><a href=""></a></span>
+<span id="cb9-13"><a href=""></a>missile_attacks_score_per_day_significant <span class="ot">&lt;-</span> complete_dataset <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">significant_date =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb9-15"><a href=""></a>    date <span class="sc">%in%</span> significant_dates, <span class="cn">TRUE</span>, <span class="cn">FALSE</span></span>
+<span id="cb9-16"><a href=""></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ab-test" class="slide level2">
+<h2>AB test</h2>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p><span class="math inline">\(H_0\)</span> - the mean severity level are about <strong>the same</strong> in both groups</p>
+</div>
+</div>
+<div class="fragment">
+<div style="font-size: 80%;">
+<p><span class="math inline">\(H_1\)</span> - the mean severity level in significant group <strong>is higher</strong>.</p>
+</div>
+</div>
+<div class="fragment">
+<div style="text-align: center;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/box%20plot-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="textt-test" class="slide level2">
+<h2><span class="math inline">\(\text{t}\)</span>-test</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(total_score_per_day <span class="sc">~</span> significant_date, missile_attacks_score_per_day_significant, <span class="at">alternative =</span> <span class="st">"less"</span>)</span>
+<span id="cb10-2"><a href=""></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  total_score_per_day by significant_date
+t = 0.7553, df = 21.985, p-value = 0.771
+alternative hypothesis: true difference in means between group FALSE and group TRUE is less than 0
+95 percent confidence interval:
+     -Inf 59.83921
+sample estimates:
+mean in group FALSE  mean in group TRUE 
+           104.3797             86.1000 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<p>As we can see the 0.7709577 &gt; 0.05. Meaning there is <code>no eveidence</code> to reject the <span class="math inline">\(H_0\)</span> hypothesis.</p>
+</div>
+</section>
+<section id="textt-test-for-filtered-data" class="slide level2">
+<h2><span class="math inline">\(\text{t}\)</span>-test for filtered data</h2>
+<p>The group of unsignificant days has a lot of outliers. Therefore i decided to filter out the anomal values using IQR.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(missile_attacks_score_per_day_significant<span class="sc">$</span>total_score_per_day, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-2"><a href=""></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(missile_attacks_score_per_day_significant<span class="sc">$</span>total_score_per_day, <span class="fl">0.75</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-3"><a href=""></a>IQR <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
+<span id="cb12-4"><a href=""></a></span>
+<span id="cb12-5"><a href=""></a>upper_threshold <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
+<span id="cb12-6"><a href=""></a></span>
+<span id="cb12-7"><a href=""></a>filtered_date <span class="ot">&lt;-</span> missile_attacks_score_per_day_significant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(total_score_per_day <span class="sc">&lt;</span> upper_threshold)</span>
+<span id="cb12-8"><a href=""></a><span class="fu">summary</span>(filtered_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      date            total_score_per_day significant_date
+ Min.   :2022-09-28   Min.   :  0.00      Mode :logical   
+ 1st Qu.:2023-04-16   1st Qu.:  0.00      FALSE:727       
+ Median :2023-10-28   Median : 39.00      TRUE :19        
+ Mean   :2023-10-30   Mean   : 63.68                      
+ 3rd Qu.:2024-05-15   3rd Qu.: 99.00                      
+ Max.   :2024-12-12   Max.   :312.00                      </code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div style="text-align: center;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="template_files/figure-revealjs/box%20plot%202-1.png" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>As you can see the amount of outliers are now <code>much lower</code>. So, let`s conduct the <span class="math inline">\(\text{t}\)</span>-test one more time.</p>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>result <span class="ot">&lt;-</span> <span class="fu">t.test</span>(total_score_per_day <span class="sc">~</span> significant_date, filtered_date, <span class="at">alternative =</span> <span class="st">"less"</span>)</span>
+<span id="cb14-2"><a href=""></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  total_score_per_day by significant_date
+t = -0.38709, df = 18.813, p-value = 0.3515
+alternative hypothesis: true difference in means between group FALSE and group TRUE is less than 0
+95 percent confidence interval:
+     -Inf 25.13731
+sample estimates:
+mean in group FALSE  mean in group TRUE 
+           63.49106            70.73684 </code></pre>
+</div>
+</div>
+<p>As we can see the <strong>0.3515153 &gt; 0.05</strong>. Meaning there is still <code>no evidence</code> to reject the <span class="math inline">\(H_0\)</span> hypothesis.</p>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<p>The analysis revealed no evidence of a connection between significant dates and the severity of missile attacks.</p>
+<div class="fragment">
+<p>Statistical testing showed no significant difference in attack severity between significant and non-significant dates. This indicates that the chosen significant dates do not influence the intensity of missile strikes.</p>
 
 </div>
 </section></section>
