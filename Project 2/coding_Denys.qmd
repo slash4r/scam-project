@@ -297,7 +297,6 @@ disrtibution_data %>%
 ## Bootstrapping
 
 ```{r}
-# Function to generate bootstrap samples and compute means
 bootstrap_normal <- function(data, n = 10000) {
   boot_means <- replicate(n, {
     sample(data, size = length(data), replace = TRUE) %>%
@@ -310,53 +309,63 @@ data_filtered <- disrtibution_data %>%
   filter((year == 2023 & season == "Summer") | (year == 2024 & season == "Autumn")) %>%
   mutate(season_year = paste(season, year))
 
-# Extract data for Summer 2023 and Autumn 2024
 summer_2023 <- data_filtered %>% filter(season_year == "Summer 2023") %>% pull(pdf_loss_score)
 autumn_2024 <- data_filtered %>% filter(season_year == "Autumn 2024") %>% pull(pdf_loss_score)
 
-
-
+# IQR because... why not?
 Q1 <- quantile(autumn_2024, 0.05)
 Q3 <- quantile(autumn_2024, 0.95)
 IQR <- Q3 - Q1
 autumn_2024_filtered <- autumn_2024[autumn_2024 > (Q1 - 1.5 * IQR) & autumn_2024 < (Q3 + 1.5 * IQR)]
 
-# Perform bootstrapping for each group
-set.seed(123) # for reproducibility
+set.seed(123)
 boot_summer <- bootstrap_normal(summer_2023)
 boot_autumn <- bootstrap_normal(autumn_2024_filtered)
 
-# Fit normal distributions (mean and SD) for each season
 fit_summer <- list(mean = mean(boot_summer), sd = sd(boot_summer))
 fit_autumn <- list(mean = mean(boot_autumn), sd = sd(boot_autumn))
 
-# Generate data for visualization of fitted normal distributions
 summer_normal <- data.frame(
   x = seq(min(boot_summer), max(boot_summer), length.out = 1000),
-  density = dnorm(seq(min(boot_summer), max(boot_summer), length.out = 1000), 
-                  mean = fit_summer$mean, sd = fit_summer$sd),
+  density = dnorm(
+    seq(min(boot_summer), max(boot_summer), length.out = 1000), 
+    mean = fit_summer$mean, 
+    sd = fit_summer$sd
+  ),
   season = "Summer 2023"
 )
 
 autumn_normal <- data.frame(
   x = seq(min(boot_autumn), max(boot_autumn), length.out = 1000),
-  density = dnorm(seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
-                  mean = fit_autumn$mean, sd = fit_autumn$sd),
+  density = dnorm(
+    seq(min(boot_autumn), max(boot_autumn), length.out = 1000), 
+    mean = fit_autumn$mean, 
+    sd = fit_autumn$sd
+  ),
   season = "Autumn 2024"
 )
 
 # Combine for plotting
 normal_data <- bind_rows(summer_normal, autumn_normal)
 
-# Plot bootstrap distributions and fitted normals
 ggplot() +
-  geom_density(data = data.frame(value = boot_summer, season = "Summer 2023"),
-               aes(x = value, fill = season), alpha = 0.5) +
-  geom_density(data = data.frame(value = boot_autumn, season = "Autumn 2024"),
-               aes(x = value, fill = season), alpha = 0.5) +
-  geom_line(data = normal_data, aes(x = x, y = density, color = season), size = 1) +
-  scale_fill_manual(values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)) +
-  scale_color_manual(values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)) +
+  geom_density(
+    data = data.frame(value = boot_summer, season = "Summer 2023"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_density(
+    data = data.frame(value = boot_autumn, season = "Autumn 2024"),
+    aes(x = value, fill = season), alpha = 0.5
+  ) +
+  geom_line(
+    data = normal_data, aes(x = x, y = density, color = season), size = 1
+  ) +
+  scale_fill_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
+  scale_color_manual(
+    values = c("Summer 2023" = SUMMER_HEX, "Autumn 2024" = AUTUMN_HEX)
+  ) +
   labs(
     title = "Bootstrap and Fitted Normal Distributions",
     x = "PDF Loss Score",
@@ -378,15 +387,12 @@ t_test_result <- t.test(
   var.equal = FALSE          # Assume unequal variances (Welch's t-test)
 )
 
-# Print results
 print(t_test_result)
 
-# Extract key values
 cat("T-statistic:", t_test_result$statistic, "\n")
 cat("P-value:", t_test_result$p.value, "\n")
 cat("95% Confidence Interval:", t_test_result$conf.int, "\n")
 
-# Interpret results
 if (t_test_result$p.value < 0.05) {
   cat("Reject the null hypothesis: There is a significant difference in means.\n")
 } 
@@ -401,7 +407,6 @@ else {
 mu <- mean(summer_2023)
 sd <- sd(summer_2023)
 
-
 n <- length(summer_2023)
 breaks <- seq(
   min(summer_2023),
@@ -409,24 +414,17 @@ breaks <- seq(
   length.out = ceiling(log2(n) + 1)
 )
 
-# Compute observed frequencies
+
 observed <- hist(summer_2023, breaks = breaks, plot = FALSE)$counts
 
-# Plot histogram using ggplot with the overlay
 plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightblue", line_color = "red", line_size = 1.5) {
-  # Create a data frame for ggplot
   data_df <- data.frame(x = data)
-  
-  # Create the histogram bins
   hist_bins <- seq(min(data), max(data), length.out = length(breaks))
-  
-  # Generate x values for the normal curve
   normal_curve <- data.frame(
     x = seq(min(data), max(data), length.out = 1000),
     y = dnorm(seq(min(data), max(data), length.out = 1000), mean = mean, sd = sd)
   )
   
-  # Plot histogram with density and overlay normal curve
   ggplot(data_df, aes(x)) +
     geom_histogram(aes(y = ..density..), bins = length(breaks) - 1, fill = hist_color, color = "black", alpha = 0.7) +
     geom_line(data = normal_curve, aes(x = x, y = y), color = line_color, size = line_size) +
@@ -438,24 +436,16 @@ plot_normal_overlay_gg <- function(data, mean, sd, breaks, hist_color = "lightbl
     theme_minimal()
 }
 
-
-
-# Plot using the function
 plot_normal_overlay_gg(summer_2023, mean = mu, sd = sd, breaks = breaks)
-
 ```
 
 ```{r}
-# Chi-Squared Test Logic
 chi_squared_test <- function(data, mean, sd, breaks) {
-  # Compute observed frequencies
   hist_data <- hist(data, breaks = breaks, plot = FALSE)
   observed <- hist_data$counts
   
-  # Total number of observations
   n <- sum(observed)
   
-  # Compute expected frequencies
   expected <- numeric(length(observed))
   for (i in seq_along(expected)) {
     if (i == 1) {
@@ -474,6 +464,7 @@ chi_squared_test <- function(data, mean, sd, breaks) {
   # Combine bins with expected frequencies < 5
   while (any(expected < 5)) {
     idx <- which.min(expected)
+    # if index is 1 or last, combine with next or previous bin
     if (idx == 1) {
       # Combine with next bin
       observed[2] <- observed[2] + observed[1]
@@ -502,13 +493,11 @@ chi_squared_test <- function(data, mean, sd, breaks) {
     }
   }
   
-  # Compute chi-squared statistic
   chi_sq_stat <- sum((observed - expected)^2 / expected)
-  df <- length(observed) - 1 - 2  # Adjust for estimated mean and sd
+  df <- length(observed) - 1 - 2  # we estimate mean and sd
   p_value <- pchisq(chi_sq_stat, df, lower.tail = FALSE)
   critical_value <- qchisq(0.95, df)
   
-  # Print results
   cat("Chi-Squared Statistic:", chi_sq_stat, "\n")
   cat("Degrees of Freedom:", df, "\n")
   cat("P-value:", p_value, "\n")
@@ -521,6 +510,5 @@ chi_squared_test <- function(data, mean, sd, breaks) {
   }
 }
 
-# Call the chi-squared test function
 chi_squared_test(summer_2023, mean = mu, sd = sd, breaks = breaks)
 ```
